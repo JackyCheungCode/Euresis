@@ -656,3 +656,12 @@ button, input { -webkit-tap-highlight-color: transparent; }
   .action-bar { align-items: flex-start; }
   .action-buttons { flex-wrap: wrap; }
 }
+
+/* Carbon toggle switch */
+.cds-switch { display: inline-flex; align-items: center; gap: .5rem; font-size: .75rem; color: #525252; cursor: pointer; white-space: nowrap; }
+.cds-switch input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.cds-switch-track { width: 2rem; height: 1rem; border: 1px solid #6f6f6f; border-radius: 1rem; background: #c6c6c6; position: relative; flex: 0 0 2rem; transition: background .12s; }
+.cds-switch-track::after { content: ''; position: absolute; width: .625rem; height: .625rem; left: .125rem; top: .125rem; background: #fff; border-radius: 50%; transition: transform .12s; }
+.cds-switch input:checked + .cds-switch-track { background: #0f62fe; border-color: #0f62fe; }
+.cds-switch input:checked + .cds-switch-track::after { transform: translateX(1rem); }
+.cds-switch input:focus-visible + .cds-switch-track { outline: 2px solid #0f62fe; outline-offset: 2px; }
