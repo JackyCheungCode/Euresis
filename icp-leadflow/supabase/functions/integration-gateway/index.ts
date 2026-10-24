@@ -106,6 +106,11 @@ async function callProvider(config: any, action: string, payload: any = {}) {
     headers["Content-Type"] = "application/json";
     if (method !== "GET" && method !== "HEAD") body = JSON.stringify(payload || { test: true, source: "Euresis" });
   }
+  if (config.auth_type === "query-key" && id !== "hunter" && config.api_key) {
+    const queryUrl = validateEndpoint(url);
+    queryUrl.searchParams.set("api_key", config.api_key);
+    url = queryUrl.toString();
+  }
   const parsed = validateEndpoint(url);
   const response = await fetch(parsed.toString(), { method, headers, ...(body ? { body } : {}), signal: AbortSignal.timeout(18000), redirect: "error" });
   const text = await response.text();
