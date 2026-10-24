@@ -11,12 +11,12 @@ export const state = {
     { id: 6, label: '渠道路由', desc: '输出 · 分流' },
   ],
   stats: [
-    { label: '候选公司', value: 247, unit: '家' },
-    { label: 'ICP 匹配', value: 83, unit: '家', color: 'var(--cds-green-40)' },
-    { label: '有效电话', value: 61, unit: '条' },
-    { label: 'WhatsApp 已注册', value: 38, unit: '条', color: 'var(--cds-teal-60)' },
-    { label: '有效邮箱', value: 54, unit: '条' },
-    { label: '背调完成', value: 29, unit: '家' },
+    { label: '候选公司', value: 0, unit: '家' },
+    { label: 'ICP 匹配', value: 0, unit: '家', color: 'var(--cds-green-40)' },
+    { label: '有效电话', value: 0, unit: '条' },
+    { label: 'WhatsApp 已注册', value: 0, unit: '条', color: 'var(--cds-teal-60)' },
+    { label: '有效邮箱', value: 0, unit: '条' },
+    { label: '背调完成', value: 0, unit: '家' },
   ],
 };
 
