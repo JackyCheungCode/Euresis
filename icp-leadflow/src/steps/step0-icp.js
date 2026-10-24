@@ -29,6 +29,29 @@ function renderSelect(key, options, selected, label) {
     <input type="hidden" data-icp-field="${escapeHtml(key)}" value="${escapeHtml(choice.value)}">
   </div>`;
 }
+const DEFAULT_DOMAIN_BLACKLIST = 'alibaba.com, 1688.com, made-in-china.com, globalsources.com, china.cn, ec21.com, tradekey.com, dhgate.com, europages.com, kompass.com, thomasnet.com, indiamart.com, tradeindia.com, exportersindia.com, ecplaza.net, go4worldbusiness.com, linkedin.com, facebook.com, twitter.com, x.com, instagram.com, pinterest.com, tiktok.com, reddit.com, quora.com, medium.com, tumblr.com, weibo.com, youtube.com, vimeo.com, dailymotion.com, bilibili.com, twitch.tv, amazon.com, ebay.com, walmart.com, etsy.com, aliexpress.com, temu.com, wish.com, rakuten.com, crunchbase.com, zoominfo.com, dnb.com, bloomberg.com, owler.com, apollo.io, lusha.com, yelp.com, yellowpages.com, manta.com, bbb.org, trustpilot.com, glassdoor.com, wikipedia.org, wikidata.org, indeed.com, monster.com, ziprecruiter.com, simplyhired.com, 51job.com, zhaopin.com, eventbrite.com, 10times.com, prnewswire.com, businesswire.com, globenewswire.com, blogspot.com, wordpress.com, substack.com, craigslist.org, google.com, microsoft.com, apple.com, adobe.com, salesforce.com, hubspot.com, zoom.us, dropbox.com';
+const MULTI_FIELDS = new Set(['行业 / 细分领域','目标职位','部门','排除行业','排除公司类型','排除规模','招聘信号','扩张信号','融资信号','技术变更信号']);
+const REGIONS = {'北美':['加拿大','美国','墨西哥'],'东南亚':['文莱','柬埔寨','印度尼西亚','老挝','马来西亚','缅甸','菲律宾','新加坡','泰国','东帝汶','越南'],'东亚':['中国大陆','中国澳门','中国香港','中国台湾','日本','韩国','朝鲜','蒙古'],'南亚':['阿富汗','孟加拉国','不丹','印度','马尔代夫','尼泊尔','巴基斯坦','斯里兰卡'],'欧洲':['奥地利','比利时','丹麦','芬兰','法国','德国','希腊','爱尔兰','意大利','荷兰','挪威','波兰','葡萄牙','西班牙','瑞典','瑞士','英国'],'中东':['巴林','伊朗','伊拉克','以色列','约旦','科威特','阿曼','卡塔尔','沙特阿拉伯','土耳其','阿联酋'],'拉丁美洲':['阿根廷','巴西','智利','哥伦比亚','秘鲁','乌拉圭'],'非洲':['阿尔及利亚','埃及','加纳','肯尼亚','摩洛哥','尼日利亚','南非']};
+function renderMultiSelect(key, options, label) {
+ const normalized=options.map(o=>({value:String(optionValue(o)),label:optionLabel(o),flag:typeof o==='object'?o.flag:null}));
+ return '<div class="cds-multi icp-multi" data-multi-wrap="'+escapeHtml(key)+'"><button type="button" class="cds-select-trigger" aria-expanded="false" aria-label="'+escapeHtml(label)+'"><span class="cds-multi-current">不限 / 请选择</span><span class="cds-select-chevron">⌄</span></button><div class="cds-multi-menu" hidden><input class="cds-text-input cds-multi-search" type="search" placeholder="搜索选项…"><div class="cds-multi-options">'+normalized.map(o=>'<label class="cds-multi-option">'+(o.flag?'<span class="flag-circle">'+o.flag+'</span>':'')+'<input type="checkbox" value="'+escapeHtml(o.value)+'"><span>'+escapeHtml(o.label)+'</span></label>').join('')+'</div><div class="cds-multi-footer"><button type="button" class="btn btn-ghost btn-sm" data-multi-clear>清除选择</button><button type="button" class="btn btn-primary btn-sm" data-multi-done>完成</button></div></div><input type="hidden" data-icp-field="'+escapeHtml(key)+'" value=""></div>';
+}
+function renderGeography(key,label) {
+ const options=MARKET_OPTIONS.map(o=>'<label class="cds-multi-option" data-country="'+escapeHtml(o.value)+'"><span class="flag-circle">'+o.flag+'</span><input type="checkbox" value="'+escapeHtml(o.value)+'"><span>'+escapeHtml(o.label)+'</span></label>').join('');
+ const regions=Object.keys(REGIONS).map(r=>'<button type="button" class="btn btn-ghost btn-sm" data-region="'+escapeHtml(r)+'">'+escapeHtml(r)+'</button>').join('');
+ return '<div class="cds-multi icp-multi icp-geography" data-multi-wrap="'+escapeHtml(key)+'"><button type="button" class="cds-select-trigger" aria-expanded="false"><span class="cds-multi-current">选择大区或国家/地区（可多选）</span><span class="cds-select-chevron">⌄</span></button><div class="cds-multi-menu" hidden><input class="cds-text-input cds-multi-search" type="search" placeholder="搜索国家/地区…"><div class="cds-region-pills">'+regions+'</div><div class="cds-multi-options">'+options+'</div><div class="cds-multi-footer"><button type="button" class="btn btn-ghost btn-sm" data-multi-clear>清除选择</button><button type="button" class="btn btn-primary btn-sm" data-multi-done>完成</button></div></div><input type="hidden" data-icp-field="'+escapeHtml(key)+'" value=""></div>';
+}
+function renderField(key,label) {
+ if(label==='目标地理位置'||label==='国家 / 地区'||label==='排除国家 / 地区') return renderGeography(key,label);
+ if(label==='排除渠道域名（黑名单）') return '<div class="icp-blacklist"><textarea class="cds-textarea" rows="4" data-icp-field="'+escapeHtml(key)+'" placeholder="输入域名，使用逗号或换行分隔"></textarea><div class="icp-blacklist-actions"><button type="button" class="btn btn-ghost btn-sm" data-fill-blacklist>一键填充默认黑名单</button><span class="field-help" data-blacklist-count>0 个域名</span></div></div>';
+ if(label==='自定义黑名单域名') return '<div class="icp-domain-tags"><div class="icp-domain-entry"><input class="cds-text-input" data-domain-input placeholder="competitor.com"><button type="button" class="btn btn-secondary btn-sm" data-domain-add>添加</button></div><div class="icp-domain-chip-list" data-domain-chip-list></div><input type="hidden" data-icp-field="'+escapeHtml(key)+'" value=""></div>';
+ if(MULTI_FIELDS.has(label)) return renderMultiSelect(key,optionsForField(label),label);
+ return renderSelect(key,optionsForField(label),'',label);
+}
+function updateMultiLabel(wrap) {
+ const values=[...wrap.querySelectorAll('.cds-multi-options input:checked')].map(i=>i.value); const hidden=wrap.querySelector('[data-icp-field]'); if(hidden) hidden.value=values.join(', ');
+ const current=wrap.querySelector('.cds-multi-current'); if(current) current.textContent=values.length?values.slice(0,3).join('、')+(values.length>3?' 等 '+values.length+' 项':''):'不限 / 请选择';
+}
 function modelSelect() {
   const selected = 'gpt-4o-mini';
   return renderSelect('aiModel', MODELS, selected, '选择 AI 模型');
@@ -58,7 +81,7 @@ export function renderStep0() {
         <div class="icp-field-grid">
           ${layer.fields.map((field, fieldIndex) => {
             const key = `layer-${i}-field-${fieldIndex}`;
-            return `<div class="icp-field"><label>${escapeHtml(field.label)}</label>${renderSelect(key, optionsForField(field.label), '', field.label)}</div>`;
+            return `<div class="icp-field"><label>${escapeHtml(field.label)}</label>${renderField(key, field.label)}</div>`;
           }).join('')}
         </div>
       </div>
@@ -109,11 +132,22 @@ function bindSelects(root) {
     wrap.querySelector('.cds-select-trigger').setAttribute('aria-expanded', 'false');
     wrap.querySelectorAll('.cds-select-option').forEach(item => item.setAttribute('aria-selected', String(item === option)));
     queryPreview(root);
-    queryPreview(root);
   }));
 }
 export function bindStep0(root) {
   bindSelects(root);
+  root.querySelectorAll('.cds-multi').forEach(wrap=>{
+    const trigger=wrap.querySelector('.cds-select-trigger'),menu=wrap.querySelector('.cds-multi-menu');
+    trigger.addEventListener('click',()=>{const opening=menu.hidden;root.querySelectorAll('.cds-multi-menu').forEach(m=>{m.hidden=true;m.closest('.cds-multi').querySelector('.cds-select-trigger').setAttribute('aria-expanded','false');});menu.hidden=!opening;trigger.setAttribute('aria-expanded',String(opening));});
+    wrap.querySelectorAll('.cds-multi-options input').forEach(i=>i.addEventListener('change',()=>{updateMultiLabel(wrap);queryPreview(root);}));
+    wrap.querySelector('[data-multi-clear]')?.addEventListener('click',()=>{wrap.querySelectorAll('.cds-multi-options input').forEach(i=>i.checked=false);updateMultiLabel(wrap);queryPreview(root);});
+    wrap.querySelector('[data-multi-done]')?.addEventListener('click',()=>{menu.hidden=true;trigger.setAttribute('aria-expanded','false');});
+    wrap.querySelector('.cds-multi-search')?.addEventListener('input',e=>{const q=e.target.value.toLocaleLowerCase();wrap.querySelectorAll('.cds-multi-option').forEach(row=>row.hidden=!row.textContent.toLocaleLowerCase().includes(q));});
+    wrap.querySelectorAll('[data-region]').forEach(button=>button.addEventListener('click',()=>{const names=REGIONS[button.dataset.region]||[];const inputs=[...wrap.querySelectorAll('.cds-multi-options input')].filter(i=>names.includes(i.value));const selectAll=inputs.some(i=>!i.checked);inputs.forEach(i=>i.checked=selectAll);updateMultiLabel(wrap);queryPreview(root);}));
+  });
+  root.querySelectorAll('[data-fill-blacklist]').forEach(b=>b.addEventListener('click',()=>{const area=b.closest('.icp-blacklist').querySelector('textarea');area.value=DEFAULT_DOMAIN_BLACKLIST;area.dispatchEvent(new Event('input',{bubbles:true}));}));
+  root.querySelectorAll('.icp-blacklist textarea').forEach(area=>area.addEventListener('input',()=>{const n=area.value.split(/[\\s,;]+/).filter(Boolean).length;area.closest('.icp-blacklist').querySelector('[data-blacklist-count]').textContent=n+' 个域名';queryPreview(root);}));
+  root.querySelectorAll('.icp-domain-tags').forEach(wrap=>{const input=wrap.querySelector('[data-domain-input]'),hidden=wrap.querySelector('[data-icp-field]'),list=wrap.querySelector('[data-domain-chip-list]');const paint=()=>{const values=(hidden.value||'').split(',').filter(Boolean);list.innerHTML=values.map(v=>'<span class="icp-domain-chip">'+escapeHtml(v)+'<button type="button" data-remove-domain="'+escapeHtml(v)+'">×</button></span>').join('');list.querySelectorAll('[data-remove-domain]').forEach(b=>b.addEventListener('click',()=>{hidden.value=values.filter(v=>v!==b.dataset.removeDomain).join(',');paint();queryPreview(root);}));};const add=()=>{const v=input.value.trim().toLowerCase().replace(/^https?:\\/\\//,'').replace(/^www\\./,'').split('/')[0];if(v&&!v.includes(' ')&&!hidden.value.split(',').includes(v)){hidden.value=[hidden.value,v].filter(Boolean).join(',');paint();queryPreview(root);}input.value='';};wrap.querySelector('[data-domain-add]').addEventListener('click',add);input.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();add();}});paint();});
   queryPreview(root);
   root.querySelectorAll('.icp-layer-header').forEach(button => button.addEventListener('click', () => {
     const layer = button.closest('.icp-layer');
@@ -176,9 +210,7 @@ export function bindStep0(root) {
     queryPreview(root);
     showToast('已清空当前 ICP 条件');
   });
-  root.querySelectorAll('[data-icp-field]').forEach(input => {
-    input.addEventListener('change', () => queryPreview(root));
-  });
+  root.querySelectorAll('[data-icp-field]').forEach(input => { input.addEventListener('change',()=>queryPreview(root)); input.addEventListener('input',()=>queryPreview(root)); });
   supabase.auth.getUser().then(async ({ data: { user } }) => {
     if (!user) return;
     const { data, error } = await supabase.from('icp_profiles').select('id,criteria').eq('user_id', user.id).order('updated_at', { ascending: false }).limit(1).maybeSingle();
