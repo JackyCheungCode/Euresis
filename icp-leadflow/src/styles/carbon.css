@@ -795,3 +795,11 @@ button, input, textarea { touch-action: manipulation; }
   .action-buttons .btn { justify-content: center; min-width: 0; }
   .action-buttons #btnNext { grid-column: 1 / -1; }
 }
+
+@media (max-width: 600px) {
+  .app-shell:not(.sidebar-collapsed) .side-nav .nav-section-label { display: block; }
+  .app-shell:not(.sidebar-collapsed) .side-nav .side-nav-item { justify-content: flex-start; padding: 0 .875rem; }
+  .app-shell:not(.sidebar-collapsed) .side-nav .side-nav-item span { display: inline; }
+  .app-shell:not(.sidebar-collapsed) .side-nav .side-nav-note span:not(.status-dot) { display: inline; }
+  .app-shell:not(.sidebar-collapsed) .side-nav .side-nav-footer { display: block; }
+}
