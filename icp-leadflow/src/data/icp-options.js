@@ -28,7 +28,7 @@ const OPTIONS = {
   '营收区间': REVENUE_RANGES,
   '成立年限': ['未满 1 年','1–3 年','3–5 年','6–10 年','11–20 年','20 年以上','未知'],
   '公司类型': COMPANY_TYPES,
-  '地域 / 目标市场': MARKET_OPTIONS,
+  '国家 / 地区': MARKET_OPTIONS,
   '技术栈': ['SAP','Oracle','Microsoft Dynamics','Salesforce','HubSpot','Shopify','Magento / Adobe Commerce','WooCommerce','BigCommerce','Odoo','NetSuite','Microsoft 365','Google Workspace','AWS','Microsoft Azure','Google Cloud','自研系统','未知/不限','其他'],
   '是否上市': ['不限','是，已上市','否，非上市','排除上市公司'],
   '供应链角色': SUPPLY_ROLES,
@@ -45,7 +45,7 @@ const OPTIONS = {
   '展会信号': ['不限','Intersolar','Hannover Messe','SPS','CES','MWC','Canton Fair / 广交会','行业展会（其他）','无展会信号'],
   '排除行业': INDUSTRIES,
   '排除公司类型': COMPANY_TYPES,
-  '排除地域': MARKET_OPTIONS,
+  '排除国家 / 地区': MARKET_OPTIONS,
   '排除规模': EMPLOYEE_RANGES,
   '排除状态': ['不排除','已倒闭','破产清算','已被收购','停业','制裁/限制名单','无有效网站','重复企业','其他']
 };
