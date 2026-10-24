@@ -51,6 +51,7 @@ export function bindStagePage(root, stage) {
   button?.addEventListener('click', async () => {
     button.disabled = true;
     const config = STAGES[stage];
+    let runId = null;
     button.textContent = '处理中…';
     message.textContent = '正在连接 Supabase 并处理线索…';
     try {
@@ -62,6 +63,10 @@ export function bindStagePage(root, stage) {
         const service = listIntegrations().find(item => item.id === config.provider && item.enabled);
         if (!service) throw new Error('请先在 API 与 AI 集成页面配置并启用 ' + config.provider);
       }
+      const stepNumber = ({ scrape: 2, enrich: 3, verify: 4, research: 5, route: 6 })[stage];
+      const { data: runRow, error: runError } = await supabase.from('workflow_runs').insert({ user_id: user.id, workflow_key: stage, current_step: stepNumber, status: 'running', input: { limit: 10, provider: config.provider } }).select('id').single();
+      if (runError) throw runError;
+      runId = runRow.id;
       const batch = leads.slice(0, 10);
       let success = 0;
       const errors = [];
@@ -118,9 +123,14 @@ export function bindStagePage(root, stage) {
       }
       await loadLeads();
       message.textContent = `处理结束：成功 ${success} 条，失败 ${errors.length} 条。` + (errors.length ? ' 首个错误：' + errors[0] : '');
+      await supabase.from('workflow_runs').update({ status: errors.length && !success ? 'failed' : 'completed', output: { success, failed: errors.length, errors: errors.slice(0, 20) }, updated_at: new Date().toISOString() }).eq('id', runId).eq('user_id', user.id);
       showToast(`${config.action}完成：成功 ${success} 条，失败 ${errors.length} 条`);
       document.dispatchEvent(new CustomEvent('euresis:leads-updated'));
     } catch (error) {
+      if (runId) {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) await supabase.from('workflow_runs').update({ status: 'failed', error_message: error.message || '阶段处理失败', updated_at: new Date().toISOString() }).eq('id', runId).eq('user_id', user.id);
+      }
       message.textContent = error.message || '阶段处理失败';
       showToast('处理失败：' + (error.message || '未知错误'));
     } finally {
