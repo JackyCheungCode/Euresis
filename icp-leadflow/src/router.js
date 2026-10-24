@@ -6,6 +6,7 @@ import { renderStep3, bindStep3 } from './steps/step3-enrich.js';
 import { renderStep4, bindStep4 } from './steps/step4-verify.js';
 import { renderStep5, bindStep5 } from './steps/step5-research.js';
 import { renderStep6, bindStep6 } from './steps/step6-rounter.js';
+import { leads, loadLeads } from './data/lead.js';
 
 const modules = [
   { render: renderStep0, bind: bindStep0 },
@@ -31,6 +32,12 @@ export function renderNav() {
 }
 
 export function renderStats() {
+  state.stats[0].value = leads.length;
+  state.stats[1].value = leads.filter(l => l.icp === true || (typeof l.score === 'number' && l.score >= 60)).length;
+  state.stats[2].value = leads.filter(l => l.phone && l.phone !== '—').length;
+  state.stats[3].value = leads.filter(l => l.waRegistered === true).length;
+  state.stats[4].value = leads.filter(l => l.email && l.email !== '—' && l.emailStatus === 'valid').length;
+  state.stats[5].value = leads.filter(l => l.data && l.data.research_completed === true).length;
   const row = document.getElementById('statsRow');
   row.innerHTML = state.stats.map(s => `
     <div class="stat">
@@ -39,19 +46,21 @@ export function renderStats() {
     </div>`).join('');
 }
 
-export function renderStep() {
+export async function renderStep() {
+  try { await loadLeads(); } catch (error) { console.error('加载线索失败', error); }
+  renderStats();
   const container = document.getElementById('stepContainer');
   const mod = modules[state.currentStep];
   container.innerHTML = `<div class="step-content active">${mod.render()}</div>`;
   mod.bind(container);
   document.getElementById('actionInfo').textContent =
-    `当前步骤：${state.currentStep + 1} / ${state.totalSteps} · ${state.steps[state.currentStep].label} · 模拟运行中`;
+    `当前步骤：${state.currentStep + 1} / ${state.totalSteps} · ${state.steps[state.currentStep].label} · ${leads.length} 条数据库记录`;
 }
 
-export function goToStep(index) {
+export async function goToStep(index) {
   if (index < 0 || index >= state.totalSteps) return;
   setStep(index);
   renderNav();
-  renderStep();
+  await renderStep();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
