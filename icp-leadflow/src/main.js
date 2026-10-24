@@ -3,7 +3,6 @@ import { renderNav, renderStats, renderStep, goToStep } from './router.js';
 import { showToast } from './components/toast.js';
 import { renderIntegrations, bindIntegrations } from './pages/integrations.js';
 import { renderStep0, bindStep0 } from './steps/step0-icp.js';
-import { renderStep0, bindStep0 } from './steps/step0-icp.js';
 import { loadIntegrations } from './services/integrations.js';
 import { supabase } from './services/supabase.js';
 
@@ -19,11 +18,6 @@ async function setView(view) {
     button.classList.toggle('active', active);
     button.setAttribute('aria-current', active ? 'page' : 'false');
   });
-  if (view === 'icp') {
-    const root = document.getElementById('icpDefinitionContainer');
-    root.innerHTML = renderStep0();
-    bindStep0(root);
-  }
   if (view === 'icp') {
     const root = document.getElementById('icpDefinitionContainer');
     root.innerHTML = renderStep0();
