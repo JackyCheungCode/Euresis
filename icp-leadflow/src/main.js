@@ -20,6 +20,34 @@ function setView(view) {
   document.title = view === 'integrations' ? 'API 与 AI 集成 · Euresis' : 'Euresis · AI Growth Workspace';
 }
 
+function openRecordDetails(row) {
+  const modal = document.getElementById('recordModal');
+  const body = document.getElementById('recordModalBody');
+  const table = row.closest('table');
+  const headers = [...table.querySelectorAll('thead th')].map(th => th.textContent.trim());
+  const cells = [...row.querySelectorAll('td')].map(td => td.textContent.trim());
+  body.innerHTML = '';
+  const list = document.createElement('dl');
+  list.className = 'record-detail-list';
+  cells.forEach((value, index) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'record-detail-item';
+    const term = document.createElement('dt');
+    term.textContent = headers[index] || '字段 ' + (index + 1);
+    const description = document.createElement('dd');
+    description.textContent = value || '—';
+    wrap.append(term, description);
+    list.append(wrap);
+  });
+  body.append(list);
+  modal.hidden = false;
+  document.getElementById('recordModalClose').focus();
+  document.body.classList.add('modal-open');
+}
+function closeRecordDetails() {
+  document.getElementById('recordModal').hidden = true;
+  document.body.classList.remove('modal-open');
+}
 function init() {
   renderStats();
   renderNav();
@@ -43,6 +71,19 @@ function init() {
   });
   document.getElementById('btnRerun').addEventListener('click', () => {
     showToast('当前仍为演示数据；配置 API 后可接入真实服务');
+  });
+  document.addEventListener('click', event => {
+    const row = event.target.closest('tr[data-record-row]');
+    if (row && !event.target.closest('a,button,input,select,textarea')) openRecordDetails(row);
+    if (event.target.closest('#recordModalClose, #recordModalDone')) closeRecordDetails();
+    if (event.target.id === 'recordModal') closeRecordDetails();
+  });
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && !document.getElementById('recordModal').hidden) closeRecordDetails();
+    if ((event.key === 'Enter' || event.key === ' ') && event.target.matches('tr[data-record-row]')) {
+      event.preventDefault();
+      openRecordDetails(event.target);
+    }
   });
   setView('workflow');
 }
