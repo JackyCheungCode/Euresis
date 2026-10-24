@@ -4,6 +4,7 @@ import { panelNoPad } from '../components/panel.js';
 import { tag } from '../components/tag.js';
 import { showToast } from '../components/toast.js';
 import { supabase } from '../services/supabase.js';
+import { leads, loadLeads } from '../data/lead.js';
 
 const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
 let savedProfileId = null;
@@ -72,7 +73,57 @@ function queryPreview(root) {
   if (company) company.textContent = format(companyTerms) || '选择行业、国家/地区、规模或购买信号后，实时生成筛选条件';
   if (persona) persona.textContent = format(selections[1] || []) || '选择目标职位、决策权限、部门或资历层级';
   if (exclusion) exclusion.textContent = format([...(selections[3] || []), ...(selections[6] || [])]) || '选择需要排除的行业、地域、规模、数据质量或合规条件';
+  renderLocalMatches(root);
 }
+
+function splitValues(value) { return String(value || '').split(',').map(v => v.trim()).filter(Boolean); }
+function renderLocalMatches(root) {
+  const selected = {};
+  root.querySelectorAll('.icp-layer .icp-field').forEach(field => {
+    const label = field.querySelector('label')?.textContent?.trim();
+    const value = field.querySelector('[data-icp-field]')?.value || '';
+    if (label && value) selected[label] = splitValues(value);
+  });
+  const includes = (value, values) => values.some(v => String(value || '').toLocaleLowerCase().includes(v.toLocaleLowerCase()));
+  const matches = leads.filter(lead => {
+    const positive = [
+      ['行业 / 细分领域', lead.industry],
+      ['目标地理位置', lead.region || lead.data?.country_region],
+      ['员工规模区间', lead.employeeRange || lead.size],
+      ['营收区间', lead.revenue || lead.data?.revenue],
+      ['公司类型', lead.companyType || lead.type],
+      ['目标职位', lead.contactTitle],
+    ];
+    for (const [label, value] of positive) {
+      const wanted = selected[label];
+      if (wanted?.length && !includes(value, wanted)) return false;
+    }
+    const negative = [
+      ['排除行业', lead.industry],
+      ['排除公司类型', lead.companyType || lead.type],
+      ['排除国家 / 地区', lead.region || lead.data?.country_region],
+      ['排除规模', lead.employeeRange || lead.size],
+    ];
+    if (negative.some(([label, value]) => selected[label]?.length && includes(value, selected[label]))) return false;
+    const blacklist = [
+      ...(selected['排除渠道域名（黑名单）'] || []),
+      ...(selected['自定义黑名单域名'] || []),
+    ].map(v => v.toLowerCase().replace(/^https?:\/\//, '').replace(/^www\./, '').split('/')[0]);
+    const domain = String(lead.domain || lead.website || '').toLowerCase().replace(/^www\./, '');
+    if (domain && blacklist.some(d => d && (domain === d || domain.endsWith('.' + d)))) return false;
+    const threshold = selected['ICP 匹配阈值']?.[0]?.match(/(\d+)/)?.[1];
+    if (threshold && typeof lead.score === 'number' && lead.score < Number(threshold)) return false;
+    return true;
+  });
+  const count = root.querySelector('[data-icp-match-count]');
+  const sample = root.querySelector('[data-icp-sample]');
+  if (count) count.textContent = `现有线索库匹配：${matches.length} 家`;
+  if (sample) {
+    const rows = matches.slice(0, 5);
+    sample.innerHTML = rows.length ? rows.map(lead => `<tr><td>${escapeHtml(lead.companyName || lead.title || '未命名企业')}</td><td>${escapeHtml(lead.domain || lead.website || '—')}</td><td>${escapeHtml(lead.region || '—')}</td><td>${escapeHtml(lead.industry || '—')}</td><td>${escapeHtml(lead.employeeRange || '—')}</td><td>${escapeHtml(lead.score ?? '—')}</td></tr>`).join('') : '<tr><td colspan="6" class="icp-empty-match">暂无匹配记录；保存 ICP 后可在搜索 API 发现阶段获取新候选企业。</td></tr>';
+  }
+}
+
 export function renderStep0() {
   const layersHtml = icpLayers.map((layer, i) => `
     <section class="icp-layer ${i === 0 ? 'open' : ''}">
@@ -99,7 +150,7 @@ export function renderStep0() {
       ${layersHtml}
     </section>
     <div class="two-col icp-support-grid">
-      ${panelNoPad('实时查询预览', `<div class="generated-queries"><div class="generated-query"><span class="query-note">当前筛选</span><code data-query-preview>请先选择筛选条件</code></div><div class="generated-query"><span class="query-note">目标联系人</span><code data-persona-preview>选择职位、部门与资历层级</code></div><div class="generated-query"><span class="query-note">排除规则</span><code data-exclusion-preview>按需配置排除条件</code></div></div>`)}
+      ${panelNoPad('实时查询预览', `<div class="generated-queries"><div class="generated-query"><span class="query-note">当前筛选</span><code data-query-preview>请先选择筛选条件</code></div><div class="generated-query"><span class="query-note">目标联系人</span><code data-persona-preview>选择职位、部门与资历层级</code></div><div class="generated-query"><span class="query-note">排除规则</span><code data-exclusion-preview>按需配置排除条件</code></div></div><div class="icp-preview-table-wrap"><div class="icp-preview-table-heading"><strong data-icp-match-count>现有线索库匹配：加载中</strong><span class="field-help">基于当前账号已保存线索，不代表外部搜索总量</span></div><div class="cds-data-table-container"><table class="data-table icp-preview-table"><thead><tr><th>企业</th><th>域名</th><th>地区</th><th>行业</th><th>员工规模</th><th>评分</th></tr></thead><tbody data-icp-sample><tr><td colspan="6">正在读取当前账号线索…</td></tr></tbody></table></div></div>`)}
       <section class="panel icp-schema-panel"><div class="panel-header"><h2>AI 判定 Schema</h2><span class="panel-meta">结构化输出字段</span></div><div class="panel-body"><div class="field-tags">${aiSchema.map(field => tag(field, 'blue')).join('')}</div><div class="model-picker-wrap"><label class="form-label">AI 模型</label>${modelSelect()}<p class="field-help">仅显示常用模型。实际调用前需在「API 与 AI 集成」配置对应服务及可用模型。</p></div></div></section>
     </div>`;
 }
@@ -149,6 +200,7 @@ export function bindStep0(root) {
   root.querySelectorAll('.icp-blacklist textarea').forEach(area=>area.addEventListener('input',()=>{const n=area.value.split(/[\s,;]+/).filter(Boolean).length;area.closest('.icp-blacklist').querySelector('[data-blacklist-count]').textContent=n+' 个域名';queryPreview(root);}));
   root.querySelectorAll('.icp-domain-tags').forEach(wrap=>{const input=wrap.querySelector('[data-domain-input]'),hidden=wrap.querySelector('[data-icp-field]'),list=wrap.querySelector('[data-domain-chip-list]');const paint=()=>{const values=(hidden.value||'').split(',').filter(Boolean);list.innerHTML=values.map(v=>'<span class="icp-domain-chip">'+escapeHtml(v)+'<button type="button" data-remove-domain="'+escapeHtml(v)+'">×</button></span>').join('');list.querySelectorAll('[data-remove-domain]').forEach(b=>b.addEventListener('click',()=>{hidden.value=values.filter(v=>v!==b.dataset.removeDomain).join(',');paint();queryPreview(root);}));};const add=()=>{const v=input.value.trim().toLowerCase().replace(/^https?:\/\//,'').replace(/^www\./,'').split('/')[0];if(v&&!v.includes(' ')&&!hidden.value.split(',').includes(v)){hidden.value=[hidden.value,v].filter(Boolean).join(',');paint();queryPreview(root);}input.value='';};wrap.querySelector('[data-domain-add]').addEventListener('click',add);input.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();add();}});paint();});
   queryPreview(root);
+  loadLeads().then(() => queryPreview(root)).catch(error => { console.warn('加载 ICP 预览线索失败', error); });
   root.querySelectorAll('.icp-layer-header').forEach(button => button.addEventListener('click', () => {
     const layer = button.closest('.icp-layer');
     const body = layer.querySelector('.icp-layer-body');
