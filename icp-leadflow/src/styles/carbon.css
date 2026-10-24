@@ -852,3 +852,7 @@ button, input, textarea { touch-action: manipulation; }
 body:not(.authenticated) .global-header, body:not(.authenticated) .app-shell { display: none !important; }
 body:not(.authenticated) .auth-gate { display: grid; }
 body.authenticated .auth-gate { display: none; }
+
+.method-fixed { min-height: 2.5rem; display: flex; align-items: center; justify-content: space-between; gap: .75rem; padding: .5rem .75rem; background: #f4f4f4; border-bottom: 1px solid #c6c6c6; color: #161616; }
+.method-fixed strong { font-size: .875rem; font-weight: 600; }
+.method-fixed span { color: #6f6f6f; font-size: .6875rem; text-align: right; }
