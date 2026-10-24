@@ -195,12 +195,15 @@ export function bindStep0(root) {
   root.querySelector('#resetIcpFields')?.addEventListener('click', async () => {
     root.querySelectorAll('[data-icp-field]').forEach(input => {
       input.value = '';
-      const wrap = input.closest('.cds-select');
-      const first = wrap.querySelector('.cds-select-option[data-value=""]');
-      if (first) {
-        updateSelectedLabel(wrap, first);
-        wrap.querySelectorAll('.cds-select-option').forEach(item => item.setAttribute('aria-selected', String(item === first)));
+      const wrap = input.closest('.cds-select, .cds-multi');
+      if (wrap?.matches('.cds-multi')) {
+        wrap.querySelectorAll('.cds-multi-options input').forEach(option => { option.checked = false; option.closest('label').hidden = false; });
+        const search = wrap.querySelector('.cds-multi-search'); if (search) search.value = '';
+        updateMultiLabel(wrap); return;
       }
+      if (!wrap) return;
+      const first = wrap.querySelector('.cds-select-option[data-value=""]');
+      if (first) { updateSelectedLabel(wrap, first); wrap.querySelectorAll('.cds-select-option').forEach(item => item.setAttribute('aria-selected', String(item === first))); }
     });
     if (savedProfileId) {
       const { error } = await supabase.from('icp_profiles').delete().eq('id', savedProfileId);
@@ -220,7 +223,16 @@ export function bindStep0(root) {
       const input = root.querySelector(`[data-icp-field="${key}"]`);
       if (!input) return;
       input.value = String(value ?? '');
-      const wrap = input.closest('.cds-select');
+      const wrap = input.closest('.cds-select, .cds-multi');
+      if (wrap?.matches('.cds-multi')) {
+        const values = input.value.split(',').map(value => value.trim());
+        wrap.querySelectorAll('.cds-multi-options input').forEach(option => { option.checked = values.includes(option.value); });
+        updateMultiLabel(wrap);
+        const countNode = wrap.querySelector('[data-blacklist-count]');
+        if (countNode) countNode.textContent = input.value.split(/[\\s,;]+/).filter(Boolean).length + ' 个域名';
+        return;
+      }
+      if (!wrap) return;
       const option = [...wrap.querySelectorAll('.cds-select-option')].find(item => item.dataset.value === input.value);
       if (option) {
         updateSelectedLabel(wrap, option);
