@@ -856,3 +856,14 @@ body.authenticated .auth-gate { display: none; }
 .method-fixed { min-height: 2.5rem; display: flex; align-items: center; justify-content: space-between; gap: .75rem; padding: .5rem .75rem; background: #f4f4f4; border-bottom: 1px solid #c6c6c6; color: #161616; }
 .method-fixed strong { font-size: .875rem; font-weight: 600; }
 .method-fixed span { color: #6f6f6f; font-size: .6875rem; text-align: right; }
+
+
+/* 节点任务实时进度 — Carbon Progress Bar */
+.stage-progress { margin-top: 1rem; padding-top: .75rem; border-top: 1px solid #e0e0e0; }
+.stage-progress[hidden] { display: none !important; }
+.stage-progress-heading { display: flex; justify-content: space-between; gap: 1rem; margin-bottom: .5rem; font-size: .8125rem; color: #393939; }
+.stage-progress-heading strong { font-family: var(--cds-font-mono); font-size: .75rem; font-weight: 600; }
+.stage-progress-track { height: .5rem; width: 100%; overflow: hidden; background: #e0e0e0; }
+.stage-progress-track > span { display: block; width: 0; height: 100%; background: #0f62fe; transition: width .18s ease; }
+.stage-progress-detail { margin-top: .5rem; color: #6f6f6f; font-size: .75rem; overflow-wrap: anywhere; }
+@media (prefers-reduced-motion: reduce) { .stage-progress-track > span { transition: none; } }
