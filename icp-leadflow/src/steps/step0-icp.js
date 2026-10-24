@@ -34,14 +34,21 @@ function modelSelect() {
   return renderSelect('aiModel', MODELS, selected, '选择 AI 模型');
 }
 function queryPreview(root) {
-  const value = key => root.querySelector(`[data-icp-field="${key}"]`)?.value || '';
-  const industry = value('layer-0-field-0');
-  const role = value('layer-0-field-8');
-  const market = value('layer-0-field-5');
-  const terms = [industry, role, market].filter(Boolean);
-  const query = terms.length ? terms.join(' ') : '请先选择行业、供应链角色或目标市场';
-  const node = root.querySelector('[data-query-preview]');
-  if (node) node.textContent = query;
+  const layers = [...root.querySelectorAll('.icp-layer')];
+  const selections = layers.map(layer => [...layer.querySelectorAll('.icp-field')].map(field => ({
+    label: field.querySelector('label')?.textContent?.trim() || '',
+    value: field.querySelector('[data-icp-field]')?.value || '',
+  })).filter(item => item.value && item.value !== '不限' && item.value !== '不排除'));
+  const format = items => items.length
+    ? items.map(item => `${item.label}：${item.value}`).join('；')
+    : '';
+  const companyTerms = [...(selections[0] || []), ...(selections[2] || [])];
+  const company = root.querySelector('[data-query-preview]');
+  const persona = root.querySelector('[data-persona-preview]');
+  const exclusion = root.querySelector('[data-exclusion-preview]');
+  if (company) company.textContent = format(companyTerms) || '选择行业、国家/地区、规模或购买信号后，实时生成筛选条件';
+  if (persona) persona.textContent = format(selections[1] || []) || '选择目标职位、决策权限、部门或资历层级';
+  if (exclusion) exclusion.textContent = format(selections[3] || []) || '选择需要排除的行业、地域、规模或状态';
 }
 export function renderStep0() {
   const layersHtml = icpLayers.map((layer, i) => `
@@ -101,13 +108,7 @@ function bindSelects(root) {
     wrap.querySelector('.cds-select-trigger').setAttribute('aria-expanded', 'false');
     wrap.querySelectorAll('.cds-select-option').forEach(item => item.setAttribute('aria-selected', String(item === option)));
     queryPreview(root);
-    const persona = root.querySelector('[data-persona-preview]');
-    const exclusion = root.querySelector('[data-exclusion-preview]');
-    const vals = [...root.querySelectorAll('[data-icp-field]')];
-    const layer1 = vals.filter(el => el.dataset.icpField.startsWith('layer-1-')).map(el => el.value).filter(Boolean);
-    const layer3 = vals.filter(el => el.dataset.icpField.startsWith('layer-3-')).map(el => el.value).filter(Boolean);
-    if (persona) persona.textContent = layer1.join(' · ') || '选择职位、部门与资历层级';
-    if (exclusion) exclusion.textContent = layer3.join(' · ') || '按需配置排除条件';
+    queryPreview(root);
   }));
 }
 export function bindStep0(root) {
