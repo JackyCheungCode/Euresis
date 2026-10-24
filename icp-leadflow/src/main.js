@@ -1,7 +1,7 @@
 import { state } from './state.js';
 import { renderNav, renderStats, renderStep, goToStep } from './router.js';
 import { showToast } from './components/toast.js';
-import { renderIntegrations, bindIntegrations } from './pages/integrations.js';
+import { renderIntegrations, bindIntegrations } from './pages/integrations.js';\nimport { renderStep0, bindStep0 } from './steps/step0-icp.js';
 import { loadIntegrations } from './services/integrations.js';
 import { supabase } from './services/supabase.js';
 
@@ -15,7 +15,7 @@ async function setView(view) {
     button.classList.toggle('active', active);
     button.setAttribute('aria-current', active ? 'page' : 'false');
   });
-  if (view === 'integrations') {
+  if (view === 'icp') {\n    const root = document.getElementById('icpDefinitionContainer');\n    root.innerHTML = renderStep0();\n    bindStep0(root);\n  }\n  if (view === 'integrations') {
     try {
       await loadIntegrations();
       renderIntegrations();
@@ -26,7 +26,7 @@ async function setView(view) {
       errorNode.className = 'notification warning';
     }
   }
-  document.title = view === 'integrations' ? 'API 与 AI 集成 · Euresis' : 'Euresis · AI Growth Workspace';
+  document.title = view === 'integrations' ? 'API 和 AI 集成 · Euresis' : view === 'icp' ? '企业 ICP · Euresis' : '搜索 API 发现 · Euresis';
 }
 
 function openRecordDetails(row) {
