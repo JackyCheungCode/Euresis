@@ -21,7 +21,9 @@ async function setView(view) {
       renderIntegrations();
       await bindIntegrations();
     } catch (error) {
-      document.getElementById('integrationCards').innerHTML = '<div class="notification warning">' + String(error.message || '无法加载配置') + '</div>';
+      const errorNode = document.getElementById('integrationCards');
+      errorNode.textContent = error.message || '无法加载配置';
+      errorNode.className = 'notification warning';
     }
   }
   document.title = view === 'integrations' ? 'API 与 AI 集成 · Euresis' : 'Euresis · AI Growth Workspace';
@@ -96,18 +98,23 @@ function init() {
   document.addEventListener('euresis:leads-updated', async () => { renderStats(); await renderStep(); });
 }
 let initialized = false;
+let activeUserId = null;
 let signupMode = false;
 function setAuthenticated(session) {
   const gate = document.getElementById('authGate');
   const shell = document.querySelector('.app-shell');
   const header = document.querySelector('.global-header');
   if (!session) {
+    activeUserId = null;
     document.body.classList.remove('authenticated');
     gate.hidden = false;
     shell.hidden = true;
     header.hidden = true;
     return;
   }
+  const userId = session.user?.id || null;
+  const accountChanged = activeUserId !== userId;
+  activeUserId = userId;
   document.body.classList.add('authenticated');
   gate.hidden = true;
   shell.hidden = false;
@@ -122,6 +129,11 @@ function setAuthenticated(session) {
       logout.disabled = false;
       if (error) showToast('退出登录失败：' + error.message);
     });
+  } else if (accountChanged) {
+    renderNav();
+    renderStats();
+    renderStep();
+    if (!document.getElementById('integrationsView').hidden) setView('integrations');
   }
 }
 function setAuthMessage(message, isError = false) {
