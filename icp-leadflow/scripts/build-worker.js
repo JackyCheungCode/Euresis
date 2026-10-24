@@ -54,7 +54,7 @@ export default {
       return new Response('Bad Request', { status: 400 });
     }
 
-    const key = pathname.replace(/^\\/+/, '') || 'index.html';
+    const key = (pathname.startsWith('/') ? pathname.slice(1) : pathname) || 'index.html';
     let asset = ASSETS[key];
     if (!asset && !key.includes('.')) asset = ASSETS['index.html'];
     if (!asset) return new Response('Not Found', { status: 404 });
