@@ -879,3 +879,12 @@ body.authenticated .auth-gate { display: none; }
 .icp-preview-table .icp-empty-match, .icp-preview-table td[colspan] { color: #6f6f6f; padding: 1rem; line-height: 1.5; }
 .icp-preview-table { min-width: 40rem; }
 @media(max-width:600px) { .icp-preview-table-heading { flex-direction: column; } .icp-preview-table { min-width: 38rem; } }
+
+
+/* Mobile navigation remains a true off-canvas sidebar instead of a top menu */
+@media(max-width:600px) {
+  .app-shell { display: block; }
+  .side-nav, .app-shell:not(.sidebar-collapsed) .side-nav { position: fixed; z-index: 1001; top: 3rem; left: 0; bottom: 0; width: min(18rem, 86vw); max-height: calc(100dvh - 3rem); overflow-y: auto; box-shadow: 4px 0 16px rgba(0,0,0,.18); background: #f4f4f4; }
+  .app-shell.sidebar-collapsed .side-nav { display: none !important; }
+  .workspace { width: 100%; max-width: 100%; }
+}
