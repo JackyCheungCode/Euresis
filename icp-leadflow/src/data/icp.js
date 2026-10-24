@@ -10,7 +10,7 @@ export const icpLayers = [
     { label: '招聘信号' }, { label: '融资信号' }, { label: '扩张信号' }, { label: '技术变更信号' }, { label: '内容信号' }, { label: '展会信号' },
   ]},
   { title: '第四层 · 排除条件（Disqualifiers）', fields: [
-    { label: '排除行业' }, { label: '排除公司类型' }, { label: '排除国家 / 地区' }, { label: '排除规模' }, { label: '排除状态' },
+    { label: '排除渠道域名（黑名单）' }, { label: '自定义黑名单域名' }, { label: '排除行业' }, { label: '排除公司类型' }, { label: '排除国家 / 地区' }, { label: '排除规模' }, { label: '排除状态' },
   ]},
 ];
 
