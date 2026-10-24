@@ -29,7 +29,7 @@ function statusText(config) {
 }
 function renderCard(config) {
   const status = statusText(config);
-  const authSelect = customSelect(config.id + '-auth', config.auth || 'bearer', AUTH_OPTIONS, '认证方式');
+  const authSelect = customSelect('auth', config.auth || 'bearer', AUTH_OPTIONS, '认证方式');
   return `<article class="integration-card" data-integration-card="${config.id}">
     <div class="integration-card-header">
       <div class="integration-icon">${escapeHtml(config.icon)}</div>
