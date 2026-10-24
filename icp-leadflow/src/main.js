@@ -2,6 +2,7 @@ import { state } from './state.js';
 import { renderNav, renderStats, renderStep, goToStep } from './router.js';
 import { showToast } from './components/toast.js';
 import { renderIntegrations, bindIntegrations } from './pages/integrations.js';
+import { supabase } from './services/supabase.js';
 
 function setView(view) {
   const workflow = document.getElementById('workflowView');
@@ -87,4 +88,84 @@ function init() {
   });
   setView('workflow');
 }
-init();
+let initialized = false;
+let signupMode = false;
+function setAuthenticated(session) {
+  const gate = document.getElementById('authGate');
+  const shell = document.querySelector('.app-shell');
+  const header = document.querySelector('.global-header');
+  if (!session) {
+    document.body.classList.remove('authenticated');
+    gate.hidden = false;
+    shell.hidden = true;
+    header.hidden = true;
+    return;
+  }
+  document.body.classList.add('authenticated');
+  gate.hidden = true;
+  shell.hidden = false;
+  header.hidden = false;
+  if (!initialized) {
+    initialized = true;
+    init();
+    const logout = document.getElementById('logoutButton');
+    logout?.addEventListener('click', async () => {
+      logout.disabled = true;
+      const { error } = await supabase.auth.signOut();
+      logout.disabled = false;
+      if (error) showToast('退出登录失败：' + error.message);
+    });
+  }
+}
+function setAuthMessage(message, isError = false) {
+  const node = document.getElementById('authMessage');
+  node.textContent = message;
+  node.classList.toggle('error', isError);
+}
+function updateAuthMode() {
+  document.getElementById('authTitle').textContent = signupMode ? '创建 Euresis 账号' : '登录 Euresis';
+  document.getElementById('authSubmit').textContent = signupMode ? '创建账号' : '登录';
+  document.getElementById('authModeToggle').textContent = signupMode ? '已有账号？返回登录' : '没有账号？创建账号';
+  document.getElementById('authPassword').autocomplete = signupMode ? 'new-password' : 'current-password';
+  setAuthMessage('');
+}
+function initAuth() {
+  const form = document.getElementById('authForm');
+  document.getElementById('authModeToggle').addEventListener('click', () => {
+    signupMode = !signupMode;
+    updateAuthMode();
+  });
+  form.addEventListener('submit', async event => {
+    event.preventDefault();
+    const email = document.getElementById('authEmail').value.trim();
+    const password = document.getElementById('authPassword').value;
+    const submit = document.getElementById('authSubmit');
+    submit.disabled = true;
+    setAuthMessage(signupMode ? '正在创建账号…' : '正在验证登录信息…');
+    try {
+      if (signupMode) {
+        const { data, error } = await supabase.auth.signUp({ email, password });
+        if (error) throw error;
+        if (data.session) {
+          setAuthenticated(data.session);
+        } else {
+          setAuthMessage('账号已创建。请检查邮箱完成验证，然后返回登录。');
+        }
+      } else {
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+        setAuthenticated(data.session);
+      }
+    } catch (error) {
+      setAuthMessage(error.message || '身份验证失败', true);
+    } finally {
+      submit.disabled = false;
+    }
+  });
+  supabase.auth.getSession().then(({ data, error }) => {
+    if (error) setAuthMessage(error.message, true);
+    setAuthenticated(data?.session || null);
+  });
+  supabase.auth.onAuthStateChange((_event, session) => setAuthenticated(session));
+}
+initAuth();
