@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "npx serve .",
-    "build": "echo 'static site, no build step'",
+    "build": "node scripts/build-worker.js",
     "preview": "npx serve ."
   }
 }
