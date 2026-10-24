@@ -23,7 +23,8 @@ export function renderStep5() {
     ${panel('背调工具', `<div class="tool-grid">
       ${toolCard({ name: 'Apollo Organization Enrichment', role: '融资事件、技术栈、员工增长。', price: '1 credit / 公司', fields: 'funding_events · current_technologies · departmental_head_count' })}
       ${toolCard({ name: 'Bright Data Business Search', role: '跨源公司背调信号。', price: '$2–3 / 1K 次', fields: 'funding_stage · employees_in_linkedin · linkedin_followers' })}
-    </div>`)};
+    </div>`)}
+  `;
 }
 
 export function bindStep5() {}
