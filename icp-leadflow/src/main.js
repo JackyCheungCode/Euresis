@@ -1,21 +1,35 @@
 import { state } from './state.js';
 import { renderNav, renderStats, renderStep, goToStep } from './router.js';
 import { showToast } from './components/toast.js';
-import { renderIntegrations, bindIntegrations } from './pages/integrations.js';\nimport { renderStep0, bindStep0 } from './steps/step0-icp.js';
+import { renderIntegrations, bindIntegrations } from './pages/integrations.js';
+import { renderStep0, bindStep0 } from './steps/step0-icp.js';
+import { renderStep0, bindStep0 } from './steps/step0-icp.js';
 import { loadIntegrations } from './services/integrations.js';
 import { supabase } from './services/supabase.js';
 
 async function setView(view) {
   const workflow = document.getElementById('workflowView');
+  const icp = document.getElementById('icpView');
   const integrations = document.getElementById('integrationsView');
   workflow.hidden = view !== 'workflow';
+  icp.hidden = view !== 'icp';
   integrations.hidden = view !== 'integrations';
   document.querySelectorAll('[data-view]').forEach(button => {
     const active = button.dataset.view === view;
     button.classList.toggle('active', active);
     button.setAttribute('aria-current', active ? 'page' : 'false');
   });
-  if (view === 'icp') {\n    const root = document.getElementById('icpDefinitionContainer');\n    root.innerHTML = renderStep0();\n    bindStep0(root);\n  }\n  if (view === 'integrations') {
+  if (view === 'icp') {
+    const root = document.getElementById('icpDefinitionContainer');
+    root.innerHTML = renderStep0();
+    bindStep0(root);
+  }
+  if (view === 'icp') {
+    const root = document.getElementById('icpDefinitionContainer');
+    root.innerHTML = renderStep0();
+    bindStep0(root);
+  }
+  if (view === 'integrations') {
     try {
       await loadIntegrations();
       renderIntegrations();
