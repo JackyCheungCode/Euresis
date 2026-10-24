@@ -72,6 +72,7 @@ export function renderStep0() {
     <div class="notification"><span class="notif-icon" aria-hidden="true">i</span><div>定义你的目标客户标准。行业、员工区间、公司类型、国家/地区及其余可枚举字段均使用 Carbon 风格自定义选择器；保存后将写入当前账号的 Supabase 数据库。</div></div>
     <section class="icp-definition-section" aria-labelledby="icpDefinitionTitle">
       <div class="icp-section-heading"><div><h2 id="icpDefinitionTitle">ICP 定义</h2><p>四层筛选条件 · 按需选择，无需手动输入</p></div><div class="icp-section-actions"><button class="btn btn-ghost btn-sm" type="button" id="resetIcpFields">清空条件</button><button class="btn btn-primary btn-sm" type="button" id="saveIcpFields">保存 ICP</button></div></div>
+      <div class="stage-progress" data-icp-progress hidden aria-live="polite"><div class="stage-progress-heading"><span data-icp-progress-label>等待保存</span><strong data-icp-progress-percent>0%</strong></div><div class="stage-progress-track" role="progressbar" aria-label="ICP 保存任务进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" data-icp-progressbar><span data-icp-progress-fill></span></div><p class="stage-progress-detail" data-icp-progress-detail>等待执行</p></div>
       ${layersHtml}
     </section>
     <div class="two-col icp-support-grid">
@@ -113,6 +114,7 @@ function bindSelects(root) {
 }
 export function bindStep0(root) {
   bindSelects(root);
+  queryPreview(root);
   root.querySelectorAll('.icp-layer-header').forEach(button => button.addEventListener('click', () => {
     const layer = button.closest('.icp-layer');
     const body = layer.querySelector('.icp-layer-body');
@@ -122,9 +124,24 @@ export function bindStep0(root) {
     body.hidden = !open;
   }));
   const modelWrap = root.querySelector('[data-select-wrap="aiModel"]');
+  const icpProgress = root.querySelector('[data-icp-progress]');
+  const updateIcpProgress = (percent, label, detailText) => {
+    const value = Math.max(0, Math.min(100, Math.round(percent)));
+    if (icpProgress) icpProgress.hidden = false;
+    icpProgress?.querySelector('[data-icp-progress-fill]')?.style.setProperty('width', value + '%');
+    icpProgress?.querySelector('[data-icp-progressbar]')?.setAttribute('aria-valuenow', String(value));
+    const pct = icpProgress?.querySelector('[data-icp-progress-percent]');
+    const title = icpProgress?.querySelector('[data-icp-progress-label]');
+    const detail = icpProgress?.querySelector('[data-icp-progress-detail]');
+    if (pct) pct.textContent = value + '%';
+    if (title) title.textContent = label;
+    if (detail) detail.textContent = detailText;
+  };
   root.querySelector('#saveIcpFields')?.addEventListener('click', async () => {
+    updateIcpProgress(10, '正在验证登录状态', '检查当前账号与数据库会话');
     const { data: { user }, error: userError } = await supabase.auth.getUser();
-    if (userError || !user) { showToast('登录状态已过期，请重新登录'); return; }
+    if (userError || !user) { updateIcpProgress(100, '保存失败', '登录状态已过期，请重新登录'); showToast('登录状态已过期，请重新登录'); return; }
+    updateIcpProgress(35, '正在准备 ICP 条件', '读取所有筛选字段并提交数据库');
     const criteria = {};
     root.querySelectorAll('[data-icp-field]').forEach(input => { criteria[input.dataset.icpField] = input.value; });
     const payload = { user_id: user.id, name: '默认 ICP', criteria, updated_at: new Date().toISOString() };
@@ -136,8 +153,9 @@ export function bindStep0(root) {
       else result = await supabase.from('icp_profiles').insert(payload).select('id').single();
       if (result.error) throw result.error;
       savedProfileId = result.data.id;
+      updateIcpProgress(100, 'ICP 保存完成', '筛选条件已写入当前账号的 Supabase 数据库');
       showToast('ICP 条件已保存到 Supabase');
-    } catch (error) { showToast('保存失败：' + (error.message || '数据库错误')); }
+    } catch (error) { updateIcpProgress(100, 'ICP 保存失败', error.message || '数据库错误'); showToast('保存失败：' + (error.message || '数据库错误')); }
     finally { button.disabled = false; }
   });
   root.querySelector('#resetIcpFields')?.addEventListener('click', async () => {
