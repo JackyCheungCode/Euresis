@@ -20,7 +20,7 @@ npm install
 npm run dev
 ```
 
-本地前端使用已配置的 Supabase 项目。生产 Edge Function 的 CORS 来源已限制到 Euresis 的 Workers 地址；本地开发如需调用集成网关，需要在函数的允许来源中加入本地开发地址。
+本地前端使用已配置的 Supabase 项目。生产 Edge Function 的 CORS 响应目前只允许 Euresis 的 Workers 地址；本地开发可以查看 UI，但如需从本地调用集成网关，需同时调整函数的 CORS 响应头和来源白名单。
 
 ## 构建
 
