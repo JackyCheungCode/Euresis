@@ -25,6 +25,7 @@ export function bindStep1(root) {
   const message = root.querySelector('#discoverMessage');
   button?.addEventListener('click', async () => {
     button.disabled = true;
+    let runId = null;
     button.textContent = '正在搜索…';
     message.textContent = '正在读取 ICP 条件并检查可用搜索服务…';
     try {
@@ -39,6 +40,9 @@ export function bindStep1(root) {
       const configs = listIntegrations();
       const provider = configs.find(c => c.id === 'serper' && c.enabled) || configs.find(c => c.id === 'tavily' && c.enabled);
       if (!provider) throw new Error('请先在「API 与 AI 集成」保存并启用 Serper 或 Tavily');
+      const { data: runRow, error: runError } = await supabase.from('workflow_runs').insert({ user_id: user.id, workflow_key: 'discover', current_step: 1, status: 'running', input: { query, provider: provider.id } }).select('id').single();
+      if (runError) throw runError;
+      runId = runRow.id;
       const response = await integrationClient.call(provider.id, { query, num: 10, max_results: 10 });
       const results = provider.id === 'serper' ? (response.organic || []) : (response.results || []);
       if (!results.length) throw new Error('API 请求成功，但没有返回可用的搜索结果');
@@ -66,9 +70,14 @@ export function bindStep1(root) {
       if (saveError) throw saveError;
       await loadLeads();
       message.textContent = `搜索完成：获取 ${records.length} 条结果，已写入 Supabase。`;
+      await supabase.from('workflow_runs').update({ status: 'completed', output: { count: records.length, provider: provider.id }, updated_at: new Date().toISOString() }).eq('id', runId).eq('user_id', user.id);
       showToast(`已保存 ${records.length} 条候选企业`);
       document.dispatchEvent(new CustomEvent('euresis:leads-updated'));
     } catch (error) {
+      if (runId) {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) await supabase.from('workflow_runs').update({ status: 'failed', error_message: error.message || '搜索失败', updated_at: new Date().toISOString() }).eq('id', runId).eq('user_id', user.id);
+      }
       message.textContent = error.message || '搜索失败';
       showToast('企业搜索失败：' + (error.message || '未知错误'));
     } finally {
