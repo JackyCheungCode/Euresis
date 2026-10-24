@@ -16,7 +16,6 @@
       <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M4 8h24M4 16h24M4 24h24" fill="none" stroke="currentColor" stroke-width="2"/></svg>
     </button>
     <div class="brand">
-      <div class="logo" aria-hidden="true">E</div>
       <span class="brand-name">Euresis</span>
       <span class="sep"></span>
       <span class="product">AI Growth Workspace</span>
@@ -94,6 +93,13 @@
         </main>
       </section>
     </div>
+  </div>
+  <div id="recordModal" class="cds-modal-backdrop" hidden>
+    <section class="cds-modal" role="dialog" aria-modal="true" aria-labelledby="recordModalTitle">
+      <header class="cds-modal-header"><h2 id="recordModalTitle">记录详情</h2><button type="button" class="cds-icon-button" id="recordModalClose" aria-label="关闭详情">×</button></header>
+      <div id="recordModalBody" class="cds-modal-body"></div>
+      <footer class="cds-modal-footer"><button type="button" class="btn btn-primary" id="recordModalDone">完成</button></footer>
+    </section>
   </div>
   <div id="toast" role="status" aria-live="polite"></div>
   <script type="module" src="/src/main.js"></script>
