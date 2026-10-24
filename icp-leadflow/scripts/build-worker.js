@@ -4,7 +4,7 @@ import path from 'node:path';
 const files = [
   'index.html',
   'src/styles/carbon.css',
-  'src/main.js',
+  'src/main.js',\n  'src/services/integrations.js',\n  'src/pages/integrations.js',
   'src/state.js',
   'src/router.js',
   'src/components/panel.js',
