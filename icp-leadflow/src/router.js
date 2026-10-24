@@ -1,5 +1,4 @@
 import { state, setStep } from './state.js';
-import { renderStep0, bindStep0 } from './steps/step0-icp.js';
 import { renderStep1, bindStep1 } from './steps/step1-discover.js';
 import { renderStep2, bindStep2 } from './steps/step2-scrape.js';
 import { renderStep3, bindStep3 } from './steps/step3-enrich.js';
@@ -9,7 +8,6 @@ import { renderStep6, bindStep6 } from './steps/step6-rounter.js';
 import { leads, loadLeads } from './data/lead.js';
 
 const modules = [
-  { render: renderStep0, bind: bindStep0 },
   { render: renderStep1, bind: bindStep1 },
   { render: renderStep2, bind: bindStep2 },
   { render: renderStep3, bind: bindStep3 },
