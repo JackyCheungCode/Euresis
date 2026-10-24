@@ -27,7 +27,6 @@ export const icpLayers = [
   { title: '第八层 · 评分与优化（Scoring & Feedback）', fields: [
     { label: 'ICP 匹配阈值' }, { label: '购买意向阈值' }, { label: '信号时效窗口' }, { label: '每批线索上限' }, { label: '评分策略' },
   ]},
-  ]},
 ];
 
 export const aiSchema = [
