@@ -21,7 +21,8 @@
       <span class="product">AI Growth Workspace</span>
     </div>
     <div class="actions">
-      <span class="environment"><span class="status-dot"></span> 前端演示环境</span>
+      <span class="environment"><span class="status-dot"></span> 生产环境 · Supabase</span>
+      <button class="header-logout" id="logoutButton" type="button">退出登录</button>
       <span class="version-label">v2.5.0</span>
     </div>
   </header>
@@ -40,7 +41,7 @@
       </button>
       <div class="side-nav-footer">
         <div class="nav-section-label">系统</div>
-        <div class="side-nav-note"><span class="status-dot"></span><span>配置在当前浏览器生效</span></div>
+        <div class="side-nav-note"><span class="status-dot"></span><span>数据与配置已加密保存</span></div>
       </div>
     </aside>
 
@@ -50,7 +51,7 @@
           <div class="breadcrumb"><span>工作区</span><span>›</span><span>ICP 获客流水线</span><span>›</span><span class="current">工作流</span></div>
           <div class="page-title-row">
             <div><h1>企业 ICP → 客户信息齐全</h1><div class="subtitle">从企业筛选、公开信号、联系方式补齐到验证与渠道路由的七阶段工作流。</div></div>
-            <span class="cds-chip"><span class="status-dot"></span> 演示数据</span>
+            <span class="cds-chip"><span class="status-dot"></span> 已连接数据库</span>
           </div>
         </div>
         <main class="main">
@@ -101,6 +102,21 @@
       <footer class="cds-modal-footer"><button type="button" class="btn btn-primary" id="recordModalDone">完成</button></footer>
     </section>
   </div>
+  <section id="authGate" class="auth-gate" hidden>
+    <form id="authForm" class="auth-card">
+      <div class="auth-eyebrow">EURESIS WORKSPACE</div>
+      <h1 id="authTitle">登录 Euresis</h1>
+      <p class="auth-copy">使用你的工作账号安全访问 ICP 获客工作区。客户数据按账号隔离存储。</p>
+      <label for="authEmail">邮箱</label>
+      <input class="cds-text-input" id="authEmail" type="email" autocomplete="email" required placeholder="name@company.com">
+      <label for="authPassword">密码</label>
+      <input class="cds-text-input" id="authPassword" type="password" autocomplete="current-password" required minlength="8" placeholder="至少 8 位字符">
+      <p id="authMessage" class="auth-message" role="status"></p>
+      <button id="authSubmit" class="btn btn-primary auth-submit" type="submit">登录</button>
+      <button id="authModeToggle" class="auth-mode-toggle" type="button">没有账号？创建账号</button>
+      <p class="auth-footnote">请勿与他人共享登录凭据。API 密钥由服务端保存，不会在浏览器中明文持久化。</p>
+    </form>
+  </section>
   <div id="toast" role="status" aria-live="polite"></div>
   <script type="module" src="/src/main.js"></script>
 </body>
