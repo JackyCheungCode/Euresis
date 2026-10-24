@@ -20,11 +20,11 @@ const modules = [
 export function renderNav() {
   const nav = document.getElementById('stepsNav');
   nav.innerHTML = state.steps.map(s => `
-    <div class="progress-step ${s.id === state.currentStep ? 'active' : ''} ${s.id < state.currentStep ? 'completed' : ''}" data-step="${s.id}">
+    <button type="button" class="progress-step ${s.id === state.currentStep ? 'active' : ''} ${s.id < state.currentStep ? 'completed' : ''}" data-step="${s.id}" aria-current="${s.id === state.currentStep ? 'step' : 'false'}">
       <div class="step-num">${s.id < state.currentStep ? '✓' : s.id + 1}</div>
       <div class="step-label">${s.label}</div>
       <div class="step-desc">${s.desc}</div>
-    </div>`).join('');
+    </button>`).join('');
 
   nav.querySelectorAll('.progress-step').forEach(el => {
     el.addEventListener('click', () => goToStep(Number(el.dataset.step)));
