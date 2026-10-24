@@ -16,7 +16,7 @@ export const MARKET_OPTIONS = COUNTRIES.map(code => ({
   flag: flagFor(code),
   code,
 })).sort((a, b) => {
-  const priority = ['中国大陆','中国香港','中国澳门','中国台湾'];
+  const priority = ['中国大陆','中国澳门','中国香港','中国台湾'];
   const ai = priority.indexOf(a.value), bi = priority.indexOf(b.value);
   if (ai >= 0 || bi >= 0) return (ai < 0 ? 99 : ai) - (bi < 0 ? 99 : bi);
   return a.label.localeCompare(b.label, 'zh-CN');
