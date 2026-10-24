@@ -13,6 +13,18 @@ const AUTH_OPTIONS = [
   { value: 'none', label: '无认证' },
 ];
 const METHOD_OPTIONS = ['GET','POST','PUT','PATCH','DELETE','HEAD'].map(value => ({ value, label: value }));
+const MODEL_OPTIONS = {
+  openai: ['gpt-4o','gpt-4o-mini','gpt-4.1','gpt-4.1-mini','o3','o4-mini','自定义模型 ID'],
+  anthropic: ['claude-sonnet-4-20250514','claude-3-7-sonnet-latest','claude-3-5-haiku-latest','claude-opus-4-1','自定义模型 ID'],
+  custom: ['gpt-4o-mini','gpt-4o','gpt-4.1','gpt-4.1-mini','自定义模型 ID'],
+};
+function modelControl(config) {
+  const known = MODEL_OPTIONS[config.id] || [];
+  const selected = known.includes(config.model) ? config.model : '自定义模型 ID';
+  const options = known.map(value => ({ value: value === '自定义模型 ID' ? '__custom__' : value, label: value }));
+  const custom = selected === '自定义模型 ID';
+  return `<div class="integration-field"><label>模型</label>${customSelect('modelPreset', selected === '自定义模型 ID' ? '__custom__' : selected, options, '模型')}<input class="model-custom-input" data-field="model" type="text" autocomplete="off" placeholder="输入服务支持的模型 ID" value="${escapeHtml(custom ? config.model || '' : config.model || '')}" ${custom ? '' : 'hidden'}><span class="field-help">选择模型或切换到自定义模型 ID。</span></div>`;
+}
 function customSelect(id, selected, options, label) {
   const choice = options.find(option => option.value === selected) || options[0];
   return `<div class="cds-select" data-select="${id}">
@@ -34,7 +46,7 @@ function renderCard(config) {
     <div class="integration-card-body"><div class="integration-form-grid">
       <div class="integration-field full"><label for="endpoint-${config.id}">API 端点 URL</label><input id="endpoint-${config.id}" data-field="endpoint" type="url" autocomplete="url" required placeholder="https://api.example.com/..." value="${escapeHtml(config.endpoint)}"><span class="field-help">${config.id === 'openai' ? '填写 API 基础地址，例如 https://api.openai.com/v1。' : config.id === 'custom' ? '填写 OpenAI 兼容服务地址；自定义请求方式由下方配置。' : '此服务的专用端点。生产环境仅允许 HTTPS。'}</span></div>
       ${config.supportsKey ? `<div class="integration-field"><label for="key-${config.id}">API Key / Token</label><input id="key-${config.id}" data-field="apiKey" type="password" autocomplete="new-password" placeholder="${config.apiKeyConfigured ? '已在服务端保存；留空保持不变' : '粘贴服务密钥'}" value=""><span class="field-help">${config.apiKeyConfigured ? '密钥已安全保存在服务端，不会回传到浏览器。' : '密钥将通过已验证的服务端网关保存。'}</span></div>` : ''}
-      ${config.supportsModel ? `<div class="integration-field"><label for="model-${config.id}">模型 ID</label><input id="model-${config.id}" data-field="model" type="text" autocomplete="off" placeholder="${config.id === 'openai' ? 'gpt-4o-mini' : config.id === 'anthropic' ? 'claude-3-5-haiku-latest' : '填写服务支持的模型 ID'}" value="${escapeHtml(config.model || '')}"><span class="field-help">按该服务账户实际可用模型填写。</span></div>` : ''}
+      ${config.supportsModel ? modelControl(config) : ''}
       ${config.supportsMethod ? `<div class="integration-field"><label>请求方式</label>${customSelect('requestMethod', config.requestMethod, METHOD_OPTIONS, '请求方式')}</div><div class="integration-field"><label>认证方式</label>${customSelect('auth', config.auth, AUTH_OPTIONS, '认证方式')}</div>` : ''}
     </div></div>
     <div class="integration-card-footer"><div class="integration-message ${escapeHtml(message.type)}" data-message role="status">${escapeHtml(message.text)}</div>
@@ -63,6 +75,7 @@ function collect(card) {
     else if (field === 'enabled') patch.enabled = input.checked;
     else if (field === 'auth') patch.auth = input.value;
     else if (field === 'requestMethod') patch.requestMethod = input.value;
+    else if (field === 'modelPreset') { if (input.value !== '__custom__') patch.model = input.value; }
     else patch[field] = input.value.trim();
   });
   return { id, patch };
@@ -146,7 +159,6 @@ export async function bindIntegrations() {
   });
   const reset = document.getElementById('resetIntegrations');
   if (reset) reset.onclick = async () => {
-    if (!confirm('将删除当前账号已保存的所有 API 与 AI 配置，确定继续吗？')) return;
     try {
       await resetIntegrations();
       messages = {};
