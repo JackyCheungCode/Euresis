@@ -2,9 +2,10 @@ import { state } from './state.js';
 import { renderNav, renderStats, renderStep, goToStep } from './router.js';
 import { showToast } from './components/toast.js';
 import { renderIntegrations, bindIntegrations } from './pages/integrations.js';
+import { loadIntegrations } from './services/integrations.js';
 import { supabase } from './services/supabase.js';
 
-function setView(view) {
+async function setView(view) {
   const workflow = document.getElementById('workflowView');
   const integrations = document.getElementById('integrationsView');
   workflow.hidden = view !== 'workflow';
@@ -15,8 +16,13 @@ function setView(view) {
     button.setAttribute('aria-current', active ? 'page' : 'false');
   });
   if (view === 'integrations') {
-    renderIntegrations();
-    bindIntegrations();
+    try {
+      await loadIntegrations();
+      renderIntegrations();
+      await bindIntegrations();
+    } catch (error) {
+      document.getElementById('integrationCards').innerHTML = '<div class="notification warning">' + String(error.message || '无法加载配置') + '</div>';
+    }
   }
   document.title = view === 'integrations' ? 'API 与 AI 集成 · Euresis' : 'Euresis · AI Growth Workspace';
 }
@@ -71,7 +77,7 @@ function init() {
     else showToast('已完成所有步骤，可导出结果');
   });
   document.getElementById('btnRerun').addEventListener('click', () => {
-    showToast('当前仍为演示数据；配置 API 后可接入真实服务');
+    showToast('请选择当前阶段的操作；已配置服务将通过安全网关调用');
   });
   document.addEventListener('click', event => {
     const row = event.target.closest('tr[data-record-row]');
@@ -87,6 +93,7 @@ function init() {
     }
   });
   setView('workflow');
+  document.addEventListener('euresis:leads-updated', async () => { renderStats(); await renderStep(); });
 }
 let initialized = false;
 let signupMode = false;
