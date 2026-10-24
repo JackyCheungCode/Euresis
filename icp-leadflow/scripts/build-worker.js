@@ -4,6 +4,9 @@ import path from 'node:path';
 const files = [
   'index.html',
   'src/styles/carbon.css',
+  'src/services/supabase.js',
+  'src/data/icp-options.js',
+  'src/components/stage.js',
   'src/main.js',
   'src/services/integrations.js',
   'src/pages/integrations.js',
