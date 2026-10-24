@@ -20,7 +20,7 @@ export function renderNav() {
   const nav = document.getElementById('stepsNav');
   nav.innerHTML = state.steps.map(s => `
     <button type="button" class="cds-progress-step ${s.id === state.currentStep ? 'active' : ''} ${s.id < state.currentStep ? 'completed' : ''}" data-step="${s.id}" aria-current="${s.id === state.currentStep ? 'step' : 'false'}">
-      <span class="cds-progress-marker" aria-hidden="true">${s.id < state.currentStep ? '✓' : s.id + 1}</span>
+      <span class="cds-progress-marker" aria-hidden="true">${s.id < state.currentStep ? '✓' : s.id + 2}</span>
       <span class="cds-progress-copy"><span class="cds-progress-label">${s.label}</span><span class="cds-progress-description">${s.desc}</span></span>
     </button>`).join('');
 
