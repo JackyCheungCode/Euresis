@@ -69,6 +69,13 @@ function init() {
   renderStats();
   renderNav();
   renderStep();
+  const appShell = document.getElementById('appShell');
+  const sidebarToggle = document.getElementById('sidebarToggle');
+  if (window.matchMedia('(max-width: 600px)').matches) {
+    appShell.classList.add('sidebar-collapsed');
+    sidebarToggle.setAttribute('aria-expanded', 'false');
+    sidebarToggle.setAttribute('aria-label', '展开侧边栏');
+  }
   document.getElementById('sidebarToggle').addEventListener('click', () => {
     const shell = document.getElementById('appShell');
     const collapsed = shell.classList.toggle('sidebar-collapsed');
@@ -76,7 +83,14 @@ function init() {
     document.getElementById('sidebarToggle').setAttribute('aria-label', collapsed ? '展开侧边栏' : '收起侧边栏');
   });
   document.querySelectorAll('[data-view]').forEach(button => {
-    button.addEventListener('click', () => setView(button.dataset.view));
+    button.addEventListener('click', () => {
+      setView(button.dataset.view);
+      if (window.matchMedia('(max-width: 600px)').matches) {
+        appShell.classList.add('sidebar-collapsed');
+        sidebarToggle.setAttribute('aria-expanded', 'false');
+        sidebarToggle.setAttribute('aria-label', '展开侧边栏');
+      }
+    });
   });
   document.getElementById('btnPrev').addEventListener('click', () => {
     if (state.currentStep > 0) goToStep(state.currentStep - 1);
