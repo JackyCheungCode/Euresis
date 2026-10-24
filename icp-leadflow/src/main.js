@@ -76,10 +76,12 @@ function init() {
   });
   document.getElementById('btnNext').addEventListener('click', () => {
     if (state.currentStep < state.totalSteps - 1) goToStep(state.currentStep + 1);
-    else showToast('已完成所有步骤，可导出结果');
+    else showToast('已完成所有步骤，可在数据库中查看处理结果');
   });
   document.getElementById('btnRerun').addEventListener('click', () => {
-    showToast('请选择当前阶段的操作；已配置服务将通过安全网关调用');
+    const action = document.querySelector('#stepContainer [data-run-stage], #stepContainer #discoverLeads, #stepContainer #saveIcpFields');
+    if (action && !action.disabled) action.click();
+    else showToast('当前阶段暂无可重新运行的操作');
   });
   document.addEventListener('click', event => {
     const row = event.target.closest('tr[data-record-row]');
