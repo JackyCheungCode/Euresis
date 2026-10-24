@@ -1,46 +1,30 @@
-export const leads = [
-  {
-    domain: 'solardist.de', title: 'SolarDist GmbH — Photovoltaic Distributor',
-    source: 'Q1', region: 'DE', status: 'scraped',
-    icp: true, size: '50-200', revenue: '$5M-50M', type: '分销商',
-    hiring: true, funding: true, whatsapp: true,
-    facebook: 'fb.com/solardist', phone: '+493012345678', email: 'info@solardist.de',
-    phoneSource: 'apollo', lineType: 'mobile', waRegistered: true, waName: 'SolarDist GmbH',
-    address: 'Berlin, DE', emailStatus: 'valid',
-    fundingRound: 'Series A', fundingRaised: '$5,000,000', growth: '+12%', glassdoor: '4.2',
-    route: 'whatsapp+email',
-  },
-  {
-    domain: 'pvhandel-nord.de', title: 'PV Handel Nord — Ihr Reseller',
-    source: 'Q1', region: 'DE', status: 'scraped',
-    icp: true, size: '20-50', revenue: '$2M-5M', type: '经销商',
-    hiring: 'unknown', funding: false, whatsapp: true,
-    facebook: 'fb.com/pvhandelnord', phone: '+494022334455', email: 'kontakt@pvhandel-nord.de',
-    phoneSource: 'apollo', lineType: 'mobile', waRegistered: true, waName: 'PV Handel Nord',
-    address: 'Hamburg, DE', emailStatus: 'valid',
-    fundingRound: '未披露', fundingRaised: '—', growth: '+8%', glassdoor: '3.9',
-    route: 'whatsapp+email',
-  },
-  {
-    domain: 'sonnenkraft-berlin.de', title: 'Sonnenkraft Berlin · Vertriebspartner',
-    source: 'Q2', region: 'DE', status: 'scraped',
-    icp: true, size: '50-200', revenue: '$5M-50M', type: '系统集成',
-    hiring: true, funding: true, whatsapp: false,
-    facebook: 'fb.com/sonnenkraft', phone: '+493055667788', email: 'hello@sonnenkraft-berlin.de',
-    phoneSource: 'clay', lineType: 'landline', waRegistered: null, waName: '—',
-    address: 'Berlin, DE', emailStatus: 'accept-all',
-    fundingRound: 'Seed', fundingRaised: '$1,200,000', growth: '+20%', glassdoor: '4.5',
-    route: 'phone+manual',
-  },
-  {
-    domain: 'energiespeicher-muenchen.de', title: 'Energiespeicher München GmbH',
-    source: 'Q1', region: 'DE', status: 'pending',
-    icp: 'unknown', size: 'Unknown', revenue: 'Unknown', type: 'Unknown',
-    hiring: false, funding: false, whatsapp: false,
-    facebook: '—', phone: '+498912345678', email: 'info@es-muenchen.de',
-    phoneSource: 'apollo', lineType: 'mobile', waRegistered: false, waName: '—',
-    address: 'München, DE', emailStatus: 'valid',
-    fundingRound: '未披露', fundingRaised: '—', growth: '0%', glassdoor: '3.1',
-    route: 'phone+email',
-  },
-];
+import { supabase } from '../services/supabase.js';
+
+export const leads = [];
+export async function loadLeads() {
+  const { data: { user }, error: userError } = await supabase.auth.getUser();
+  if (userError || !user) { leads.splice(0, leads.length); return leads; }
+  const { data, error } = await supabase.from('leads').select('*').eq('user_id', user.id).order('created_at', { ascending: false }).limit(1000);
+  if (error) throw error;
+  const mapped = (data || []).map(row => {
+    const extra = row.data || {};
+    let domain = row.website || '';
+    try { domain = new URL(domain.startsWith('http') ? domain : 'https://' + domain).hostname; } catch {}
+    return {
+      id: row.id, userId: row.user_id, domain, title: row.company_name || domain || '未命名企业',
+      source: row.source || 'manual', region: row.country_region || '—', status: row.status || 'new',
+      icp: extra.icp_match ?? null, size: row.employee_range || '—', revenue: extra.revenue || '—',
+      type: row.company_type || '—', hiring: extra.hiring ?? null, funding: extra.funding ?? null,
+      whatsapp: extra.whatsapp ?? null, facebook: extra.facebook || '—', phone: row.phone || '—',
+      email: row.email || '—', phoneSource: extra.phoneSource || '—', lineType: extra.lineType || '—',
+      waRegistered: extra.waRegistered ?? null, waName: extra.waName || '—', address: extra.address || '—',
+      emailStatus: extra.emailStatus || 'pending', fundingRound: extra.fundingRound || '—',
+      fundingRaised: extra.fundingRaised || '—', growth: extra.growth || '—', glassdoor: extra.glassdoor || '—',
+      route: extra.route || '待分流', companyName: row.company_name, website: row.website, industry: row.industry,
+      employeeRange: row.employee_range, companyType: row.company_type, contactName: row.contact_name,
+      contactTitle: row.contact_title, score: row.score, data: extra, createdAt: row.created_at,
+    };
+  });
+  leads.splice(0, leads.length, ...mapped);
+  return leads;
+}
