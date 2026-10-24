@@ -13,6 +13,7 @@ const AUTH_OPTIONS = [
   { value: 'none', label: '无认证' },
 ];
 const METHOD_OPTIONS = ['GET','POST','PUT','PATCH','DELETE','HEAD'].map(value => ({ value, label: value }));
+const METHOD_LABELS = { tavily: 'POST', serper: 'POST', openai: 'GET / POST', anthropic: 'POST', apollo: 'GET / POST', hunter: 'GET', apify: 'GET / POST', n8n: 'POST' };
 const MODEL_OPTIONS = {
   openai: ['gpt-4o','gpt-4o-mini','gpt-4.1','gpt-4.1-mini','o3','o4-mini','自定义模型 ID'],
   anthropic: ['claude-sonnet-4-20250514','claude-3-7-sonnet-latest','claude-3-5-haiku-latest','claude-opus-4-1','自定义模型 ID'],
@@ -46,6 +47,7 @@ function renderCard(config) {
     <div class="integration-card-body"><div class="integration-form-grid">
       <div class="integration-field full"><label for="endpoint-${config.id}">API 端点 URL</label><input id="endpoint-${config.id}" data-field="endpoint" type="url" autocomplete="url" required placeholder="https://api.example.com/..." value="${escapeHtml(config.endpoint)}"><span class="field-help">${config.id === 'openai' ? '填写 API 基础地址，例如 https://api.openai.com/v1。' : config.id === 'custom' ? '填写 OpenAI 兼容服务地址；自定义请求方式由下方配置。' : '此服务的专用端点。生产环境仅允许 HTTPS。'}</span></div>
       ${config.supportsKey ? `<div class="integration-field"><label for="key-${config.id}">API Key / Token</label><input id="key-${config.id}" data-field="apiKey" type="password" autocomplete="new-password" placeholder="${config.apiKeyConfigured ? '已在服务端保存；留空保持不变' : '粘贴服务密钥'}" value=""><span class="field-help">${config.apiKeyConfigured ? '密钥已安全保存在服务端，不会回传到浏览器。' : '密钥将通过已验证的服务端网关保存。'}</span></div>` : ''}
+      ${!config.supportsMethod ? `<div class="integration-field"><label>请求方式</label><div class="method-fixed"><strong>${METHOD_LABELS[config.id] || config.requestMethod}</strong><span>按服务 API 协议执行</span></div></div>` : ''}
       ${config.supportsModel ? modelControl(config) : ''}
       ${config.supportsMethod ? `<div class="integration-field"><label>请求方式</label>${customSelect('requestMethod', config.requestMethod, METHOD_OPTIONS, '请求方式')}</div><div class="integration-field"><label>认证方式</label>${customSelect('auth', config.auth, AUTH_OPTIONS, '认证方式')}</div>` : ''}
     </div></div>
