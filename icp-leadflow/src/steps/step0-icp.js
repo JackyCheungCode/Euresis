@@ -30,7 +30,7 @@ function renderSelect(key, options, selected, label) {
   </div>`;
 }
 const DEFAULT_DOMAIN_BLACKLIST = 'alibaba.com, 1688.com, made-in-china.com, globalsources.com, china.cn, ec21.com, tradekey.com, dhgate.com, europages.com, kompass.com, thomasnet.com, indiamart.com, tradeindia.com, exportersindia.com, ecplaza.net, go4worldbusiness.com, linkedin.com, facebook.com, twitter.com, x.com, instagram.com, pinterest.com, tiktok.com, reddit.com, quora.com, medium.com, tumblr.com, weibo.com, youtube.com, vimeo.com, dailymotion.com, bilibili.com, twitch.tv, amazon.com, ebay.com, walmart.com, etsy.com, aliexpress.com, temu.com, wish.com, rakuten.com, crunchbase.com, zoominfo.com, dnb.com, bloomberg.com, owler.com, apollo.io, lusha.com, yelp.com, yellowpages.com, manta.com, bbb.org, trustpilot.com, glassdoor.com, wikipedia.org, wikidata.org, indeed.com, monster.com, ziprecruiter.com, simplyhired.com, 51job.com, zhaopin.com, eventbrite.com, 10times.com, prnewswire.com, businesswire.com, globenewswire.com, blogspot.com, wordpress.com, substack.com, craigslist.org, google.com, microsoft.com, apple.com, adobe.com, salesforce.com, hubspot.com, zoom.us, dropbox.com';
-const MULTI_FIELDS = new Set(['行业 / 细分领域','目标职位','部门','排除行业','排除公司类型','排除规模','招聘信号','扩张信号','融资信号','技术变更信号']);
+const MULTI_FIELDS = new Set(['行业 / 细分领域','目标职位','部门','排除行业','排除公司类型','排除规模','招聘信号','扩张信号','融资信号','技术变更信号','商业模式','产品 / 服务类别','目标客户市场','销售覆盖区域','核心痛点','解决方案需求','购买意向行为','产品发布信号','预期成果']);
 const REGIONS = {'北美':['加拿大','美国','墨西哥'],'东南亚':['文莱','柬埔寨','印度尼西亚','老挝','马来西亚','缅甸','菲律宾','新加坡','泰国','东帝汶','越南'],'东亚':['中国大陆','中国澳门','中国香港','中国台湾','日本','韩国','朝鲜','蒙古'],'南亚':['阿富汗','孟加拉国','不丹','印度','马尔代夫','尼泊尔','巴基斯坦','斯里兰卡'],'欧洲':['奥地利','比利时','丹麦','芬兰','法国','德国','希腊','爱尔兰','意大利','荷兰','挪威','波兰','葡萄牙','西班牙','瑞典','瑞士','英国'],'中东':['巴林','伊朗','伊拉克','以色列','约旦','科威特','阿曼','卡塔尔','沙特阿拉伯','土耳其','阿联酋'],'拉丁美洲':['阿根廷','巴西','智利','哥伦比亚','秘鲁','乌拉圭'],'非洲':['阿尔及利亚','埃及','加纳','肯尼亚','摩洛哥','尼日利亚','南非']};
 function renderMultiSelect(key, options, label) {
  const normalized=options.map(o=>({value:String(optionValue(o)),label:optionLabel(o),flag:typeof o==='object'?o.flag:null}));
@@ -65,13 +65,13 @@ function queryPreview(root) {
   const format = items => items.length
     ? items.map(item => `${item.label}：${item.value}`).join('；')
     : '';
-  const companyTerms = [...(selections[0] || []), ...(selections[2] || [])];
+  const companyTerms = selections.flatMap((items, index) => [1, 3, 6].includes(index) ? [] : items);
   const company = root.querySelector('[data-query-preview]');
   const persona = root.querySelector('[data-persona-preview]');
   const exclusion = root.querySelector('[data-exclusion-preview]');
   if (company) company.textContent = format(companyTerms) || '选择行业、国家/地区、规模或购买信号后，实时生成筛选条件';
   if (persona) persona.textContent = format(selections[1] || []) || '选择目标职位、决策权限、部门或资历层级';
-  if (exclusion) exclusion.textContent = format(selections[3] || []) || '选择需要排除的行业、地域、规模或状态';
+  if (exclusion) exclusion.textContent = format([...(selections[3] || []), ...(selections[6] || [])]) || '选择需要排除的行业、地域、规模、数据质量或合规条件';
 }
 export function renderStep0() {
   const layersHtml = icpLayers.map((layer, i) => `
@@ -92,9 +92,9 @@ export function renderStep0() {
     ['排除规则', 'data-exclusion-preview'],
   ];
   return `
-    <div class="notification"><span class="notif-icon" aria-hidden="true">i</span><div>定义你的目标客户标准。行业、员工区间、公司类型、国家/地区及其余可枚举字段均使用 Carbon 风格自定义选择器；保存后将写入当前账号的 Supabase 数据库。</div></div>
+    <div class="notification"><span class="notif-icon" aria-hidden="true">i</span><div>以企业筛选、购买委员会、实时触发信号、商业匹配度、需求痛点、数据质量与评分反馈定义理想客户。枚举字段采用 Carbon 风格控件；保存后写入当前账号的 Supabase 数据库。</div></div>
     <section class="icp-definition-section" aria-labelledby="icpDefinitionTitle">
-      <div class="icp-section-heading"><div><h2 id="icpDefinitionTitle">ICP 定义</h2><p>四层筛选条件 · 按需选择，无需手动输入</p></div><div class="icp-section-actions"><button class="btn btn-ghost btn-sm" type="button" id="resetIcpFields">清空条件</button><button class="btn btn-primary btn-sm" type="button" id="saveIcpFields">保存 ICP</button></div></div>
+      <div class="icp-section-heading"><div><h2 id="icpDefinitionTitle">ICP 定义</h2><p>八层筛选条件 · 企业属性、联系人、触发信号、商业匹配、需求痛点、数据质量与评分优化</p></div><div class="icp-section-actions"><button class="btn btn-ghost btn-sm" type="button" id="resetIcpFields">清空条件</button><button class="btn btn-primary btn-sm" type="button" id="saveIcpFields">保存 ICP</button></div></div>
       <div class="stage-progress" data-icp-progress hidden aria-live="polite"><div class="stage-progress-heading"><span data-icp-progress-label>等待保存</span><strong data-icp-progress-percent>0%</strong></div><div class="stage-progress-track" role="progressbar" aria-label="ICP 保存任务进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" data-icp-progressbar><span data-icp-progress-fill></span></div><p class="stage-progress-detail" data-icp-progress-detail>等待执行</p></div>
       ${layersHtml}
     </section>
