@@ -848,3 +848,7 @@ button, input, textarea { touch-action: manipulation; }
   .discover-panel .panel-header .btn { width: 100%; justify-content: center; }
   .cds-select-menu { max-height: 45dvh; }
 }
+
+body:not(.authenticated) .global-header, body:not(.authenticated) .app-shell { display: none !important; }
+body:not(.authenticated) .auth-gate { display: grid; }
+body.authenticated .auth-gate { display: none; }
