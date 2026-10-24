@@ -41,19 +41,35 @@ export function renderStagePage(stage) {
   const providerHint = config.provider ? `需要已启用的 ${config.provider} 服务。请先在侧边栏「API 与 AI 集成」保存并测试连接。` : '按数据库中的真实联系人字段生成路由规则。';
   return `
     <div class="notification"><span class="notif-icon">i</span><div>${escapeHtml(config.desc)}</div></div>
-    <section class="panel stage-action-panel"><div class="panel-header"><div><h2>${escapeHtml(config.title)}</h2><p class="panel-meta">${escapeHtml(providerHint)}</p></div><button class="btn btn-primary btn-sm" type="button" data-run-stage="${stage}" ${leads.length ? '' : 'disabled'}>${escapeHtml(config.action)}</button></div><div class="panel-body"><p class="field-help" data-stage-message>当前账号共有 ${leads.length} 条线索；每次最多处理 10 条，失败记录会保留并显示原因。</p></div></section>
+    <section class="panel stage-action-panel"><div class="panel-header"><div><h2>${escapeHtml(config.title)}</h2><p class="panel-meta">${escapeHtml(providerHint)}</p></div><button class="btn btn-primary btn-sm" type="button" data-run-stage="${stage}" ${leads.length ? '' : 'disabled'}>${escapeHtml(config.action)}</button></div><div class="panel-body"><p class="field-help" data-stage-message>当前账号共有 ${leads.length} 条线索；每次最多处理 10 条，失败记录会保留并显示原因。</p><div class="stage-progress" data-stage-progress hidden aria-live="polite"><div class="stage-progress-heading"><span data-stage-progress-label>等待任务开始</span><strong data-stage-progress-percent>0%</strong></div><div class="stage-progress-track" role="progressbar" aria-label="当前节点任务进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" data-stage-progressbar><span data-stage-progress-fill></span></div><p class="stage-progress-detail" data-stage-progress-detail>等待执行</p></div></div></section>
     ${panelNoPad(config.title + ' · 结果记录', rows.length ? table(config.columns, rows, config.title) : empty, `${leads.length} 条数据库记录`)}
   `;
 }
 export function bindStagePage(root, stage) {
   const button = root.querySelector('[data-run-stage]');
   const message = root.querySelector('[data-stage-message]');
+  const progress = root.querySelector('[data-stage-progress]');
+  const progressBar = root.querySelector('[data-stage-progressbar]');
+  const progressFill = root.querySelector('[data-stage-progress-fill]');
+  const progressLabel = root.querySelector('[data-stage-progress-label]');
+  const progressPercent = root.querySelector('[data-stage-progress-percent]');
+  const progressDetail = root.querySelector('[data-stage-progress-detail]');
+  const updateProgress = (percent, label, detail) => {
+    const value = Math.max(0, Math.min(100, Math.round(percent)));
+    if (progress) progress.hidden = false;
+    if (progressFill) progressFill.style.width = value + '%';
+    if (progressBar) progressBar.setAttribute('aria-valuenow', String(value));
+    if (progressPercent) progressPercent.textContent = value + '%';
+    if (progressLabel) progressLabel.textContent = label;
+    if (progressDetail) progressDetail.textContent = detail;
+  };
   button?.addEventListener('click', async () => {
     button.disabled = true;
     const config = STAGES[stage];
     let runId = null;
     button.textContent = '处理中…';
     message.textContent = '正在连接 Supabase 并处理线索…';
+    updateProgress(0, '正在启动节点任务', '验证登录状态、检查服务配置并读取待处理线索');
     try {
       const { data: { user }, error: authError } = await supabase.auth.getUser();
       if (authError || !user) throw new Error('登录会话已失效，请重新登录');
@@ -68,6 +84,7 @@ export function bindStagePage(root, stage) {
       if (runError) throw runError;
       runId = runRow.id;
       const batch = leads.slice(0, 10);
+      updateProgress(0, '开始处理线索', `共 ${batch.length} 条任务，正在处理第 0/${batch.length} 条`);
       let success = 0;
       const errors = [];
       for (let index = 0; index < batch.length; index++) {
@@ -119,10 +136,13 @@ export function bindStagePage(root, stage) {
           const { error: saveError } = await supabase.from('leads').update({ data: { ...data, stage_errors: { ...(data.stage_errors || {}), [stage]: error.message || '处理失败' } }, updated_at: new Date().toISOString() }).eq('id', lead.id).eq('user_id', user.id);
           if (saveError) console.error(saveError);
         }
+        const percent = Math.round(((index + 1) / batch.length) * 100);
         message.textContent = `处理进度 ${index + 1}/${batch.length}；成功 ${success} 条。`;
+        updateProgress(percent, `正在执行：${config.title}`, `已处理 ${index + 1}/${batch.length} 条 · 成功 ${success} 条 · 失败 ${errors.length} 条`);
       }
       await loadLeads();
       message.textContent = `处理结束：成功 ${success} 条，失败 ${errors.length} 条。` + (errors.length ? ' 首个错误：' + errors[0] : '');
+      updateProgress(100, errors.length ? '任务已结束（含失败项）' : '任务已完成', `总计 ${batch.length} 条 · 成功 ${success} 条 · 失败 ${errors.length} 条`);
       await supabase.from('workflow_runs').update({ status: errors.length && !success ? 'failed' : 'completed', output: { success, failed: errors.length, errors: errors.slice(0, 20) }, updated_at: new Date().toISOString() }).eq('id', runId).eq('user_id', user.id);
       showToast(`${config.action}完成：成功 ${success} 条，失败 ${errors.length} 条`);
       document.dispatchEvent(new CustomEvent('euresis:leads-updated'));
@@ -132,6 +152,7 @@ export function bindStagePage(root, stage) {
         if (user) await supabase.from('workflow_runs').update({ status: 'failed', error_message: error.message || '阶段处理失败', updated_at: new Date().toISOString() }).eq('id', runId).eq('user_id', user.id);
       }
       message.textContent = error.message || '阶段处理失败';
+      updateProgress(100, '任务失败', error.message || '阶段处理失败');
       showToast('处理失败：' + (error.message || '未知错误'));
     } finally {
       button.disabled = false;
