@@ -46,11 +46,15 @@ export function resetIntegrations() {
 }
 function authHeaders(config) {
   const headers = { Accept: 'application/json' };
-  if (config.id === 'serper') headers['X-API-KEY'] = config.apiKey;
-  else if (config.id === 'anthropic') {
+  if (!config.apiKey || config.auth === 'none') return headers;
+  if (config.auth === 'x-api-key') headers['X-API-KEY'] = config.apiKey;
+  else if (config.auth === 'query-key') return headers;
+  else headers.Authorization = 'Bearer ' + config.apiKey;
+  if (config.id === 'anthropic') {
     headers['x-api-key'] = config.apiKey;
     headers['anthropic-version'] = '2023-06-01';
-  } else if (config.id !== 'hunter' && config.apiKey) headers.Authorization = 'Bearer ' + config.apiKey;
+    delete headers.Authorization;
+  }
   return headers;
 }
 function endpointFor(config, path = '') {
