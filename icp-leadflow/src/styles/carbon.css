@@ -803,3 +803,48 @@ button, input, textarea { touch-action: manipulation; }
   .app-shell:not(.sidebar-collapsed) .side-nav .side-nav-note span:not(.status-dot) { display: inline; }
   .app-shell:not(.sidebar-collapsed) .side-nav .side-nav-footer { display: block; }
 }
+
+/* Production auth + Carbon select finishing */
+.global-header[hidden], .app-shell[hidden] { display: none !important; }
+.header-logout { border: 0; background: transparent; color: #f4f4f4; padding: .5rem .75rem; font: inherit; cursor: pointer; }
+.header-logout:hover { background: #393939; }
+.auth-gate { min-height: 100dvh; display: grid; place-items: center; padding: 1.25rem; background: #f4f4f4; }
+.auth-gate[hidden] { display: none !important; }
+.auth-card { width: min(28rem, 100%); background: #fff; border-top: 4px solid #0f62fe; padding: clamp(1.25rem, 5vw, 2.5rem); box-shadow: 0 2px 6px rgba(0,0,0,.12); display: flex; flex-direction: column; gap: .75rem; }
+.auth-eyebrow { color: #0f62fe; font-size: .75rem; font-weight: 600; letter-spacing: .12em; }
+.auth-card h1 { font-size: 1.75rem; font-weight: 400; margin: .25rem 0; }
+.auth-copy, .auth-footnote { color: #6f6f6f; font-size: .8125rem; line-height: 1.5; }
+.auth-card label { margin-top: .5rem; font-size: .75rem; color: #525252; }
+.auth-submit { width: 100%; justify-content: center; margin-top: .75rem; min-height: 3rem; }
+.auth-mode-toggle { padding: .75rem 0; border: 0; background: transparent; color: #0f62fe; font: inherit; cursor: pointer; text-align: center; }
+.auth-message { min-height: 1.25rem; color: #198038; font-size: .8125rem; overflow-wrap: anywhere; }
+.auth-message.error { color: #da1e28; }
+.auth-footnote { border-top: 1px solid #e0e0e0; padding-top: .875rem; margin-top: .25rem; }
+.icp-carbon-select { width: 100%; min-width: 0; }
+.cds-select-trigger { display: flex; align-items: center; justify-content: space-between; gap: .75rem; width: 100%; min-width: 0; min-height: 2.5rem; padding: .5rem .75rem; border: 0; border-bottom: 1px solid #8d8d8d; background: #f4f4f4; color: #161616; text-align: left; font: inherit; cursor: pointer; }
+.cds-select-trigger:hover { background: #e8e8e8; }
+.cds-select-trigger:focus-visible { outline: 2px solid #0f62fe; outline-offset: -2px; }
+.cds-select-current { display: flex; align-items: center; min-width: 0; gap: .5rem; overflow-wrap: anywhere; }
+.cds-select-chevron { flex: 0 0 auto; color: #525252; }
+.cds-select-menu { position: absolute; z-index: 1200; left: 0; right: 0; top: calc(100% + 1px); max-height: min(19rem, 55dvh); overflow: auto; background: #fff; border: 1px solid #c6c6c6; box-shadow: 0 4px 12px rgba(0,0,0,.18); }
+.cds-select-menu[hidden] { display: none !important; }
+.cds-select { position: relative; }
+.cds-select-option { display: flex; align-items: center; gap: .625rem; width: 100%; min-height: 2.5rem; padding: .5rem .75rem; border: 0; background: #fff; color: #161616; font: inherit; font-size: .875rem; text-align: left; cursor: pointer; }
+.cds-select-option:hover, .cds-select-option[aria-selected="true"] { background: #e8e8e8; }
+.cds-select-option[aria-selected="true"]::after { content: "✓"; margin-left: auto; color: #0f62fe; font-weight: 600; }
+.flag-circle { width: 1.35rem; height: 1.35rem; display: inline-flex; align-items: center; justify-content: center; flex: 0 0 1.35rem; border-radius: 50%; background: #f4f4f4; font-size: 1rem; line-height: 1; overflow: hidden; }
+.icp-field-grid { align-items: start; }
+.icp-field { position: relative; }
+.icp-field label { display: block; }
+.empty-state { padding: 2rem 1.25rem; color: #525252; background: #f4f4f4; }
+.empty-state h3 { margin-bottom: .5rem; font-size: 1rem; color: #161616; }
+.empty-state p { max-width: 52rem; line-height: 1.55; }
+.discover-panel .panel-header { align-items: center; gap: 1rem; }
+.discover-panel .panel-header p { margin-top: .25rem; }
+@media (max-width: 600px) {
+  .header-logout { padding-inline: .4rem; font-size: .75rem; }
+  .auth-card { padding: 1.25rem; }
+  .discover-panel .panel-header { align-items: flex-start; flex-direction: column; }
+  .discover-panel .panel-header .btn { width: 100%; justify-content: center; }
+  .cds-select-menu { max-height: 45dvh; }
+}
