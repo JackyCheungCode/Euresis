@@ -179,6 +179,9 @@ function updateAuthMode() {
 }
 function initAuth() {
   const form = document.getElementById('authForm');
+  const submitButton = document.getElementById('authSubmit');
+  // Carbon buttons render their native button inside Shadow DOM; bridge form submission explicitly.
+  submitButton.addEventListener('click', () => form.requestSubmit());
   document.getElementById('authModeToggle').addEventListener('click', () => {
     signupMode = !signupMode;
     updateAuthMode();
