@@ -34,7 +34,7 @@ export function bindStagePage(root,stage){
  const updateSelection=()=>{const ids=selectedIds();button.disabled=ids.length===0;button.textContent=c.action+'（已选 '+ids.length+'）';};
  root.querySelectorAll('[data-select-lead]').forEach(el=>el.addEventListener('cds-checkbox-changed',updateSelection));
  root.querySelector('[data-select-visible]')?.addEventListener('cds-checkbox-changed',event=>{root.querySelectorAll('[data-select-lead]').forEach(el=>el.checked=event.target.checked);updateSelection();});
- const updateProgress=(n,title,desc)=>{const v=Math.max(0,Math.min(100,Math.round(n)));progress.hidden=false;if(bar)bar.setAttribute('description',title+' · '+desc);percent.textContent=v+'%';label.textContent=title;detail.textContent=desc;};
+ const updateProgress=(n,title,desc)=>{const v=Math.max(0,Math.min(100,Math.round(n)));progress.hidden=false;if(bar){bar.setAttribute('description',title+' · '+desc);bar.setAttribute('status',v<100?'active':title.includes('失败')?'error':'finished');}percent.textContent=v+'%';label.textContent=title;detail.textContent=desc;};
  async function refreshLogs(){const {data:{user}}=await supabase.auth.getUser();if(!user)return;const {data,error}=await supabase.from('lead_activity_logs').select('id,lead_id,action,provider,status,input,output,error_message,started_at,completed_at,created_at').eq('user_id',user.id).order('created_at',{ascending:false}).limit(20);const tbody=root.querySelector('[data-stage-logs]');if(tbody)tbody.innerHTML=error?'<cds-table-row><cds-table-cell colspan="9">日志读取失败：'+esc(error.message)+'</cds-table-cell></cds-table-row>':renderLogRows(data);}
  async function runSelected(ids){
   if(busy)return;
