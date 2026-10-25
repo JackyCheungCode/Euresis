@@ -42,7 +42,7 @@ function renderCard(config) {
     <div class="integration-card-header">
       <div class="integration-icon" aria-hidden="true">${escapeHtml(config.icon)}</div>
       <div class="integration-title"><h3>${escapeHtml(config.name)}</h3><p>${escapeHtml(config.category)} · ${escapeHtml(config.description)}</p></div>
-      <cds-toggle data-field="enabled" label-text="启用此服务" on-text="启用" off-text="停用" ${config.enabled ? 'checked' : ''}></cds-toggle>
+      <cds-toggle data-field="enabled" label-text="启用此服务" label-a="启用" label-b="停用" ${config.enabled ? 'checked' : ''}></cds-toggle>
     </div>
     <div class="integration-card-body"><div class="integration-form-grid">
       <div class="integration-field full"><label for="endpoint-${config.id}">API 端点 URL</label><cds-text-input id="endpoint-${config.id}" data-field="endpoint" type="url" autocomplete="url" required placeholder="https://api.example.com/..." value="${escapeHtml(config.endpoint)}" aria-label="https://api.example.com/..."></cds-text-input><span class="field-help">${config.id === 'openai' ? '填写 API 基础地址，例如 https://api.openai.com/v1。' : config.id === 'custom' ? '填写 OpenAI 兼容服务地址；自定义请求方式由下方配置。' : '此服务的专用端点。生产环境仅允许 HTTPS。'}</span></div>
