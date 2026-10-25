@@ -45,7 +45,7 @@ function renderCard(config) {
       ${config.supportsModel ? modelControl(config) : ''}
       ${config.supportsMethod ? `<div class="integration-field"><label>请求方式</label>${customSelect('requestMethod', config.requestMethod, METHOD_OPTIONS, '请求方式')}</div><div class="integration-field"><label>认证方式</label>${customSelect('auth', config.auth, AUTH_OPTIONS, '认证方式')}</div>` : ''}
     </div></div>
-    <div class="integration-card-footer"><div class="integration-message ${escapeHtml(message.type)}" data-message role="status">${escapeHtml(message.text)}</div>
+    <div class="integration-card-footer"><cds-inline-notification class="integration-message ${escapeHtml(message.type)}" data-message role="status" kind="${message.type === 'success' ? 'success' : message.type === 'error' ? 'error' : 'info'}" title="连接状态" subtitle="${escapeHtml(message.text)}" hide-close-button></cds-inline-notification>
       <div class="integration-footer-actions"><cds-button class="btn btn-ghost btn-sm" type="button" data-action="test" ${busy.has(config.id) ? 'disabled' : ''} kind="ghost" size="sm">${busy.has(config.id) ? '测试中…' : '测试连接'}</cds-button><cds-button class="btn btn-primary btn-sm" type="button" data-action="save" kind="primary" size="sm">保存配置</cds-button></div>
     </div>
   </cds-tile>`;
@@ -58,7 +58,7 @@ export function renderIntegrations() {
     ['服务适配器', configs.length, '已注册连接器'],
     ['已启用', enabled, '保存至 Supabase'],
     ['已配置凭据', withKey, '密钥只在服务端保存'],
-  ].map(([label, value, note]) => `<div class="integration-summary-card"><div class="integration-summary-label">${label}</div><div class="integration-summary-value">${value}</div><div class="field-help">${note}</div></div>`).join('');
+  ].map(([label, value, note]) => `<cds-tile class="integration-summary-card"><div class="integration-summary-label">${label}</div><div class="integration-summary-value">${value}</div><div class="field-help">${note}</div></cds-tile>`).join('');
   document.getElementById('integrationCards').innerHTML = configs.map(renderCard).join('');
 }
 function collect(card) {
@@ -78,7 +78,9 @@ function collect(card) {
 }
 function showMessage(card, text, type = '') {
   const node = card.querySelector('[data-message]');
-  node.textContent = text;
+  node.subtitle = text;
+  node.kind = type === 'success' ? 'success' : type === 'error' ? 'error' : 'info';
+  node.open = true;
   node.className = 'integration-message ' + type;
 }
 function bindSelects(root) {
