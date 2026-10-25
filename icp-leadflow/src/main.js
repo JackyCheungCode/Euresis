@@ -180,17 +180,31 @@ function updateAuthMode() {
 function initAuth() {
   const form = document.getElementById('authForm');
   const submitButton = document.getElementById('authSubmit');
-  // Use a native submit button so mobile taps trigger the form's submit event reliably.
-  document.getElementById('authModeToggle').addEventListener('click', () => {
-    signupMode = !signupMode;
-    updateAuthMode();
-  });
-  form.addEventListener('submit', async event => {
-    event.preventDefault();
-    const email = document.getElementById('authEmail').value.trim();
-    const password = document.getElementById('authPassword').value;
-    const submit = document.getElementById('authSubmit');
-    submit.disabled = true;
+  const modeButton = document.getElementById('authModeToggle');
+
+  // Don't let browser-native constraint validation silently prevent the submit handler.
+  form.noValidate = true;
+
+  const authenticate = async event => {
+    event?.preventDefault();
+    const emailInput = document.getElementById('authEmail');
+    const passwordInput = document.getElementById('authPassword');
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+
+    if (!email || !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) {
+      setAuthMessage('请输入有效的邮箱地址。', true);
+      emailInput.focus();
+      return;
+    }
+    if (!password || (!signupMode && password.length < 1) || (signupMode && password.length < 8)) {
+      setAuthMessage(signupMode ? '密码至少需要 8 位字符。' : '请输入密码。', true);
+      passwordInput.focus();
+      return;
+    }
+
+    submitButton.disabled = true;
+    submitButton.textContent = signupMode ? '正在创建账号…' : '正在登录…';
     setAuthMessage(signupMode ? '正在创建账号…' : '正在验证登录信息…');
     try {
       if (signupMode) {
@@ -207,15 +221,26 @@ function initAuth() {
         setAuthenticated(data.session);
       }
     } catch (error) {
-      setAuthMessage(error.message || '身份验证失败', true);
+      setAuthMessage(error?.message || '身份验证失败，请稍后重试。', true);
     } finally {
-      submit.disabled = false;
+      submitButton.disabled = false;
+      submitButton.textContent = signupMode ? '创建账号' : '登录';
     }
+  };
+
+  // Bind both the physical button tap and form submit; either path reaches the same handler.
+  submitButton.addEventListener('click', authenticate);
+  form.addEventListener('submit', authenticate);
+  modeButton.addEventListener('click', () => {
+    signupMode = !signupMode;
+    updateAuthMode();
   });
+
   supabase.auth.getSession().then(({ data, error }) => {
     if (error) setAuthMessage(error.message, true);
     setAuthenticated(data?.session || null);
-  });
+  }).catch(error => setAuthMessage(error?.message || '无法连接身份验证服务。', true));
+
   supabase.auth.onAuthStateChange((_event, session) => setAuthenticated(session));
 }
 initAuth();
