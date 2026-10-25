@@ -58,21 +58,23 @@ function modelSelect() {
   return renderSelect('aiModel', MODELS, selected, '选择 AI 模型');
 }
 function queryPreview(root) {
-  const layers = [...root.querySelectorAll('.icp-layer')];
-  const selections = layers.map(layer => [...layer.querySelectorAll('.icp-field')].map(field => ({
-    label: field.querySelector('label')?.textContent?.trim() || '',
-    value: field.querySelector('[data-icp-field]')?.value || '',
-  })).filter(item => item.value && item.value !== '不限' && item.value !== '不排除'));
-  const format = items => items.length
-    ? items.map(item => `${item.label}：${item.value}`).join('；')
-    : '';
-  const companyTerms = selections.flatMap((items, index) => [1, 3, 6].includes(index) ? [] : items);
-  const company = root.querySelector('[data-query-preview]');
-  const persona = root.querySelector('[data-persona-preview]');
-  const exclusion = root.querySelector('[data-exclusion-preview]');
-  if (company) company.textContent = format(companyTerms) || '选择行业、国家/地区、规模或购买信号后，实时生成筛选条件';
-  if (persona) persona.textContent = format(selections[1] || []) || '选择目标职位、决策权限、部门或资历层级';
-  if (exclusion) exclusion.textContent = format([...(selections[3] || []), ...(selections[6] || [])]) || '选择需要排除的行业、地域、规模、数据质量或合规条件';
+  const layers=[...root.querySelectorAll('.icp-layer')];
+  const selections=layers.map(layer=>[...layer.querySelectorAll('.icp-field')].map(field=>({label:field.querySelector('label')?.textContent?.trim()||'',value:field.querySelector('[data-icp-field]')?.value||''})).filter(item=>item.value&&item.value!=='不限'&&item.value!=='不排除'));
+  const format=items=>items.length?items.map(item=>item.label+'：'+item.value).join('；'):'';
+  const values=(layer,index)=>String(layers[layer]?.querySelectorAll('.icp-field')[index]?.querySelector('[data-icp-field]')?.value||'').split(/[,;\n]+/).map(v=>v.trim()).filter(v=>v&&v!=='不限'&&v!=='不排除');
+  const phrase=arr=>arr.length?'('+arr.map(v=>'"'+v.replace(/"/g,'\\"')+'"').join(' OR ')+')':'';
+  const industry=values(0,0), geography=values(0,5), size=values(0,1), companyType=values(0,4), supply=values(0,8), products=values(0,11), markets=values(0,12);
+  const syntax=[phrase(industry),phrase(geography),phrase(size),phrase(companyType),phrase(supply),phrase(products),phrase(markets)].filter(Boolean);
+  const persona=[...values(1,0),...values(1,1),...values(1,2)]; if(persona.length)syntax.push(phrase(persona));
+  const signals=[...values(2,0),...values(2,1),...values(2,2),...values(2,3),...values(2,6),...values(2,7)]; if(signals.length)syntax.push(phrase(signals));
+  const blacklist=[...values(3,5),...values(3,6)].map(v=>v.toLowerCase().replace(/^https?:\/\//,'').replace(/^www\./,'').split('/')[0]).filter(Boolean);
+  const exclude=[...values(3,0),...values(3,1),...values(3,2),...values(3,3),...values(3,4)];
+  const advanced=(syntax.filter(Boolean).join(' ')||'B2B distributors manufacturers')+' companies official website'+(blacklist.length?' '+[...new Set(blacklist)].map(v=>'-site:'+v).join(' '):'')+(exclude.length?' -'+exclude.map(v=>'"'+v+'"').join(' -'):'');
+  const company=root.querySelector('[data-query-preview]'),personaNode=root.querySelector('[data-persona-preview]'),exclusion=root.querySelector('[data-exclusion-preview]'),syntaxNode=root.querySelector('[data-query-syntax]');
+  if(company)company.textContent=format(selections.flatMap((items,index)=>[1,3,6].includes(index)?[]:items))||'选择企业属性和购买信号后，实时生成筛选条件';
+  if(personaNode)personaNode.textContent=format(selections[1]||[])||'选择职位、决策权限、部门或资历层级';
+  if(exclusion)exclusion.textContent=format([...(selections[3]||[]),...(selections[6]||[])])||'选择排除条件或域名黑名单';
+  if(syntaxNode)syntaxNode.textContent=advanced;
   renderLocalMatches(root);
 }
 
@@ -150,8 +152,8 @@ export function renderStep0() {
       ${layersHtml}
     </section>
     <div class="two-col icp-support-grid">
-      ${panelNoPad('实时查询预览', `<div class="generated-queries"><div class="generated-query"><span class="query-note">当前筛选</span><code data-query-preview>请先选择筛选条件</code></div><div class="generated-query"><span class="query-note">目标联系人</span><code data-persona-preview>选择职位、部门与资历层级</code></div><div class="generated-query"><span class="query-note">排除规则</span><code data-exclusion-preview>按需配置排除条件</code></div></div><div class="icp-preview-table-wrap"><div class="icp-preview-table-heading"><strong data-icp-match-count>现有线索库匹配：加载中</strong><span class="field-help">基于当前账号已保存线索，不代表外部搜索总量</span></div><div class="cds-data-table-container"><table class="data-table icp-preview-table"><thead><tr><th>企业</th><th>域名</th><th>地区</th><th>行业</th><th>员工规模</th><th>评分</th></tr></thead><tbody data-icp-sample><tr><td colspan="6">正在读取当前账号线索…</td></tr></tbody></table></div></div>`)}
-      <section class="panel icp-schema-panel"><div class="panel-header"><h2>AI 判定 Schema</h2><span class="panel-meta">结构化输出字段</span></div><div class="panel-body"><div class="field-tags">${aiSchema.map(field => tag(field, 'blue')).join('')}</div><div class="model-picker-wrap"><label class="form-label">AI 模型</label>${modelSelect()}<p class="field-help">仅显示常用模型。实际调用前需在「API 与 AI 集成」配置对应服务及可用模型。</p></div></div></section>
+      ${panelNoPad('实时查询预览', `<div class="generated-queries"><div class="generated-query"><span class="query-note">当前筛选</span><code data-query-preview>请先选择筛选条件</code></div><div class="generated-query"><span class="query-note">目标联系人</span><code data-persona-preview>选择职位、部门与资历层级</code></div><div class="generated-query"><span class="query-note">排除规则</span><code data-exclusion-preview>按需配置排除条件</code></div><div class="generated-query generated-query-syntax"><span class="query-note">最终高级搜索语法（实时拼接）</span><code data-query-syntax>B2B distributors manufacturers companies official website</code></div></div><div class="icp-preview-table-wrap"><div class="icp-preview-table-heading"><strong data-icp-match-count>现有线索库匹配：加载中</strong><span class="field-help">基于当前账号已保存线索，不代表外部搜索总量</span></div><div class="cds-data-table-container"><table class="data-table icp-preview-table"><thead><tr><th>企业</th><th>域名</th><th>地区</th><th>行业</th><th>员工规模</th><th>评分</th></tr></thead><tbody data-icp-sample><tr><td colspan="6">正在读取当前账号线索…</td></tr></tbody></table></div></div>`)}
+      <section class="panel icp-schema-panel"><div class="panel-header"><h2>AI 判定 Schema</h2><span class="panel-meta">结构化输出字段</span></div><div class="panel-body"><p class="field-help">Schema v2.0 · 仅允许定义字段；未知信息留空并标记缺失，关键字段附可访问证据 URL 与原文摘录。置信度统一为 0–1。</p><div class="field-tags">${Object.keys(aiSchema.properties).map(field => tag(field, 'blue')).join('')}</div><details class="icp-schema-json"><summary>查看完整 JSON Schema</summary><pre class="cds-code-snippet">${escapeHtml(JSON.stringify(aiSchema,null,2))}</pre></details><div class="model-picker-wrap"><label class="form-label">AI 模型</label>${modelSelect()}<p class="field-help">仅显示常用模型。实际调用前需在「API 与 AI 集成」配置对应服务及可用模型。</p></div></div></section>
     </div>`;
 }
 function updateSelectedLabel(wrap, option) {
