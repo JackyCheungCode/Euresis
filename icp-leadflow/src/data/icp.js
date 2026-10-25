@@ -13,7 +13,7 @@ export const icpLayers = [
     { label: '购买意向行为' }, { label: '产品发布信号' },
   ]},
   { title: '第四层 · 排除条件（Disqualifiers）', fields: [
-    { label: '排除行业' }, { label: '排除公司类型' }, { label: '排除国家 / 地区' }, { label: '排除规模' }, { label: '排除状态' }, { label: '排除渠道域名（黑名单）' }, { label: '自定义黑名单域名' },
+    { label: '排除行业' }, { label: '排除公司类型' }, { label: '排除国家 / 地区' }, { label: '排除规模' }, { label: '排除状态' }, { label: '排除渠道域名（黑名单）' }, { label: '自定义黑名单域名' }, { label: '排除产品关键词' },
   ]},
   { title: '第五层 · 商业匹配度（Commercial Fit）', fields: [
     { label: '预算区间' }, { label: '采购周期' }, { label: '最低交易规模' }, { label: '目标毛利区间' }, { label: '销售覆盖区域' }, { label: '客户价值等级' },
@@ -26,6 +26,9 @@ export const icpLayers = [
   ]},
   { title: '第八层 · 评分与优化（Scoring & Feedback）', fields: [
     { label: 'ICP 匹配阈值' }, { label: '购买意向阈值' }, { label: '信号时效窗口' }, { label: '每批线索上限' }, { label: '评分策略' },
+  ]},
+  { title: '第九层 · 产品与解决方案匹配（Product & Solution Fit）', fields: [
+    { label: '企业产品关键字描述' },
   ]},
 ];
 
