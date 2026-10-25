@@ -1,4 +1,5 @@
 import { state, setStep } from './state.js';
+import { renderStep0, bindStep0 } from './steps/step0-icp.js';
 import { renderStep1, bindStep1 } from './steps/step1-discover.js';
 import { renderStep2, bindStep2 } from './steps/step2-scrape.js';
 import { renderStep3, bindStep3 } from './steps/step3-enrich.js';
@@ -8,6 +9,7 @@ import { renderStep6, bindStep6 } from './steps/step6-rounter.js';
 import { leads, loadLeads } from './data/lead.js';
 
 const modules = [
+  { render: renderStep0, bind: bindStep0 },
   { render: renderStep1, bind: bindStep1 },
   { render: renderStep2, bind: bindStep2 },
   { render: renderStep3, bind: bindStep3 },
@@ -52,7 +54,7 @@ export async function renderStep() {
   container.innerHTML = `<div class="step-content active">${mod.render()}</div>`;
   mod.bind(container);
   document.getElementById('actionInfo').textContent =
-    `当前步骤：${state.currentStep + 2} / 7 · ${state.steps[state.currentStep].label} · ${leads.length} 条数据库记录`;
+    `当前步骤：${state.currentStep + 1} / 7 · ${state.steps[state.currentStep].label} · ${leads.length} 条数据库记录`;
 }
 
 export async function goToStep(index) {
