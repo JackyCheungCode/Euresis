@@ -19,6 +19,7 @@ export function renderStep1() {
       <p id="discoverMessage" class="field-help">选择本次数量后运行搜索。重复企业会被跳过，不会再次创建。</p>
       <div class="stage-progress" id="discoverProgress" hidden aria-live="polite"><div class="stage-progress-heading"><span id="discoverProgressLabel">等待搜索任务开始</span><strong id="discoverProgressPercent">0%</strong></div><div class="stage-progress-track" role="progressbar" aria-label="候选发现任务进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="discoverProgressBar"><span id="discoverProgressFill"></span></div><p class="stage-progress-detail" id="discoverProgressDetail">等待执行</p></div></div></section>
     ${panelNoPad('候选企业列表', rows.length ? table(['#','企业域名','企业名称','来源','市场','状态'], rows, '候选企业') : empty, `${leads.length} 条数据库记录`)}
+    ${panelNoPad('搜索操作日志', '<div class="cds-data-table-container"><table class="data-table stage-log-table"><thead><tr><th>开始时间</th><th>完成时间</th><th>服务</th><th>状态</th><th>查询语法</th><th>数量统计</th><th>错误</th></tr></thead><tbody id="discoverLogs"><tr><td colspan="7">正在加载日志…</td></tr></tbody></table></div>', '最近 20 次搜索')}
     ${panel('数据来源', '<p class="helper-copy">Serper 用于 Google 搜索结果发现；Tavily 用于网页搜索与研究。搜索日志会记录查询语法、目标数量、返回数量、新增数量、重复数量、服务及错误原因。</p>')}
   `;
 }
@@ -28,6 +29,7 @@ export function bindStep1(root) {
   limitTrigger?.addEventListener('click',()=>{limitMenu.hidden=!limitMenu.hidden;limitTrigger.setAttribute('aria-expanded',String(!limitMenu.hidden));});
   root.querySelectorAll('[data-limit]').forEach(option=>option.addEventListener('click',()=>{limitInput.value=option.dataset.limit;root.querySelector('#discoverLimitLabel').textContent=option.dataset.limit+' 条';limitMenu.hidden=true;limitTrigger.setAttribute('aria-expanded','false');root.querySelectorAll('[data-limit]').forEach(item=>item.setAttribute('aria-selected',String(item===option)));}));
   const progress=root.querySelector('#discoverProgress'), progressBar=root.querySelector('#discoverProgressBar'), progressFill=root.querySelector('#discoverProgressFill'), progressLabel=root.querySelector('#discoverProgressLabel'), progressPercent=root.querySelector('#discoverProgressPercent'), progressDetail=root.querySelector('#discoverProgressDetail');
+  async function refreshDiscoverLogs(){const {data:{user}}=await supabase.auth.getUser();if(!user)return;const {data,error}=await supabase.from('lead_activity_logs').select('provider,status,input,output,error_message,started_at,completed_at,created_at').eq('user_id',user.id).eq('action','discover').order('created_at',{ascending:false}).limit(20);const tbody=root.querySelector('#discoverLogs');if(!tbody)return;tbody.innerHTML=error?'<tr><td colspan="7">日志读取失败：'+esc(error.message)+'</td></tr>':(data||[]).length?(data||[]).map(log=>'<tr><td>'+esc(new Date(log.started_at||log.created_at).toLocaleString())+'</td><td>'+esc(log.completed_at?new Date(log.completed_at).toLocaleString():'进行中')+'</td><td>'+esc(log.provider||'—')+'</td><td>'+esc(log.status)+'</td><td>'+esc(log.input?.query||'—')+'</td><td>'+esc(JSON.stringify(log.output||{}).slice(0,300))+'</td><td>'+esc(log.error_message||'—')+'</td></tr>').join(''):'<tr><td colspan="7">暂无搜索记录</td></tr>';}
   const updateProgress=(percent,label,detail)=>{const value=Math.max(0,Math.min(100,Math.round(percent)));progress.hidden=false;progressFill.style.width=value+'%';progressBar.setAttribute('aria-valuenow',String(value));progressPercent.textContent=value+'%';progressLabel.textContent=label;progressDetail.textContent=detail;};
   const rootDomain=value=>{
     try {
@@ -41,6 +43,7 @@ export function bindStep1(root) {
   };
   const splitValues=value=>String(value||'').split(/[,;\n]+/).map(x=>x.trim()).filter(Boolean);
   const blockedDomain=(host,blacklist)=>blacklist.some(domain=>host===domain||host.endsWith('.'+domain));
+  refreshDiscoverLogs().catch(error=>console.warn('加载搜索日志失败',error));
   button?.addEventListener('click',async()=>{
     button.disabled=true;let runId=null,logId=null;button.textContent='正在搜索…';
     const requested=Math.max(1,Math.min(100,Number(limitInput.value)||10));
@@ -89,12 +92,12 @@ export function bindStep1(root) {
       updateProgress(100,'搜索任务已完成','API 返回 '+results.length+' · 新增 '+savedCount+' · 重复/过滤 '+(results.length-savedCount));
       await supabase.from('workflow_runs').update({status:'completed',output:summary,updated_at:new Date().toISOString()}).eq('id',runId).eq('user_id',user.id);
       if(logId)await supabase.from('lead_activity_logs').update({status:'completed',output:summary,completed_at:new Date().toISOString()}).eq('id',logId).eq('user_id',user.id);
-      showToast('搜索完成：新增 '+savedCount+' 条，跳过重复 '+duplicateCount+' 条');document.dispatchEvent(new CustomEvent('euresis:leads-updated'));
+      showToast('搜索完成：新增 '+savedCount+' 条，跳过重复 '+duplicateCount+' 条');await refreshDiscoverLogs();document.dispatchEvent(new CustomEvent('euresis:leads-updated'));
     }catch(error){
       const {data:{user}}=await supabase.auth.getUser();
       if(runId&&user)await supabase.from('workflow_runs').update({status:'failed',error_message:error.message||'搜索失败',output:{requested_count:requested,provider:'unknown',completed_at:new Date().toISOString()},updated_at:new Date().toISOString()}).eq('id',runId).eq('user_id',user.id);
       if(logId&&user)await supabase.from('lead_activity_logs').update({status:'failed',error_message:error.message||'搜索失败',output:{requested_count:requested},completed_at:new Date().toISOString()}).eq('id',logId).eq('user_id',user.id);
-      message.textContent=error.message||'搜索失败';updateProgress(100,'搜索任务失败',error.message||'搜索失败');showToast('企业搜索失败：'+(error.message||'未知错误'));
+      message.textContent=error.message||'搜索失败';updateProgress(100,'搜索任务失败',error.message||'搜索失败');await refreshDiscoverLogs();showToast('企业搜索失败：'+(error.message||'未知错误'));
     }finally{button.disabled=false;button.textContent='运行企业搜索';}
   });
 }
