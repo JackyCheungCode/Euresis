@@ -69,8 +69,8 @@ export function bindStep1(root) {
       const signalTerms=[get(2,0),get(2,1),get(2,2),get(2,3),get(2,6),get(2,7)].flatMap(splitValues);
       if(signalTerms.length)queryParts.push('('+signalTerms.map(x=>'"'+x+'"').join(' OR ')+')');
       const query=(queryParts.length?queryParts.join(' '):'B2B distributors manufacturers')+' companies businesses official website';
-      const exclusionSyntax=excluded.length?' -'+excluded.map(x=>'\"'+x+'\"').join(' -'):'';
-      const originalFinalQuery=query.trim()+exclusionSyntax+(blacklist.length?' '+[...new Set(blacklist)].map(d=>'-site:'+d).join(' '):'');
+      const exclusionSyntax=excluded.length?' -'+excluded.map(x=>'"'+x.replace(/"/g,'\\"')+'"').join(' -'):'';
+      const originalFinalQuery=query.trim()+(blacklist.length?' '+[...new Set(blacklist)].map(d=>'-site:'+d).join(' '):'')+exclusionSyntax;
       const finalQuery=criteria.translatedQuery&&criteria.translatedSourceQuery===originalFinalQuery?String(criteria.translatedQuery):originalFinalQuery;
       await loadIntegrations();const configs=listIntegrations();const provider=configs.find(x=>x.id==='serper'&&x.enabled)||configs.find(x=>x.id==='tavily'&&x.enabled);if(provider)providerId=provider.id;
       if(!provider)throw new Error('请先在「API 和 AI 集成」保存并启用 Serper 或 Tavily');
