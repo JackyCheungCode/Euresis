@@ -27,14 +27,8 @@ function modelControl(config) {
   return `<div class="integration-field"><label>模型</label>${customSelect('modelPreset', selected === '自定义模型 ID' ? '__custom__' : selected, options, '模型')}<cds-text-input class="model-custom-input" data-field="model" type="text" autocomplete="off" placeholder="输入服务支持的模型 ID" value="${escapeHtml(custom ? config.model || '' : config.model || '')}" ${custom ? '' : 'hidden'} aria-label="输入服务支持的模型 ID"></cds-text-input><span class="field-help">选择模型或切换到自定义模型 ID。</span></div>`;
 }
 function customSelect(id, selected, options, label) {
-  const choice = options.find(option => option.value === selected) || options[0];
-  return `<div class="cds-select" data-select="${id}">
-    <cds-button class="cds-select-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" kind="ghost"><span>${escapeHtml(choice?.label || '')}</span><span aria-hidden="true">⌄</span></cds-button>
-    <div class="cds-select-menu" role="listbox" aria-label="${escapeHtml(label)}" hidden>
-      ${options.map(option => `<cds-button class="cds-select-option" type="button" role="option" data-value="${escapeHtml(option.value)}" aria-selected="${option.value === selected}" kind="ghost">${escapeHtml(option.label)}</cds-button>`).join('')}
-    </div>
-    <input type="hidden" data-field="${id}" value="${escapeHtml(selected)}">
-  </div>`;
+ const choice=options.find(option=>option.value===selected)||options[0];
+ return `<div class="cds-select integration-carbon-select" data-select="${id}"><cds-dropdown class="carbon-select-control" title-text="${escapeHtml(label)}" label="${escapeHtml(choice?.label||'')}" value="${escapeHtml(selected)}" data-carbon-select>${options.map(option=>`<cds-dropdown-item value="${escapeHtml(option.value)}" ${option.value===selected?'selected':''}>${escapeHtml(option.label)}</cds-dropdown-item>`).join('')}</cds-dropdown><input type="hidden" data-field="${id}" value="${escapeHtml(selected)}"></div>`;
 }
 function renderCard(config) {
   const message = messages[config.id] || { text: config.enabled ? '已启用 · 等待调用' : '未启用', type: '' };
@@ -88,25 +82,18 @@ function showMessage(card, text, type = '') {
   node.className = 'integration-message ' + type;
 }
 function bindSelects(root) {
-  root.querySelectorAll('.cds-select-trigger').forEach(trigger => trigger.addEventListener('click', () => {
-    const wrap = trigger.closest('.cds-select');
-    const menu = wrap.querySelector('.cds-select-menu');
-    const willOpen = menu.hidden;
-    root.querySelectorAll('.cds-select-menu').forEach(other => {
-      other.hidden = true;
-      other.closest('.cds-select').querySelector('.cds-select-trigger').setAttribute('aria-expanded', 'false');
-    });
-    menu.hidden = !willOpen;
-    trigger.setAttribute('aria-expanded', String(willOpen));
-  }));
-  root.querySelectorAll('.cds-select-option').forEach(option => option.addEventListener('click', () => {
-    const wrap = option.closest('.cds-select');
-    wrap.querySelector('input[type="hidden"]').value = option.dataset.value;
-    wrap.querySelector('.cds-select-trigger span').textContent = option.textContent;
-    wrap.querySelector('.cds-select-menu').hidden = true;
-    wrap.querySelector('.cds-select-trigger').setAttribute('aria-expanded', 'false');
-    wrap.querySelectorAll('.cds-select-option').forEach(item => item.setAttribute('aria-selected', String(item === option)));
-  }));
+ root.querySelectorAll('.integration-carbon-select cds-dropdown').forEach(dropdown=>{
+  const hidden=dropdown.closest('.integration-carbon-select')?.querySelector('input[type="hidden"]');
+  dropdown.addEventListener('cds-dropdown-selected',event=>{
+   if(hidden){hidden.value=String(event.detail?.item?.value??dropdown.value??'');hidden.dispatchEvent(new Event('change',{bubbles:true}));}
+   const card=dropdown.closest('[data-integration-card]');
+   if(hidden?.dataset.field==='modelPreset'){
+    const custom=card?.querySelector('.model-custom-input');
+    if(custom)custom.hidden=hidden.value!=='__custom__';
+   }
+  });
+  if(hidden)dropdown.value=hidden.value;
+ });
 }
 export async function bindIntegrations() {
   const root = document.getElementById('integrationsView');
