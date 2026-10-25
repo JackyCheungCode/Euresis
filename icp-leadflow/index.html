@@ -108,13 +108,13 @@
             <cds-button class="btn btn-ghost btn-sm" id="resetIntegrations" type="button" kind="ghost" size="sm">恢复默认配置</cds-button>
           </div>
           <div id="integrationCards" class="integration-grid"></div>
-          <div class="panel integration-help">
+          <cds-tile class="panel integration-help">
             <div class="panel-header"><h2>统一调用方式</h2><span class="panel-meta">Integration Client</span></div>
             <div class="panel-body">
               <p class="helper-copy">工作流模块可以通过 <code>integrationClient.call('serper', payload)</code> 调用已启用服务。具体请求格式由服务适配器处理；工作流阶段会读取当前账号的真实线索，并在执行后将结果保存到 Supabase。</p>
               <div class="code-block">import { integrationClient } from './services/integrations.js';<br>const result = await integrationClient.call('tavily', { query: 'solar distributors Germany' });</div>
             </div>
-          </div>
+          </cds-tile>
         </main>
       </section>
     </div>
