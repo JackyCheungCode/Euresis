@@ -4,9 +4,15 @@ export const leads = [];
 export async function loadLeads() {
   const { data: { user }, error: userError } = await supabase.auth.getUser();
   if (userError || !user) { leads.splice(0, leads.length); return leads; }
-  const { data, error } = await supabase.from('leads').select('*').eq('user_id', user.id).order('created_at', { ascending: false }).limit(1000);
-  if (error) throw error;
-  const mapped = (data || []).map(row => {
+  const data = [];
+  const pageSize = 1000;
+  for (let offset = 0; ; offset += pageSize) {
+    const { data: page, error } = await supabase.from('leads').select('*').eq('user_id', user.id).order('created_at', { ascending: false }).range(offset, offset + pageSize - 1);
+    if (error) throw error;
+    data.push(...(page || []));
+    if (!page || page.length < pageSize) break;
+  }
+  const mapped = data.map(row => {
     const extra = row.data || {};
     let domain = row.website || '';
     try { domain = new URL(domain.startsWith('http') ? domain : 'https://' + domain).hostname; } catch {}
