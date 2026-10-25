@@ -59,9 +59,13 @@ export function bindStep1(root) {
       const excluded=[get(3,0),get(3,1),get(3,2),get(3,3),get(3,4),get(3,7)].filter(Boolean).flatMap(splitValues);
       const blacklist=[...splitValues(get(3,5)),...splitValues(get(3,6))].map(x=>rootDomain(x)||x.toLowerCase().replace(/^www\./,''));
       const queryParts=[];
-      const queryFields=[get(0,0),get(0,5),get(0,1),get(0,4),get(0,6),get(0,8),get(0,9),get(0,10),get(0,11),get(0,12),get(2,0),get(2,1),get(2,2),get(2,3),get(2,6),get(2,7),get(8,0)];
-      queryFields.filter(Boolean).forEach(value=>{const terms=splitValues(value);if(terms.length)queryParts.push('('+terms.map(x=>'\"'+x+'\"').join(' OR ')+')');});
-      const query=(queryParts.length?queryParts.join(' '):'B2B companies distributors manufacturers')+' companies businesses official website';
+      const queryFields=[get(0,0),get(0,5),get(0,1),get(0,4),get(0,6),get(0,8),get(0,9),get(0,10),get(0,11),get(0,12),get(8,0)];
+      queryFields.filter(Boolean).forEach(value=>{const terms=splitValues(value);if(terms.length)queryParts.push('('+terms.map(x=>'"'+x+'"').join(' OR ')+')');});
+      const personaTerms=[get(1,0),get(1,1),get(1,2)].flatMap(splitValues);
+      if(personaTerms.length)queryParts.push('('+personaTerms.map(x=>'"'+x+'"').join(' OR ')+')');
+      const signalTerms=[get(2,0),get(2,1),get(2,2),get(2,3),get(2,6),get(2,7)].flatMap(splitValues);
+      if(signalTerms.length)queryParts.push('('+signalTerms.map(x=>'"'+x+'"').join(' OR ')+')');
+      const query=(queryParts.length?queryParts.join(' '):'B2B distributors manufacturers')+' companies businesses official website';
       const exclusionSyntax=excluded.length?' -'+excluded.map(x=>'\"'+x+'\"').join(' -'):'';
       const originalFinalQuery=query.trim()+exclusionSyntax+(blacklist.length?' '+[...new Set(blacklist)].map(d=>'-site:'+d).join(' '):'');
       const finalQuery=criteria.translatedQuery&&criteria.translatedSourceQuery===originalFinalQuery?String(criteria.translatedQuery):originalFinalQuery;
