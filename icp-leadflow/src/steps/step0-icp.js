@@ -152,7 +152,7 @@ export function renderStep0() {
     <div class="notification"><span class="notif-icon" aria-hidden="true">i</span><div>以企业筛选、购买委员会、实时触发信号、商业匹配度、需求痛点、数据质量与评分反馈定义理想客户。枚举字段采用 Carbon 风格控件；保存后写入当前账号的 Supabase 数据库。</div></div>
     <section class="icp-definition-section" aria-labelledby="icpDefinitionTitle">
       <div class="icp-section-heading"><div><h2 id="icpDefinitionTitle">ICP 定义</h2><p>八层筛选条件 · 企业属性、联系人、触发信号、商业匹配、需求痛点、数据质量与评分优化</p></div><div class="icp-section-actions"><cds-button class="btn btn-ghost btn-sm" type="button" id="resetIcpFields" kind="ghost" size="sm">清空条件</cds-button><cds-button class="btn btn-primary btn-sm" type="button" id="saveIcpFields" kind="primary" size="sm">保存 ICP</cds-button></div></div>
-      <div class="stage-progress" data-icp-progress hidden aria-live="polite"><div class="stage-progress-heading"><span data-icp-progress-label>等待保存</span><strong data-icp-progress-percent>0%</strong></div><div class="stage-progress-track" role="progressbar" aria-label="ICP 保存任务进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" data-icp-progressbar><span data-icp-progress-fill></span></div><p class="stage-progress-detail" data-icp-progress-detail>等待执行</p></div>
+      <div class="stage-progress" data-icp-progress hidden aria-live="polite"><div class="stage-progress-heading"><span data-icp-progress-label>等待保存</span><strong data-icp-progress-percent>0%</strong></div><cds-progress-bar data-icp-progressbar label="ICP 保存任务进度" value="0" max="100"></cds-progress-bar><p class="stage-progress-detail" data-icp-progress-detail>等待执行</p></div>
       ${layersHtml}
     </section>
     <div class="two-col icp-support-grid">
@@ -243,8 +243,7 @@ export function bindStep0(root) {
   const updateIcpProgress = (percent, label, detailText) => {
     const value = Math.max(0, Math.min(100, Math.round(percent)));
     if (icpProgress) icpProgress.hidden = false;
-    icpProgress?.querySelector('[data-icp-progress-fill]')?.style.setProperty('width', value + '%');
-    icpProgress?.querySelector('[data-icp-progressbar]')?.setAttribute('aria-valuenow', String(value));
+    const bar=icpProgress?.querySelector('[data-icp-progressbar]'); if(bar){bar.value=value;bar.setAttribute('value',String(value));}
     const pct = icpProgress?.querySelector('[data-icp-progress-percent]');
     const title = icpProgress?.querySelector('[data-icp-progress-label]');
     const detail = icpProgress?.querySelector('[data-icp-progress-detail]');
