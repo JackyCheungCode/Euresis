@@ -32,7 +32,7 @@ function customSelect(id, selected, options, label) {
 }
 function renderCard(config) {
   const message = messages[config.id] || { text: config.enabled ? '已启用 · 等待调用' : '未启用', type: '' };
-  return `<article class="integration-card" data-integration-card="${config.id}">
+  return `<cds-tile class="integration-card" data-integration-card="${config.id}">
     <div class="integration-card-header">
       <div class="integration-icon" aria-hidden="true">${escapeHtml(config.icon)}</div>
       <div class="integration-title"><h3>${escapeHtml(config.name)}</h3><p>${escapeHtml(config.category)} · ${escapeHtml(config.description)}</p></div>
@@ -48,7 +48,7 @@ function renderCard(config) {
     <div class="integration-card-footer"><div class="integration-message ${escapeHtml(message.type)}" data-message role="status">${escapeHtml(message.text)}</div>
       <div class="integration-footer-actions"><cds-button class="btn btn-ghost btn-sm" type="button" data-action="test" ${busy.has(config.id) ? 'disabled' : ''} kind="ghost" size="sm">${busy.has(config.id) ? '测试中…' : '测试连接'}</cds-button><cds-button class="btn btn-primary btn-sm" type="button" data-action="save" kind="primary" size="sm">保存配置</cds-button></div>
     </div>
-  </article>`;
+  </cds-tile>`;
 }
 export function renderIntegrations() {
   const configs = listIntegrations();
