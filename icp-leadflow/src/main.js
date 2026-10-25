@@ -2,7 +2,6 @@ import { state } from './state.js';
 import { renderNav, renderStats, renderStep, goToStep } from './router.js';
 import { showToast } from './components/toast.js';
 import { renderIntegrations, bindIntegrations } from './pages/integrations.js';
-import { renderStep0, bindStep0 } from './steps/step0-icp.js';
 import { loadIntegrations } from './services/integrations.js';
 import { supabase } from './services/supabase.js';
 
@@ -58,7 +57,7 @@ function openRecordDetails(row) {
     actions.querySelectorAll('[data-detail-action]').forEach(button => button.addEventListener('click', async () => {
       const stage = button.dataset.detailAction;
       closeRecordDetails();
-      await goToStep(stage === 'enrich' ? 2 : 4);
+      await goToStep(stage === 'enrich' ? 3 : 5);
       document.getElementById('stepContainer').dispatchEvent(new CustomEvent('euresis:run-lead-action', { detail: { stage, leadId } }));
     }));
     body.append(actions);
@@ -75,16 +74,6 @@ function init() {
   renderStats();
   renderNav();
   renderStep();
-  const icpRoot = document.getElementById('icpDefinitionContainer');
-  icpRoot.innerHTML = renderStep0();
-  bindStep0(icpRoot);
-  const icpToggle = document.getElementById('toggleIcpConfig');
-  icpToggle.addEventListener('click', () => {
-    const expanded = icpToggle.getAttribute('aria-expanded') !== 'true';
-    icpToggle.setAttribute('aria-expanded', String(expanded));
-    icpRoot.hidden = !expanded;
-    icpToggle.textContent = expanded ? '收起 ICP 配置' : '展开 ICP 配置';
-  });
   const appShell = document.getElementById('appShell');
   const sidebarToggle = document.getElementById('sidebarToggle');
   if (window.matchMedia('(max-width: 600px)').matches) {
