@@ -22,8 +22,7 @@ async function setView(view) {
       await bindIntegrations();
     } catch (error) {
       const errorNode = document.getElementById('integrationCards');
-      errorNode.textContent = error.message || '无法加载配置';
-      errorNode.className = 'notification warning';
+      errorNode.innerHTML = '<cds-inline-notification kind="error" title="无法加载集成配置" hide-close-button>' + String(error.message || '无法加载配置').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char])) + '</cds-inline-notification>'; 
     }
   }
   document.title = view === 'integrations' ? 'API 和 AI 集成 · Euresis' : '搜索 API 发现 · Euresis';
