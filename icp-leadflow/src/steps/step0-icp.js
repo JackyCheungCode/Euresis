@@ -205,6 +205,38 @@ function bindSelects(root) {
 }
 export function bindStep0(root) {
   bindSelects(root);
+  bindKeywordTags(root);
+  root.querySelector('[data-translate-query]')?.addEventListener('click', async event => {
+    const button=event.currentTarget, source=root.querySelector('[data-query-syntax]')?.textContent||'';
+    const target=root.querySelector('[data-translation-language]')?.value||'EN-US';
+    const status=root.querySelector('[data-translation-status]'), output=root.querySelector('[data-translated-query]');
+    const pattern=/"([^"]*)"/g, matches=[...source.matchAll(pattern)];
+    if(!matches.length){status.textContent='当前语法没有可翻译的引号关键词。';return;}
+    button.disabled=true;button.textContent='翻译中…';status.textContent='正在调用 DeepL；OR、site:、括号和域名等语法不会被翻译。';
+    try {
+      await loadIntegrations();
+      const result=await integrationClient.call('deepl',{text:matches.map(match=>match[1]),target_lang:target});
+      const translations=result.translations||[];
+      if(translations.length!==matches.length)throw new Error('DeepL 返回的翻译数量与关键词数量不一致');
+      let index=0;
+      const translated=source.replace(pattern,()=>'"'+String(translations[index++]?.text||'').replace(/"/g,'')+'"');
+      output.textContent=translated;
+      root.querySelector('[data-icp-field="translatedQuery"]').value=translated;
+      root.querySelector('[data-icp-field="translatedSourceQuery"]').value=source;
+      root.querySelector('[data-icp-field="translatedLanguage"]').value=target;
+      const {data:{user}}=await supabase.auth.getUser();if(!user)throw new Error('请先登录后保存翻译结果');
+      const criteria={};root.querySelectorAll('[data-icp-field]').forEach(input=>{criteria[input.dataset.icpField]=input.value;});
+      const {data:profile,error:profileError}=await supabase.from('icp_profiles').select('id').eq('user_id',user.id).order('updated_at',{ascending:false}).limit(1).maybeSingle();
+      if(profileError)throw profileError;
+      const payload={user_id:user.id,name:'默认 ICP',criteria,updated_at:new Date().toISOString()};
+      const saved=profile?.id?await supabase.from('icp_profiles').update(payload).eq('id',profile.id).select('id').single():await supabase.from('icp_profiles').insert(payload).select('id').single();
+      if(saved.error)throw saved.error;savedProfileId=saved.data.id;
+      status.textContent='翻译完成并已保存。下一次企业搜索会在原始语法未变化时使用该翻译。';
+      showToast('DeepL 翻译完成并已保存');
+    } catch(error) {
+      status.textContent=error.message||'翻译失败';showToast('DeepL 翻译失败：'+(error.message||'未知错误'));
+    } finally {button.disabled=false;button.textContent='翻译搜索语法';}
+  });
   root.querySelectorAll('.cds-multi').forEach(wrap=>{
     const trigger=wrap.querySelector('.cds-select-trigger'),menu=wrap.querySelector('.cds-multi-menu');
     trigger.addEventListener('click',()=>{const opening=menu.hidden;root.querySelectorAll('.cds-multi-menu').forEach(m=>{m.hidden=true;m.closest('.cds-multi').querySelector('.cds-select-trigger').setAttribute('aria-expanded','false');});menu.hidden=!opening;trigger.setAttribute('aria-expanded',String(opening));});
@@ -265,6 +297,7 @@ export function bindStep0(root) {
   root.querySelector('#resetIcpFields')?.addEventListener('click', async () => {
     root.querySelectorAll('[data-icp-field]').forEach(input => {
       input.value = '';
+      const keywordWrap=input.closest('.icp-keyword-tags');if(keywordWrap){paintKeywordTags(keywordWrap);return;}
       const wrap = input.closest('.cds-select, .cds-multi');
       if (wrap?.matches('.cds-multi')) {
         wrap.querySelectorAll('.cds-multi-options input').forEach(option => { option.checked = false; option.closest('label').hidden = false; });
