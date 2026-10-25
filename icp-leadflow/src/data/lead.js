@@ -11,7 +11,7 @@ export async function loadLeads() {
     let domain = row.website || '';
     try { domain = new URL(domain.startsWith('http') ? domain : 'https://' + domain).hostname; } catch {}
     return {
-      id: row.id, userId: row.user_id, domain, title: row.company_name || domain || '未命名企业',
+      id: row.id, userId: row.user_id, domain, rootDomain: row.root_domain || extra.root_domain || null, title: row.company_name || domain || '未命名企业',
       source: row.source || 'manual', region: row.country_region || '—', status: row.status || 'new',
       icp: extra.icp_match ?? null, size: row.employee_range || '—', revenue: extra.revenue || '—',
       type: row.company_type || '—', hiring: extra.hiring ?? null, funding: extra.funding ?? null,
