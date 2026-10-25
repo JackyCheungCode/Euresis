@@ -25,6 +25,7 @@
   <script type="module" src="https://1.www.s81c.com/common/carbon/web-components/version/v2.66.0/progress-indicator.min.js"></script>
   <script type="module" src="https://1.www.s81c.com/common/carbon/web-components/version/v2.66.0/tabs.min.js"></script>
   <script type="module" src="https://1.www.s81c.com/common/carbon/web-components/version/v2.66.0/tile.min.js"></script>
+  <script type="module" src="https://1.www.s81c.com/common/carbon/web-components/version/v2.66.0/breadcrumb.min.js"></script>
   <script type="module" src="https://1.www.s81c.com/common/carbon/web-components/version/v2.66.0/search.min.js"></script>
   <script type="module" src="https://1.www.s81c.com/common/carbon/web-components/version/v2.66.0/inline-loading.min.js"></script>
   <script type="module" src="https://1.www.s81c.com/common/carbon/web-components/version/v2.66.0/pagination.min.js"></script>
@@ -71,10 +72,10 @@
     <div class="workspace" id="workspace">
       <section id="workflowView">
         <div class="page-header">
-          <div class="breadcrumb"><span>工作区</span><span>›</span><span>搜索 API 发现</span><span>›</span><span class="current">工作流</span></div>
+          <cds-breadcrumb><cds-breadcrumb-item href="#workflowView">工作区</cds-breadcrumb-item><cds-breadcrumb-item href="#workflowView">搜索 API 发现</cds-breadcrumb-item><cds-breadcrumb-item>工作流</cds-breadcrumb-item></cds-breadcrumb>
           <div class="page-title-row">
             <div><h1>搜索 API 发现</h1><div class="subtitle">从搜索 API 发现候选企业，再进行公开信号抓取、联系方式补齐、验证、背调与渠道路由。</div></div>
-            <span class="cds-chip"><span class="status-dot"></span> 已连接数据库</span>
+            <cds-tag type="green">已连接数据库</cds-tag>
           </div>
         </div>
         <main class="main">
@@ -93,10 +94,10 @@
       </section>
       <section id="integrationsView" hidden>
         <div class="page-header">
-          <div class="breadcrumb"><span>系统设置</span><span>›</span><span class="current">API 与 AI 集成</span></div>
+          <cds-breadcrumb><cds-breadcrumb-item href="#integrationsView">系统设置</cds-breadcrumb-item><cds-breadcrumb-item>API 与 AI 集成</cds-breadcrumb-item></cds-breadcrumb>
           <div class="page-title-row">
             <div><h1>API 与 AI 集成</h1><div class="subtitle">集中管理搜索、数据补全、验证与模型服务。保存配置后可通过统一集成层调用。</div></div>
-            <span class="cds-chip">连接配置</span>
+            <cds-tag type="blue">连接配置</cds-tag>
           </div>
         </div>
         <main class="main integrations-main">
