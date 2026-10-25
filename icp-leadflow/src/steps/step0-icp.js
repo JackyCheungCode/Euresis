@@ -36,10 +36,10 @@ const MULTI_FIELDS = new Set(['行业 / 细分领域','目标职位','部门','�
 const REGIONS = {'北美':['加拿大','美国','墨西哥'],'东南亚':['文莱','柬埔寨','印度尼西亚','老挝','马来西亚','缅甸','菲律宾','新加坡','泰国','东帝汶','越南'],'东亚':['中国大陆','中国澳门','中国香港','中国台湾','日本','韩国','朝鲜','蒙古'],'南亚':['阿富汗','孟加拉国','不丹','印度','马尔代夫','尼泊尔','巴基斯坦','斯里兰卡'],'欧洲':['奥地利','比利时','丹麦','芬兰','法国','德国','希腊','爱尔兰','意大利','荷兰','挪威','波兰','葡萄牙','西班牙','瑞典','瑞士','英国'],'中东':['巴林','伊朗','伊拉克','以色列','约旦','科威特','阿曼','卡塔尔','沙特阿拉伯','土耳其','阿联酋'],'拉丁美洲':['阿根廷','巴西','智利','哥伦比亚','秘鲁','乌拉圭'],'非洲':['阿尔及利亚','埃及','加纳','肯尼亚','摩洛哥','尼日利亚','南非']};
 function renderMultiSelect(key, options, label) {
  const normalized=options.map(o=>({value:String(optionValue(o)),label:optionLabel(o),flag:typeof o==='object'?o.flag:null}));
- return '<div class="cds-multi icp-multi" data-multi-wrap="'+escapeHtml(key)+'"><cds-button type="button" class="cds-select-trigger" aria-expanded="false" aria-label="'+escapeHtml(label)+'" kind="ghost"><span class="cds-multi-current">不限 / 请选择</span><span class="cds-select-chevron">⌄</span></cds-button><div class="cds-multi-menu" hidden><cds-text-input class="cds-text-input cds-multi-search" type="search" placeholder="搜索选项…" aria-label="搜索选项…"></cds-text-input><div class="cds-multi-options">'+normalized.map(o=>'<label class="cds-multi-option">'+(o.flag?'<span class="flag-circle">'+o.flag+'</span>':'')+'<input type="checkbox" value="'+escapeHtml(o.value)+'"><span>'+escapeHtml(o.label)+'</span></label>').join('')+'</div><div class="cds-multi-footer"><cds-button type="button" class="btn btn-ghost btn-sm" data-multi-clear kind="ghost" size="sm">清除选择</cds-button><cds-button type="button" class="btn btn-primary btn-sm" data-multi-done kind="primary" size="sm">完成</cds-button></div></div><input type="hidden" data-icp-field="'+escapeHtml(key)+'" value=""></div>';
+ return '<div class="cds-multi icp-multi" data-multi-wrap="'+escapeHtml(key)+'"><cds-button type="button" class="cds-select-trigger" aria-expanded="false" aria-label="'+escapeHtml(label)+'" kind="ghost"><span class="cds-multi-current">不限 / 请选择</span><span class="cds-select-chevron">⌄</span></cds-button><div class="cds-multi-menu" hidden><cds-text-input class="cds-text-input cds-multi-search" type="search" placeholder="搜索选项…" aria-label="搜索选项…"></cds-text-input><div class="cds-multi-options">'+normalized.map(o=>'<div class="cds-multi-option">'+(o.flag?'<span class="flag-circle">'+o.flag+'</span>':'')+'<cds-checkbox value="'+escapeHtml(o.value)+'" label-text="'+escapeHtml(o.label)+'"></cds-checkbox></div>').join('')+'</div><div class="cds-multi-footer"><cds-button type="button" class="btn btn-ghost btn-sm" data-multi-clear kind="ghost" size="sm">清除选择</cds-button><cds-button type="button" class="btn btn-primary btn-sm" data-multi-done kind="primary" size="sm">完成</cds-button></div></div><input type="hidden" data-icp-field="'+escapeHtml(key)+'" value=""></div>';
 }
 function renderGeography(key,label) {
- const options=MARKET_OPTIONS.map(o=>'<label class="cds-multi-option" data-country="'+escapeHtml(o.value)+'"><span class="flag-circle">'+o.flag+'</span><input type="checkbox" value="'+escapeHtml(o.value)+'"><span>'+escapeHtml(o.label)+'</span></label>').join('');
+ const options=MARKET_OPTIONS.map(o=>'<div class="cds-multi-option" data-country="'+escapeHtml(o.value)+'"><span class="flag-circle">'+o.flag+'</span><cds-checkbox value="'+escapeHtml(o.value)+'" label-text="'+escapeHtml(o.label)+'"></cds-checkbox></div>').join('');
  const regions=Object.keys(REGIONS).map(r=>'<cds-button type="button" class="btn btn-ghost btn-sm" data-region="'+escapeHtml(r)+'" kind="ghost" size="sm">'+escapeHtml(r)+'</cds-button>').join('');
  return '<div class="cds-multi icp-multi icp-geography" data-multi-wrap="'+escapeHtml(key)+'"><cds-button type="button" class="cds-select-trigger" aria-expanded="false" kind="ghost"><span class="cds-multi-current">选择大区或国家/地区（可多选）</span><span class="cds-select-chevron">⌄</span></cds-button><div class="cds-multi-menu" hidden><cds-text-input class="cds-text-input cds-multi-search" type="search" placeholder="搜索国家/地区…" aria-label="搜索国家/地区…"></cds-text-input><div class="cds-region-pills">'+regions+'</div><div class="cds-multi-options">'+options+'</div><div class="cds-multi-footer"><cds-button type="button" class="btn btn-ghost btn-sm" data-multi-clear kind="ghost" size="sm">清除选择</cds-button><cds-button type="button" class="btn btn-primary btn-sm" data-multi-done kind="primary" size="sm">完成</cds-button></div></div><input type="hidden" data-icp-field="'+escapeHtml(key)+'" value=""></div>';
 }
@@ -67,7 +67,7 @@ function renderField(key,label) {
  return renderSelect(key,optionsForField(label),'',label);
 }
 function updateMultiLabel(wrap) {
- const values=[...wrap.querySelectorAll('.cds-multi-options input:checked')].map(i=>i.value); const hidden=wrap.querySelector('[data-icp-field]'); if(hidden) hidden.value=values.join(', ');
+ const values=[...[...wrap.querySelectorAll('.cds-multi-options cds-checkbox')].filter(i=>i.checked)].map(i=>i.value); const hidden=wrap.querySelector('[data-icp-field]'); if(hidden) hidden.value=values.join(', ');
  const current=wrap.querySelector('.cds-multi-current'); if(current) current.textContent=values.length?values.slice(0,3).join('、')+(values.length>3?' 等 '+values.length+' 项':''):'不限 / 请选择';
 }
 function modelSelect() {
@@ -242,11 +242,11 @@ export function bindStep0(root) {
   root.querySelectorAll('.cds-multi').forEach(wrap=>{
     const trigger=wrap.querySelector('.cds-select-trigger'),menu=wrap.querySelector('.cds-multi-menu');
     trigger.addEventListener('click',()=>{const opening=menu.hidden;root.querySelectorAll('.cds-multi-menu').forEach(m=>{m.hidden=true;m.closest('.cds-multi').querySelector('.cds-select-trigger').setAttribute('aria-expanded','false');});menu.hidden=!opening;trigger.setAttribute('aria-expanded',String(opening));});
-    wrap.querySelectorAll('.cds-multi-options input').forEach(i=>i.addEventListener('change',()=>{updateMultiLabel(wrap);queryPreview(root);}));
-    wrap.querySelector('[data-multi-clear]')?.addEventListener('click',()=>{wrap.querySelectorAll('.cds-multi-options input').forEach(i=>i.checked=false);updateMultiLabel(wrap);queryPreview(root);});
+    wrap.querySelectorAll('.cds-multi-options cds-checkbox').forEach(i=>i.addEventListener('change',()=>{updateMultiLabel(wrap);queryPreview(root);}));
+    wrap.querySelector('[data-multi-clear]')?.addEventListener('click',()=>{wrap.querySelectorAll('.cds-multi-options cds-checkbox').forEach(i=>i.checked=false);updateMultiLabel(wrap);queryPreview(root);});
     wrap.querySelector('[data-multi-done]')?.addEventListener('click',()=>{menu.hidden=true;trigger.setAttribute('aria-expanded','false');});
     wrap.querySelector('.cds-multi-search')?.addEventListener('input',e=>{const q=e.target.value.toLocaleLowerCase();wrap.querySelectorAll('.cds-multi-option').forEach(row=>row.hidden=!row.textContent.toLocaleLowerCase().includes(q));});
-    wrap.querySelectorAll('[data-region]').forEach(button=>button.addEventListener('click',()=>{const names=REGIONS[button.dataset.region]||[];const inputs=[...wrap.querySelectorAll('.cds-multi-options input')].filter(i=>names.includes(i.value));const selectAll=inputs.some(i=>!i.checked);inputs.forEach(i=>i.checked=selectAll);updateMultiLabel(wrap);queryPreview(root);}));
+    wrap.querySelectorAll('[data-region]').forEach(button=>button.addEventListener('click',()=>{const names=REGIONS[button.dataset.region]||[];const inputs=[...wrap.querySelectorAll('.cds-multi-options cds-checkbox')].filter(i=>names.includes(i.value));const selectAll=inputs.some(i=>!i.checked);inputs.forEach(i=>i.checked=selectAll);updateMultiLabel(wrap);queryPreview(root);}));
   });
   root.querySelectorAll('[data-fill-blacklist]').forEach(b=>b.addEventListener('click',()=>{const area=b.closest('.icp-blacklist').querySelector('textarea');area.value=DEFAULT_DOMAIN_BLACKLIST;area.dispatchEvent(new Event('input',{bubbles:true}));}));
   root.querySelectorAll('.icp-blacklist textarea').forEach(area=>area.addEventListener('input',()=>{const n=area.value.split(/[\s,;]+/).filter(Boolean).length;area.closest('.icp-blacklist').querySelector('[data-blacklist-count]').textContent=n+' 个域名';queryPreview(root);}));
@@ -302,7 +302,7 @@ export function bindStep0(root) {
       const keywordWrap=input.closest('.icp-keyword-tags');if(keywordWrap){paintKeywordTags(keywordWrap);return;}
       const wrap = input.closest('.cds-select, .cds-multi');
       if (wrap?.matches('.cds-multi')) {
-        wrap.querySelectorAll('.cds-multi-options input').forEach(option => { option.checked = false; option.closest('label').hidden = false; });
+        wrap.querySelectorAll('.cds-multi-options cds-checkbox').forEach(option => { option.checked = false; option.closest('.cds-multi-option').hidden = false; });
         const search = wrap.querySelector('.cds-multi-search'); if (search) search.value = '';
         updateMultiLabel(wrap); return;
       }
@@ -334,7 +334,7 @@ export function bindStep0(root) {
       const wrap = input.closest('.cds-select, .cds-multi');
       if (wrap?.matches('.cds-multi')) {
         const values = input.value.split(',').map(value => value.trim());
-        wrap.querySelectorAll('.cds-multi-options input').forEach(option => { option.checked = values.includes(option.value); });
+        wrap.querySelectorAll('.cds-multi-options cds-checkbox').forEach(option => { option.checked = values.includes(option.value); });
         updateMultiLabel(wrap);
         const countNode = wrap.querySelector('[data-blacklist-count]');
         if (countNode) countNode.textContent = input.value.split(/[\s,;]+/).filter(Boolean).length + ' 个域名';
