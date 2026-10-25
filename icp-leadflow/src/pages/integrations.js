@@ -147,7 +147,7 @@ export async function bindIntegrations() {
     }
   }));
   root.querySelectorAll('[data-integration-card]').forEach(card => {
-    card.querySelector('[data-field="enabled"]').addEventListener('change', async event => {
+    card.querySelector('[data-field="enabled"]').addEventListener('cds-toggle-changed', async event => {
       const { id, patch } = collect(card);
       try {
         patch.enabled = event.target.checked;
