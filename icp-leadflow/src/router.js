@@ -20,15 +20,9 @@ const modules = [
 
 export function renderNav() {
   const nav = document.getElementById('stepsNav');
-  nav.innerHTML = state.steps.map(s => `
-    <cds-button type="button" class="cds-progress-step ${s.id === state.currentStep ? 'active' : ''} ${s.id < state.currentStep ? 'completed' : ''}" data-step="${s.id}" aria-current="${s.id === state.currentStep ? 'step' : 'false'}" kind="ghost">
-      <span class="cds-progress-marker" aria-hidden="true">${s.id < state.currentStep ? '✓' : s.id + 1}</span>
-      <span class="cds-progress-copy"><span class="cds-progress-label">${s.label}</span><span class="cds-progress-description">${s.desc}</span></span>
-    </cds-button>`).join('');
-
-  nav.querySelectorAll('.cds-progress-step').forEach(el => {
-    el.addEventListener('click', () => goToStep(Number(el.dataset.step)));
-  });
+  nav.innerHTML = `<cds-progress-indicator current-index="${state.currentStep}" space-equally aria-label="获客流程进度">${state.steps.map(s => `<cds-progress-step data-step="${s.id}" label="${s.label}" description="${s.desc}" ${s.id < state.currentStep ? 'complete' : ''} ${s.id === state.currentStep ? 'current' : ''}></cds-progress-step>`).join('')}</cds-progress-indicator>`;
+  const indicator=nav.querySelector('cds-progress-indicator');
+  if(indicator) indicator.onChange=event=>goToStep(Number(event.detail?.index));
 }
 
 export function renderStats() {
