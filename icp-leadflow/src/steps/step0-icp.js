@@ -36,7 +36,7 @@ function renderKeywordTags(key,label) {
 function paintKeywordTags(wrap) {
  const hidden=wrap.querySelector('[data-icp-field]'),list=wrap.querySelector('.icp-keyword-chip-list');if(!hidden||!list)return;
  const values=[...new Set(String(hidden.value||'').split(/[,;\n]+/).map(v=>v.trim()).filter(Boolean))];hidden.value=values.join(', ');
- list.innerHTML=values.map(v=>'<cds-tag class="icp-keyword-chip" type="blue">'+escapeHtml(v)+'<cds-button type="button" data-remove-keyword="'+escapeHtml(v)+'" aria-label="删除关键词" kind="ghost">×</cds-button></span>').join('');
+ list.innerHTML=values.map(v=>'<cds-tag class="icp-keyword-chip" type="blue">'+escapeHtml(v)+'<cds-button type="button" data-remove-keyword="'+escapeHtml(v)+'" aria-label="删除关键词" kind="ghost">×</cds-button></cds-tag>').join('');
  list.querySelectorAll('[data-remove-keyword]').forEach(button=>button.addEventListener('click',()=>{hidden.value=values.filter(v=>v!==button.dataset.removeKeyword).join(', ');paintKeywordTags(wrap);hidden.dispatchEvent(new Event('change',{bubbles:true}));}));
 }
 function bindKeywordTags(root) {
