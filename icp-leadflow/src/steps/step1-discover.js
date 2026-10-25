@@ -12,7 +12,7 @@ export function renderStep1() {
     index + 1, '<span class="mono">'+esc(lead.domain)+'</span>', esc(lead.title),
     tag(lead.source || '—', 'gray'), esc(lead.region || '—'), statusTag(lead.status || 'new'),
   ]);
-  const empty = leads.length ? '' : '<div class="empty-state"><h3>还没有候选企业</h3><p>先在「企业 ICP」保存目标市场，然后在「API 和 AI 集成」启用 Serper 或 Tavily。</p></div>';
+  const empty = leads.length ? '' : '<cds-tile class="empty-state"><h3>还没有候选企业</h3><p>先在「企业 ICP」保存目标市场，然后在「API 和 AI 集成」启用 Serper 或 Tavily。</p></cds-tile>';
   return `
     <cds-inline-notification class="notification" kind="info" title="搜索流程说明" hide-close-button>搜索只负责发现候选企业；联系方式补全与企业背调必须在后续页面手动选择记录后执行。系统会按企业根域名去重，并记录每次搜索的数量、来源和去重结果。</cds-inline-notification>
     <section class="panel discover-panel"><div class="panel-header"><div><h2>候选企业发现</h2><p class="panel-meta">搜索服务 · ICP 条件驱动</p></div><cds-button type="button" id="discoverLeads" class="btn btn-primary btn-sm" kind="primary" size="sm">运行企业搜索</cds-button></div>
