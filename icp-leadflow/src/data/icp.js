@@ -29,9 +29,59 @@ export const icpLayers = [
   ]},
 ];
 
-export const aiSchema = [
-  'company_name','domain','industry','employee_range','country_region','company_type','supply_chain_role',
-  'icp_match','icp_score','contact_name','contact_title','email','phone','email_status','phone_type',
-  'whatsapp_registered','hiring_signal','funding_signal','expansion_signal','technology_stack',
-  'research_summary','source_url','confidence','disqualifiers',
-];
+export const aiSchema = {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Euresis Lead Qualification",
+  "version": "2.0.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["company_name", "domain", "confidence", "evidence", "disqualifiers"],
+  "properties": {
+    "company_name": {"type":"string","description":"企业官方名称；找不到时为空字符串，不得猜测。"},
+    "domain": {"type":"string","description":"规范化后的企业根域名，不含协议、路径或 www。"},
+    "website": {"type":"string","format":"uri"},
+    "industry": {"type":"string"},
+    "employee_range": {"type":"string"},
+    "revenue_range": {"type":"string"},
+    "country_region": {"type":"string"},
+    "company_type": {"type":"string"},
+    "business_model": {"type":"string"},
+    "funding_stage": {"type":"string"},
+    "technology_stack": {"type":"array","items":{"type":"string"}},
+    "supply_chain_role": {"type":"string"},
+    "icp_match": {"type":"boolean"},
+    "icp_score": {"type":"integer","minimum":0,"maximum":100},
+    "intent_score": {"type":"integer","minimum":0,"maximum":100},
+    "contact": {
+      "type":"object","additionalProperties":false,
+      "properties": {
+        "name":{"type":"string"},"title":{"type":"string"},"department":{"type":"string"},
+        "decision_role":{"type":"string"},"work_email":{"type":"string"},
+        "email_status":{"type":"string","enum":["valid","invalid","risky","unknown","not_found"]},
+        "phone":{"type":"string"},"phone_status":{"type":"string","enum":["verified","unverified","invalid","unknown","not_found"]},
+        "linkedin_url":{"type":"string","format":"uri"}
+      },
+      "required":["name","title","work_email","email_status","phone","phone_status"]
+    },
+    "signals": {
+      "type":"array","items":{
+        "type":"object","additionalProperties":false,
+        "properties":{"type":{"type":"string","enum":["hiring","funding","expansion","technology","product","intent","news","event","other"]},"summary":{"type":"string"},"observed_at":{"type":"string"},"source_url":{"type":"string","format":"uri"},"evidence_quote":{"type":"string"}},
+        "required":["type","summary","source_url","evidence_quote"]
+      }
+    },
+    "evidence": {
+      "type":"array","items":{
+        "type":"object","additionalProperties":false,
+        "properties":{"field":{"type":"string"},"value":{"type":"string"},"source_url":{"type":"string","format":"uri"},"source_title":{"type":"string"},"observed_at":{"type":"string"},"quote":{"type":"string"}},
+        "required":["field","value","source_url","quote"]
+      }
+    },
+    "field_confidence": {"type":"object","additionalProperties":{"type":"number","minimum":0,"maximum":1}},
+    "confidence": {"type":"number","minimum":0,"maximum":1},
+    "missing_fields": {"type":"array","items":{"type":"string"}},
+    "disqualifiers": {"type":"array","items":{"type":"string"}},
+    "research_summary": {"type":"string"},
+    "review_required": {"type":"boolean"}
+  }
+};
