@@ -29,6 +29,7 @@ export function renderStagePage(stage){
 export function bindStagePage(root,stage){
  const c=STAGES[stage],button=root.querySelector('[data-run-stage]'),message=root.querySelector('[data-stage-message]');
  const progress=root.querySelector('[data-stage-progress]'),bar=root.querySelector('[data-stage-progressbar]'),fill=root.querySelector('[data-stage-progress-fill]'),label=root.querySelector('[data-stage-progress-label]'),percent=root.querySelector('[data-stage-progress-percent]'),detail=root.querySelector('[data-stage-progress-detail]');
+ let busy=false;
  const selectedIds=()=>[...root.querySelectorAll('[data-select-lead]:checked')].map(el=>el.dataset.selectLead);
  const updateSelection=()=>{const ids=selectedIds();button.disabled=ids.length===0;button.textContent=c.action+'（已选 '+ids.length+'）';};
  root.querySelectorAll('[data-select-lead]').forEach(el=>el.addEventListener('change',updateSelection));
@@ -36,8 +37,9 @@ export function bindStagePage(root,stage){
  const updateProgress=(n,title,desc)=>{const v=Math.max(0,Math.min(100,Math.round(n)));progress.hidden=false;fill.style.width=v+'%';bar.setAttribute('aria-valuenow',String(v));percent.textContent=v+'%';label.textContent=title;detail.textContent=desc;};
  async function refreshLogs(){const {data:{user}}=await supabase.auth.getUser();if(!user)return;const {data,error}=await supabase.from('lead_activity_logs').select('id,lead_id,action,provider,status,input,output,error_message,started_at,completed_at,created_at').eq('user_id',user.id).order('created_at',{ascending:false}).limit(20);const tbody=root.querySelector('[data-stage-logs]');if(tbody)tbody.innerHTML=error?'<tr><td colspan="9">日志读取失败：'+esc(error.message)+'</td></tr>':renderLogRows(data);}
  async function runSelected(ids){
+  if(busy)return;
   if(!ids.length){showToast('请先勾选要处理的记录');return;}
-  button.disabled=true;const startedAt=new Date().toISOString();let runId=null;
+  busy=true;button.disabled=true;root.querySelectorAll('[data-run-one],[data-select-lead],[data-select-visible]').forEach(el=>el.disabled=true);const startedAt=new Date().toISOString();let runId=null;
   try{
    const {data:{user},error:authError}=await supabase.auth.getUser();if(authError||!user)throw new Error('登录会话已失效，请重新登录');
    await loadLeads();if(c.provider){await loadIntegrations();if(!listIntegrations().some(x=>x.id===c.provider&&x.enabled))throw new Error('请先在 API 和 AI 集成页面启用 '+c.provider);}
@@ -62,7 +64,7 @@ export function bindStagePage(root,stage){
    await loadLeads();await supabase.from('workflow_runs').update({status:failed&&!success?'failed':'completed',output:{selected_count:batch.length,success,failed,errors,provider:c.provider,completed_at:new Date().toISOString()},updated_at:new Date().toISOString()}).eq('id',runId).eq('user_id',user.id);
    message.textContent='完成：选中 '+batch.length+' 条，成功 '+success+' 条，失败 '+failed+' 条。'+(errors.length?' 首个错误：'+errors[0].error:'');updateProgress(100,failed?'任务结束（含失败项）':'任务完成','总计 '+batch.length+' · 成功 '+success+' · 失败 '+failed);showToast(c.action+'完成：成功 '+success+'，失败 '+failed);document.dispatchEvent(new CustomEvent('euresis:leads-updated'));await refreshLogs();
   }catch(error){if(runId)await supabase.from('workflow_runs').update({status:'failed',error_message:error.message||'处理失败',output:{selected_count:ids.length},updated_at:new Date().toISOString()}).eq('id',runId);message.textContent=error.message||'处理失败';updateProgress(100,'任务失败',error.message||'处理失败');showToast('处理失败：'+(error.message||'未知错误'));}
-  finally{button.disabled=selectedIds().length===0;button.textContent=c.action+'（已选 '+selectedIds().length+'）';}
+  finally{busy=false;root.querySelectorAll('[data-run-one],[data-select-lead],[data-select-visible]').forEach(el=>el.disabled=false);button.disabled=selectedIds().length===0;button.textContent=c.action+'（已选 '+selectedIds().length+'）';}
  }
  button?.addEventListener('click',()=>runSelected(selectedIds()));
  root.querySelectorAll('[data-run-one]').forEach(el=>el.addEventListener('click',()=>runSelected([el.dataset.runOne])));
