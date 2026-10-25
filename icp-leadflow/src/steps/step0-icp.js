@@ -80,8 +80,8 @@ function queryPreview(root) {
   const format=items=>items.length?items.map(item=>item.label+'：'+item.value).join('；'):'';
   const values=(layer,index)=>String(layers[layer]?.querySelectorAll('.icp-field')[index]?.querySelector('[data-icp-field]')?.value||'').split(/[,;\n]+/).map(v=>v.trim()).filter(v=>v&&v!=='不限'&&v!=='不排除');
   const phrase=arr=>arr.length?'('+arr.map(v=>'"'+v.replace(/"/g,'\\"')+'"').join(' OR ')+')':'';
-  const industry=values(0,0), geography=values(0,5), size=values(0,1), companyType=values(0,4), supply=values(0,8), products=values(0,11), markets=values(0,12), productKeywords=values(8,0);
-  const syntax=[phrase(industry),phrase(geography),phrase(size),phrase(companyType),phrase(supply),phrase(products),phrase(markets),phrase(productKeywords)].filter(Boolean);
+  const industry=values(0,0), geography=values(0,5), size=values(0,1), companyType=values(0,4), technology=values(0,6), supply=values(0,8), funding=values(0,9), businessModel=values(0,10), products=values(0,11), markets=values(0,12), productKeywords=values(8,0);
+  const syntax=[phrase(industry),phrase(geography),phrase(size),phrase(companyType),phrase(technology),phrase(supply),phrase(funding),phrase(businessModel),phrase(products),phrase(markets),phrase(productKeywords)].filter(Boolean);
   const persona=[...values(1,0),...values(1,1),...values(1,2)]; if(persona.length)syntax.push(phrase(persona));
   const signals=[...values(2,0),...values(2,1),...values(2,2),...values(2,3),...values(2,6),...values(2,7)]; if(signals.length)syntax.push(phrase(signals));
   const blacklist=[...values(3,5),...values(3,6)].map(v=>v.toLowerCase().replace(/^https?:\/\//,'').replace(/^www\./,'').split('/')[0]).filter(Boolean);
@@ -317,7 +317,7 @@ export function bindStep0(root) {
     queryPreview(root);
     showToast('已清空当前 ICP 条件');
   });
-  root.querySelectorAll('[data-icp-field]').forEach(input => { input.addEventListener('change',()=>queryPreview(root)); input.addEventListener('input',()=>queryPreview(root)); });
+  root.querySelectorAll('[data-icp-field]').forEach(input => { const refresh=()=>{if(!['translatedQuery','translatedSourceQuery','translatedLanguage'].includes(input.dataset.icpField)){const translated=root.querySelector('[data-icp-field="translatedQuery"]');if(translated)translated.value='';const output=root.querySelector('[data-translated-query]');if(output)output.textContent='条件已变更，请重新翻译后再搜索。';}queryPreview(root);};input.addEventListener('change',refresh);input.addEventListener('input',refresh); });
   supabase.auth.getUser().then(async ({ data: { user } }) => {
     if (!user) return;
     const { data, error } = await supabase.from('icp_profiles').select('id,criteria').eq('user_id', user.id).order('updated_at', { ascending: false }).limit(1).maybeSingle();
