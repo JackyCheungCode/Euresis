@@ -180,8 +180,7 @@ function updateAuthMode() {
 function initAuth() {
   const form = document.getElementById('authForm');
   const submitButton = document.getElementById('authSubmit');
-  // Carbon buttons render their native button inside Shadow DOM; bridge form submission explicitly.
-  submitButton.addEventListener('click', () => form.requestSubmit());
+  // Use a native submit button so mobile taps trigger the form's submit event reliably.
   document.getElementById('authModeToggle').addEventListener('click', () => {
     signupMode = !signupMode;
     updateAuthMode();
