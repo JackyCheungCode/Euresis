@@ -279,7 +279,7 @@ export function bindStep0(root) {
       const keywordWrap=input.closest('.icp-keyword-tags');if(keywordWrap){paintKeywordTags(keywordWrap);return;}
       const wrap = input.closest('.cds-select, .cds-multi');
       if (wrap?.matches('.cds-multi')) {
-        wrap.querySelectorAll('cds-multi-select-item').forEach(option => { option.selected = false; option.closest('.cds-multi-option').hidden = false; });
+        wrap.querySelectorAll('cds-multi-select-item').forEach(option => { option.selected = false; option.removeAttribute('selected'); });
         const search = wrap.querySelector('.cds-multi-search'); if (search) search.value = '';
         updateMultiLabel(wrap); return;
       }
@@ -310,7 +310,7 @@ export function bindStep0(root) {
       const wrap = input.closest('.cds-select, .cds-multi');
       if (wrap?.matches('.cds-multi')) {
         const values = input.value.split(',').map(value => value.trim());
-        wrap.querySelectorAll('cds-multi-select-item').forEach(option => { option.selected = values.includes(option.value); });
+        wrap.querySelectorAll('cds-multi-select-item').forEach(option => { option.selected = values.includes(option.value); if(option.selected) option.setAttribute('selected',''); else option.removeAttribute('selected'); });
         updateMultiLabel(wrap);
         const countNode = wrap.querySelector('[data-blacklist-count]');
         if (countNode) countNode.textContent = input.value.split(/[\s,;]+/).filter(Boolean).length + ' 个域名';
