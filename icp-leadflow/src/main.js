@@ -8,21 +8,14 @@ import { supabase } from './services/supabase.js';
 
 async function setView(view) {
   const workflow = document.getElementById('workflowView');
-  const icp = document.getElementById('icpView');
   const integrations = document.getElementById('integrationsView');
   workflow.hidden = view !== 'workflow';
-  icp.hidden = view !== 'icp';
   integrations.hidden = view !== 'integrations';
   document.querySelectorAll('[data-view]').forEach(button => {
     const active = button.dataset.view === view;
     button.classList.toggle('active', active);
     button.setAttribute('aria-current', active ? 'page' : 'false');
   });
-  if (view === 'icp') {
-    const root = document.getElementById('icpDefinitionContainer');
-    root.innerHTML = renderStep0();
-    bindStep0(root);
-  }
   if (view === 'integrations') {
     try {
       await loadIntegrations();
@@ -34,7 +27,7 @@ async function setView(view) {
       errorNode.className = 'notification warning';
     }
   }
-  document.title = view === 'integrations' ? 'API 和 AI 集成 · Euresis' : view === 'icp' ? '企业 ICP · Euresis' : '搜索 API 发现 · Euresis';
+  document.title = view === 'integrations' ? 'API 和 AI 集成 · Euresis' : '搜索 API 发现 · Euresis';
 }
 
 function openRecordDetails(row) {
@@ -82,6 +75,16 @@ function init() {
   renderStats();
   renderNav();
   renderStep();
+  const icpRoot = document.getElementById('icpDefinitionContainer');
+  icpRoot.innerHTML = renderStep0();
+  bindStep0(icpRoot);
+  const icpToggle = document.getElementById('toggleIcpConfig');
+  icpToggle.addEventListener('click', () => {
+    const expanded = icpToggle.getAttribute('aria-expanded') !== 'true';
+    icpToggle.setAttribute('aria-expanded', String(expanded));
+    icpRoot.hidden = !expanded;
+    icpToggle.textContent = expanded ? '收起 ICP 配置' : '展开 ICP 配置';
+  });
   const appShell = document.getElementById('appShell');
   const sidebarToggle = document.getElementById('sidebarToggle');
   if (window.matchMedia('(max-width: 600px)').matches) {
