@@ -16,32 +16,18 @@ const MODELS = [
   { value: 'claude-sonnet-4-20250514', label: 'Anthropic · Claude Sonnet 4' },
 ];
 function renderSelect(key, options, selected, label) {
-  const normalized = [{ value: '', label: '不限 / 请选择' }, ...options.map(option => ({
-    value: String(optionValue(option)), label: optionLabel(option),
-    flag: typeof option === 'object' ? option.flag : null,
-  }))];
-  const choice = normalized.find(option => option.value === String(selected ?? '')) || normalized[0];
-  return `<div class="cds-select icp-carbon-select" data-select-wrap="${escapeHtml(key)}">
-    <cds-button type="button" class="cds-select-trigger" aria-haspopup="listbox" aria-expanded="false" aria-label="${escapeHtml(label)}" kind="ghost">
-      <span class="cds-select-current">${choice.flag ? `<span class="flag-circle" aria-hidden="true">${choice.flag}</span>` : ''}${escapeHtml(choice.label)}</span><span class="cds-select-chevron" aria-hidden="true">⌄</span>
-    </cds-button>
-    <div class="cds-select-menu" role="listbox" aria-label="${escapeHtml(label)}" hidden>
-      ${normalized.map(option => `<cds-button type="button" class="cds-select-option" role="option" data-value="${escapeHtml(option.value)}" aria-selected="${option.value === choice.value}" kind="ghost">${option.flag ? `<span class="flag-circle" aria-hidden="true">${option.flag}</span>` : ''}<span>${escapeHtml(option.label)}</span></cds-button>`).join('')}
-    </div>
-    <input type="hidden" data-icp-field="${escapeHtml(key)}" value="${escapeHtml(choice.value)}">
-  </div>`;
+ const normalized=[{value:'',label:'不限 / 请选择'},...options.map(option=>({value:String(optionValue(option)),label:optionLabel(option),flag:typeof option==='object'?option.flag:null}))];
+ const choice=normalized.find(option=>option.value===String(selected??''))||normalized[0];
+ return `<div class="cds-select icp-carbon-select" data-select-wrap="${escapeHtml(key)}"><cds-dropdown class="carbon-select-control" title-text="${escapeHtml(label)}" label="${escapeHtml(choice.label)}" value="${escapeHtml(choice.value)}" data-carbon-select>${normalized.map(option=>`<cds-dropdown-item value="${escapeHtml(option.value)}" ${option.value===choice.value?'selected':''}>${option.flag?`<span class="flag-circle" aria-hidden="true">${option.flag}</span>`:''}${escapeHtml(option.label)}</cds-dropdown-item>`).join('')}</cds-dropdown><input type="hidden" data-icp-field="${escapeHtml(key)}" value="${escapeHtml(choice.value)}"></div>`;
 }
-const DEFAULT_DOMAIN_BLACKLIST = 'alibaba.com, 1688.com, made-in-china.com, globalsources.com, china.cn, ec21.com, tradekey.com, dhgate.com, europages.com, kompass.com, thomasnet.com, indiamart.com, tradeindia.com, exportersindia.com, ecplaza.net, go4worldbusiness.com, linkedin.com, facebook.com, twitter.com, x.com, instagram.com, pinterest.com, tiktok.com, reddit.com, quora.com, medium.com, tumblr.com, weibo.com, youtube.com, vimeo.com, dailymotion.com, bilibili.com, twitch.tv, amazon.com, ebay.com, walmart.com, etsy.com, aliexpress.com, temu.com, wish.com, rakuten.com, crunchbase.com, zoominfo.com, dnb.com, bloomberg.com, owler.com, apollo.io, lusha.com, yelp.com, yellowpages.com, manta.com, bbb.org, trustpilot.com, glassdoor.com, wikipedia.org, wikidata.org, indeed.com, monster.com, ziprecruiter.com, simplyhired.com, 51job.com, zhaopin.com, eventbrite.com, 10times.com, prnewswire.com, businesswire.com, globenewswire.com, blogspot.com, wordpress.com, substack.com, craigslist.org, google.com, microsoft.com, apple.com, adobe.com, salesforce.com, hubspot.com, zoom.us, dropbox.com';
-const MULTI_FIELDS = new Set(['行业 / 细分领域','目标职位','部门','排除行业','排除公司类型','排除规模','招聘信号','扩张信号','融资信号','技术变更信号','商业模式','产品 / 服务类别','目标客户市场','销售覆盖区域','核心痛点','解决方案需求','购买意向行为','产品发布信号','预期成果']);
-const REGIONS = {'北美':['加拿大','美国','墨西哥'],'东南亚':['文莱','柬埔寨','印度尼西亚','老挝','马来西亚','缅甸','菲律宾','新加坡','泰国','东帝汶','越南'],'东亚':['中国大陆','中国澳门','中国香港','中国台湾','日本','韩国','朝鲜','蒙古'],'南亚':['阿富汗','孟加拉国','不丹','印度','马尔代夫','尼泊尔','巴基斯坦','斯里兰卡'],'欧洲':['奥地利','比利时','丹麦','芬兰','法国','德国','希腊','爱尔兰','意大利','荷兰','挪威','波兰','葡萄牙','西班牙','瑞典','瑞士','英国'],'中东':['巴林','伊朗','伊拉克','以色列','约旦','科威特','阿曼','卡塔尔','沙特阿拉伯','土耳其','阿联酋'],'拉丁美洲':['阿根廷','巴西','智利','哥伦比亚','秘鲁','乌拉圭'],'非洲':['阿尔及利亚','埃及','加纳','肯尼亚','摩洛哥','尼日利亚','南非']};
 function renderMultiSelect(key, options, label) {
  const normalized=options.map(o=>({value:String(optionValue(o)),label:optionLabel(o),flag:typeof o==='object'?o.flag:null}));
- return '<div class="cds-multi icp-multi" data-multi-wrap="'+escapeHtml(key)+'"><cds-button type="button" class="cds-select-trigger" aria-expanded="false" aria-label="'+escapeHtml(label)+'" kind="ghost"><span class="cds-multi-current">不限 / 请选择</span><span class="cds-select-chevron">⌄</span></cds-button><div class="cds-multi-menu" hidden><cds-text-input class="cds-text-input cds-multi-search" type="search" placeholder="搜索选项…" aria-label="搜索选项…"></cds-text-input><div class="cds-multi-options">'+normalized.map(o=>'<div class="cds-multi-option">'+(o.flag?'<span class="flag-circle">'+o.flag+'</span>':'')+'<cds-checkbox value="'+escapeHtml(o.value)+'" label-text="'+escapeHtml(o.label)+'"></cds-checkbox><span hidden>'+escapeHtml(o.label)+'</span></div>').join('')+'</div><div class="cds-multi-footer"><cds-button type="button" class="btn btn-ghost btn-sm" data-multi-clear kind="ghost" size="sm">清除选择</cds-button><cds-button type="button" class="btn btn-primary btn-sm" data-multi-done kind="primary" size="sm">完成</cds-button></div></div><input type="hidden" data-icp-field="'+escapeHtml(key)+'" value=""></div>';
+ return `<div class="cds-multi icp-multi" data-multi-wrap="${escapeHtml(key)}"><cds-multi-select class="carbon-multi-control" filterable="true" title-text="${escapeHtml(label)}" label="不限 / 请选择" data-carbon-multi>${normalized.map(o=>`<cds-multi-select-item value="${escapeHtml(o.value)}">${o.flag?'<span class="flag-circle">'+o.flag+'</span>':''}${escapeHtml(o.label)}</cds-multi-select-item>`).join('')}</cds-multi-select><div class="icp-multi-actions"><cds-button type="button" data-multi-clear kind="ghost" size="sm">清除选择</cds-button></div><input type="hidden" data-icp-field="${escapeHtml(key)}" value=""></div>`;
 }
 function renderGeography(key,label) {
- const options=MARKET_OPTIONS.map(o=>'<div class="cds-multi-option" data-country="'+escapeHtml(o.value)+'"><span class="flag-circle">'+o.flag+'</span><cds-checkbox value="'+escapeHtml(o.value)+'" label-text="'+escapeHtml(o.label)+'"></cds-checkbox></div>').join('');
- const regions=Object.keys(REGIONS).map(r=>'<cds-button type="button" class="btn btn-ghost btn-sm" data-region="'+escapeHtml(r)+'" kind="ghost" size="sm">'+escapeHtml(r)+'</cds-button>').join('');
- return '<div class="cds-multi icp-multi icp-geography" data-multi-wrap="'+escapeHtml(key)+'"><cds-button type="button" class="cds-select-trigger" aria-expanded="false" kind="ghost"><span class="cds-multi-current">选择大区或国家/地区（可多选）</span><span class="cds-select-chevron">⌄</span></cds-button><div class="cds-multi-menu" hidden><cds-text-input class="cds-text-input cds-multi-search" type="search" placeholder="搜索国家/地区…" aria-label="搜索国家/地区…"></cds-text-input><div class="cds-region-pills">'+regions+'</div><div class="cds-multi-options">'+options+'</div><div class="cds-multi-footer"><cds-button type="button" class="btn btn-ghost btn-sm" data-multi-clear kind="ghost" size="sm">清除选择</cds-button><cds-button type="button" class="btn btn-primary btn-sm" data-multi-done kind="primary" size="sm">完成</cds-button></div></div><input type="hidden" data-icp-field="'+escapeHtml(key)+'" value=""></div>';
+ const options=MARKET_OPTIONS.map(o=>`<cds-multi-select-item value="${escapeHtml(o.value)}" data-country="${escapeHtml(o.value)}">${o.flag} ${escapeHtml(o.label)}</cds-multi-select-item>`).join('');
+ const regions=Object.keys(REGIONS).map(r=>`<cds-button type="button" data-region="${escapeHtml(r)}" kind="ghost" size="sm">${escapeHtml(r)}</cds-button>`).join('');
+ return `<div class="cds-multi icp-multi icp-geography" data-multi-wrap="${escapeHtml(key)}"><cds-multi-select class="carbon-multi-control" filterable="true" title-text="${escapeHtml(label)}" label="选择大区或国家/地区（可多选）" data-carbon-multi>${options}</cds-multi-select><div class="cds-region-pills">${regions}</div><div class="icp-multi-actions"><cds-button type="button" data-multi-clear kind="ghost" size="sm">清除选择</cds-button></div><input type="hidden" data-icp-field="${escapeHtml(key)}" value=""></div>`;
 }
 function renderKeywordTags(key,label) {
  const placeholder=label==='企业产品关键字描述'?'输入产品、设备、技术或解决方案关键词后按 Enter':'输入需要排除的产品关键词后按 Enter';
@@ -67,8 +53,9 @@ function renderField(key,label) {
  return renderSelect(key,optionsForField(label),'',label);
 }
 function updateMultiLabel(wrap) {
- const values=[...[...wrap.querySelectorAll('.cds-multi-options cds-checkbox')].filter(i=>i.checked)].map(i=>i.value); const hidden=wrap.querySelector('[data-icp-field]'); if(hidden) hidden.value=values.join(', ');
- const current=wrap.querySelector('.cds-multi-current'); if(current) current.textContent=values.length?values.slice(0,3).join('、')+(values.length>3?' 等 '+values.length+' 项':''):'不限 / 请选择';
+ const items=[...wrap.querySelectorAll('cds-multi-select-item')];
+ const values=items.filter(item=>item.selected||item.hasAttribute('selected')).map(item=>item.value);
+ const hidden=wrap.querySelector('[data-icp-field]');if(hidden)hidden.value=values.join(', ');
 }
 function modelSelect() {
   const selected = 'gpt-4o-mini';
@@ -169,7 +156,7 @@ export function renderStep0() {
       ${layersHtml}
     </section>
     <div class="two-col icp-support-grid">
-      ${panelNoPad('实时查询预览', `<div class="generated-queries"><div class="generated-query"><span class="query-note">当前筛选</span><code data-query-preview>请先选择筛选条件</code></div><div class="generated-query"><span class="query-note">目标联系人</span><code data-persona-preview>选择职位、部门与资历层级</code></div><div class="generated-query"><span class="query-note">排除规则</span><code data-exclusion-preview>按需配置排除条件</code></div><div class="generated-query generated-query-syntax"><span class="query-note">最终高级搜索语法（实时拼接）</span><code data-query-syntax>B2B distributors manufacturers companies businesses official website</code></div><section class="query-translation" aria-label="搜索语法翻译"><div class="query-translation-heading"><div><strong>DeepL 搜索语法翻译</strong><p class="field-help">只翻译引号中的关键词；OR、site:、减号、括号、引号和域名等搜索语法保持原样。</p></div><div class="query-translation-controls"><div><label>目标语言</label><div class="cds-select" data-translation-select><cds-button type="button" class="cds-select-trigger" aria-haspopup="listbox" aria-expanded="false" kind="ghost"><span class="cds-select-current" data-translation-current>英语（美国）</span><span class="cds-select-chevron" aria-hidden="true">⌄</span></cds-button><div class="cds-select-menu" role="listbox" aria-label="翻译目标语言" hidden><cds-button type="button" class="cds-select-option" role="option" data-value="EN-US" aria-selected="true" kind="ghost">英语（美国）</cds-button><cds-button type="button" class="cds-select-option" role="option" data-value="EN-GB" aria-selected="false" kind="ghost">英语（英国）</cds-button><cds-button type="button" class="cds-select-option" role="option" data-value="DE" aria-selected="false" kind="ghost">德语</cds-button><cds-button type="button" class="cds-select-option" role="option" data-value="FR" aria-selected="false" kind="ghost">法语</cds-button><cds-button type="button" class="cds-select-option" role="option" data-value="ES" aria-selected="false" kind="ghost">西班牙语</cds-button><cds-button type="button" class="cds-select-option" role="option" data-value="IT" aria-selected="false" kind="ghost">意大利语</cds-button><cds-button type="button" class="cds-select-option" role="option" data-value="NL" aria-selected="false" kind="ghost">荷兰语</cds-button><cds-button type="button" class="cds-select-option" role="option" data-value="PL" aria-selected="false" kind="ghost">波兰语</cds-button><cds-button type="button" class="cds-select-option" role="option" data-value="PT-BR" aria-selected="false" kind="ghost">葡萄牙语（巴西）</cds-button><cds-button type="button" class="cds-select-option" role="option" data-value="JA" aria-selected="false" kind="ghost">日语</cds-button><cds-button type="button" class="cds-select-option" role="option" data-value="KO" aria-selected="false" kind="ghost">韩语</cds-button><cds-button type="button" class="cds-select-option" role="option" data-value="ZH" aria-selected="false" kind="ghost">中文</cds-button><cds-button type="button" class="cds-select-option" role="option" data-value="SV" aria-selected="false" kind="ghost">瑞典语</cds-button><cds-button type="button" class="cds-select-option" role="option" data-value="DA" aria-selected="false" kind="ghost">丹麦语</cds-button><cds-button type="button" class="cds-select-option" role="option" data-value="FI" aria-selected="false" kind="ghost">芬兰语</cds-button><cds-button type="button" class="cds-select-option" role="option" data-value="CS" aria-selected="false" kind="ghost">捷克语</cds-button><cds-button type="button" class="cds-select-option" role="option" data-value="EL" aria-selected="false" kind="ghost">希腊语</cds-button><cds-button type="button" class="cds-select-option" role="option" data-value="HU" aria-selected="false" kind="ghost">匈牙利语</cds-button><cds-button type="button" class="cds-select-option" role="option" data-value="ID" aria-selected="false" kind="ghost">印尼语</cds-button><cds-button type="button" class="cds-select-option" role="option" data-value="RO" aria-selected="false" kind="ghost">罗马尼亚语</cds-button><cds-button type="button" class="cds-select-option" role="option" data-value="RU" aria-selected="false" kind="ghost">俄语</cds-button><cds-button type="button" class="cds-select-option" role="option" data-value="TR" aria-selected="false" kind="ghost">土耳其语</cds-button><cds-button type="button" class="cds-select-option" role="option" data-value="UK" aria-selected="false" kind="ghost">乌克兰语</cds-button></div><input type="hidden" data-translation-language value="EN-US"></div></div><cds-button type="button" class="btn btn-primary btn-sm" data-translate-query kind="primary" size="sm">翻译搜索语法</cds-button></div></div><code class="translated-query-code" data-translated-query>配置并启用 DeepL API 后，可选择目标语言并翻译关键词。</code><p class="field-help" data-translation-status role="status">翻译结果可用于下一次企业搜索；修改 ICP 条件后需重新翻译。</p><input type="hidden" data-icp-field="translatedQuery" value=""><input type="hidden" data-icp-field="translatedSourceQuery" value=""><input type="hidden" data-icp-field="translatedLanguage" value="EN-US"></section></div><div class="icp-preview-table-wrap"><div class="icp-preview-table-heading"><strong data-icp-match-count>现有线索库匹配：加载中</strong><span class="field-help">基于当前账号已保存线索，不代表外部搜索总量</span></div><div class="cds-data-table-container"><table class="data-table icp-preview-table"><thead><tr><th>企业</th><th>域名</th><th>地区</th><th>行业</th><th>员工规模</th><th>评分</th></tr></thead><tbody data-icp-sample><tr><td colspan="6">正在读取当前账号线索…</td></tr></tbody></table></div></div>`)}
+      ${panelNoPad('实时查询预览', `<div class="generated-queries"><div class="generated-query"><span class="query-note">当前筛选</span><code data-query-preview>请先选择筛选条件</code></div><div class="generated-query"><span class="query-note">目标联系人</span><code data-persona-preview>选择职位、部门与资历层级</code></div><div class="generated-query"><span class="query-note">排除规则</span><code data-exclusion-preview>按需配置排除条件</code></div><div class="generated-query generated-query-syntax"><span class="query-note">最终高级搜索语法（实时拼接）</span><code data-query-syntax>B2B distributors manufacturers companies businesses official website</code></div><section class="query-translation" aria-label="搜索语法翻译"><div class="query-translation-heading"><div><strong>DeepL 搜索语法翻译</strong><p class="field-help">只翻译引号中的关键词；OR、site:、减号、括号、引号和域名等搜索语法保持原样。</p></div><div class="query-translation-controls"><div><label>目标语言</label><div class="cds-select" data-translation-select><cds-dropdown class="carbon-select-control" title-text="目标语言" label="英语（美国）" value="EN-US" data-translation-carbon><cds-dropdown-item value="EN-US" selected>英语（美国）</cds-dropdown-item><cds-dropdown-item value="EN-GB" >英语（英国）</cds-dropdown-item><cds-dropdown-item value="DE" >德语</cds-dropdown-item><cds-dropdown-item value="FR" >法语</cds-dropdown-item><cds-dropdown-item value="ES" >西班牙语</cds-dropdown-item><cds-dropdown-item value="IT" >意大利语</cds-dropdown-item><cds-dropdown-item value="NL" >荷兰语</cds-dropdown-item><cds-dropdown-item value="PL" >波兰语</cds-dropdown-item><cds-dropdown-item value="PT-BR" >葡萄牙语（巴西）</cds-dropdown-item><cds-dropdown-item value="JA" >日语</cds-dropdown-item><cds-dropdown-item value="KO" >韩语</cds-dropdown-item><cds-dropdown-item value="ZH" >中文</cds-dropdown-item><cds-dropdown-item value="SV" >瑞典语</cds-dropdown-item><cds-dropdown-item value="DA" >丹麦语</cds-dropdown-item><cds-dropdown-item value="FI" >芬兰语</cds-dropdown-item><cds-dropdown-item value="CS" >捷克语</cds-dropdown-item><cds-dropdown-item value="EL" >希腊语</cds-dropdown-item><cds-dropdown-item value="HU" >匈牙利语</cds-dropdown-item><cds-dropdown-item value="ID" >印尼语</cds-dropdown-item><cds-dropdown-item value="RO" >罗马尼亚语</cds-dropdown-item><cds-dropdown-item value="RU" >俄语</cds-dropdown-item><cds-dropdown-item value="TR" >土耳其语</cds-dropdown-item><cds-dropdown-item value="UK" >乌克兰语</cds-dropdown-item></cds-dropdown><input type="hidden" data-translation-language value="EN-US"></div><cds-button type="button" class="btn btn-primary btn-sm" data-translate-query kind="primary" size="sm">翻译搜索语法</cds-button></div></div><code class="translated-query-code" data-translated-query>配置并启用 DeepL API 后，可选择目标语言并翻译关键词。</code><p class="field-help" data-translation-status role="status">翻译结果可用于下一次企业搜索；修改 ICP 条件后需重新翻译。</p><input type="hidden" data-icp-field="translatedQuery" value=""><input type="hidden" data-icp-field="translatedSourceQuery" value=""><input type="hidden" data-icp-field="translatedLanguage" value="EN-US"></section></div><div class="icp-preview-table-wrap"><div class="icp-preview-table-heading"><strong data-icp-match-count>现有线索库匹配：加载中</strong><span class="field-help">基于当前账号已保存线索，不代表外部搜索总量</span></div><div class="cds-data-table-container"><table class="data-table icp-preview-table"><thead><tr><th>企业</th><th>域名</th><th>地区</th><th>行业</th><th>员工规模</th><th>评分</th></tr></thead><tbody data-icp-sample><tr><td colspan="6">正在读取当前账号线索…</td></tr></tbody></table></div></div>`)}
       <section class="panel icp-schema-panel"><div class="panel-header"><h2>AI 判定 Schema</h2><span class="panel-meta">结构化输出字段</span></div><div class="panel-body"><p class="field-help">Schema v2.0 · 仅允许定义字段；未知信息留空并标记缺失，关键字段附可访问证据 URL 与原文摘录。置信度统一为 0–1。</p><div class="field-tags">${Object.keys(aiSchema.properties).map(field => tag(field, 'blue')).join('')}</div><details class="icp-schema-json"><summary>查看完整 JSON Schema</summary><pre class="cds-code-snippet">${escapeHtml(JSON.stringify(aiSchema,null,2))}</pre></details><div class="model-picker-wrap"><label class="form-label">AI 模型</label>${modelSelect()}<p class="field-help">仅显示常用模型。实际调用前需在「API 与 AI 集成」配置对应服务及可用模型。</p></div></div></section>
     </div>`;
 }
@@ -182,32 +169,16 @@ function updateSelectedLabel(wrap, option) {
   label.append(text);
 }
 function bindSelects(root) {
-  root.querySelectorAll('.cds-select-trigger').forEach(trigger => trigger.addEventListener('click', () => {
-    const wrap = trigger.closest('.cds-select');
-    const menu = wrap.querySelector('.cds-select-menu');
-    const willOpen = menu.hidden;
-    root.querySelectorAll('.cds-select-menu').forEach(other => {
-      other.hidden = true;
-      other.closest('.cds-select').querySelector('.cds-select-trigger').setAttribute('aria-expanded', 'false');
-    });
-    menu.hidden = !willOpen;
-    trigger.setAttribute('aria-expanded', String(willOpen));
-  }));
-  root.querySelectorAll('.cds-select-option').forEach(option => option.addEventListener('click', () => {
-    const wrap = option.closest('.cds-select');
-    const field = wrap.querySelector('input[type="hidden"]');
-    field.value = option.dataset.value;
-    updateSelectedLabel(wrap, option);
-    wrap.querySelector('.cds-select-menu').hidden = true;
-    wrap.querySelector('.cds-select-trigger').setAttribute('aria-expanded', 'false');
-    wrap.querySelectorAll('.cds-select-option').forEach(item => item.setAttribute('aria-selected', String(item === option)));
-    queryPreview(root);
-  }));
+ root.querySelectorAll('[data-select-wrap] cds-dropdown').forEach(dropdown=>{
+  const hidden=dropdown.closest('[data-select-wrap]')?.querySelector('[data-icp-field]');
+  dropdown.addEventListener('cds-dropdown-selected',event=>{if(hidden){hidden.value=String(event.detail?.item?.value??dropdown.value??'');hidden.dispatchEvent(new Event('change',{bubbles:true}));}queryPreview(root);});
+  if(hidden&&hidden.value)dropdown.value=hidden.value;
+ });
 }
 export function bindStep0(root) {
   bindSelects(root);
   bindKeywordTags(root);
-  root.querySelectorAll('[data-translation-select] .cds-select-option').forEach(option=>option.addEventListener('click',()=>{const translated=root.querySelector('[data-icp-field="translatedQuery"]');if(translated)translated.value='';const output=root.querySelector('[data-translated-query]');if(output)output.textContent='目标语言已变更，请重新翻译。';const status=root.querySelector('[data-translation-status]');if(status)status.textContent='请选择目标语言后重新翻译，避免使用旧语言结果。';}));
+  root.querySelector('[data-translation-select] cds-dropdown')?.addEventListener('cds-dropdown-selected',event=>{const val=event.detail?.item?.value||'EN-US';root.querySelector('[data-translation-language]').value=val;const translated=root.querySelector('[data-icp-field="translatedQuery"]');if(translated)translated.value='';const output=root.querySelector('[data-translated-query]');if(output)output.textContent='目标语言已变更，请重新翻译。';const status=root.querySelector('[data-translation-status]');if(status)status.textContent='请选择目标语言后重新翻译，避免使用旧语言结果。';});
   root.querySelector('[data-translate-query]')?.addEventListener('click', async event => {
     const button=event.currentTarget, source=root.querySelector('[data-query-syntax]')?.textContent||'';
     const target=root.querySelector('[data-translation-language]')?.value||'EN-US';
@@ -240,13 +211,19 @@ export function bindStep0(root) {
     } finally {button.disabled=false;button.textContent='翻译搜索语法';}
   });
   root.querySelectorAll('.cds-multi').forEach(wrap=>{
-    const trigger=wrap.querySelector('.cds-select-trigger'),menu=wrap.querySelector('.cds-multi-menu');
-    trigger.addEventListener('click',()=>{const opening=menu.hidden;root.querySelectorAll('.cds-multi-menu').forEach(m=>{m.hidden=true;m.closest('.cds-multi').querySelector('.cds-select-trigger').setAttribute('aria-expanded','false');});menu.hidden=!opening;trigger.setAttribute('aria-expanded',String(opening));});
-    wrap.querySelectorAll('.cds-multi-options cds-checkbox').forEach(i=>i.addEventListener('cds-checkbox-changed',()=>{updateMultiLabel(wrap);queryPreview(root);}));
-    wrap.querySelector('[data-multi-clear]')?.addEventListener('click',()=>{wrap.querySelectorAll('.cds-multi-options cds-checkbox').forEach(i=>i.checked=false);updateMultiLabel(wrap);queryPreview(root);});
-    wrap.querySelector('[data-multi-done]')?.addEventListener('click',()=>{menu.hidden=true;trigger.setAttribute('aria-expanded','false');});
-    wrap.querySelector('.cds-multi-search')?.addEventListener('input',e=>{const q=e.target.value.toLocaleLowerCase();wrap.querySelectorAll('.cds-multi-option').forEach(row=>row.hidden=!row.textContent.toLocaleLowerCase().includes(q));});
-    wrap.querySelectorAll('[data-region]').forEach(button=>button.addEventListener('click',()=>{const names=REGIONS[button.dataset.region]||[];const inputs=[...wrap.querySelectorAll('.cds-multi-options cds-checkbox')].filter(i=>names.includes(i.value));const selectAll=inputs.some(i=>!i.checked);inputs.forEach(i=>i.checked=selectAll);updateMultiLabel(wrap);queryPreview(root);}));
+    const control=wrap.querySelector('cds-multi-select');
+    control?.addEventListener('cds-multi-select-selected',()=>{updateMultiLabel(wrap);queryPreview(root);});
+    wrap.querySelector('[data-multi-clear]')?.addEventListener('click',()=>{
+      wrap.querySelectorAll('cds-multi-select-item').forEach(item=>{item.selected=false;item.removeAttribute('selected');});
+      control?.requestUpdate?.();updateMultiLabel(wrap);queryPreview(root);
+    });
+    wrap.querySelectorAll('[data-region]').forEach(button=>button.addEventListener('click',()=>{
+      const names=REGIONS[button.dataset.region]||[];
+      const items=[...wrap.querySelectorAll('cds-multi-select-item')].filter(item=>names.includes(item.value));
+      const selectAll=items.some(item=>!item.selected&&!item.hasAttribute('selected'));
+      items.forEach(item=>{item.selected=selectAll;if(selectAll)item.setAttribute('selected','');else item.removeAttribute('selected');});
+      control?.requestUpdate?.();updateMultiLabel(wrap);queryPreview(root);
+    }));
   });
   root.querySelectorAll('[data-fill-blacklist]').forEach(b=>b.addEventListener('click',()=>{const area=b.closest('.icp-blacklist').querySelector('textarea');area.value=DEFAULT_DOMAIN_BLACKLIST;area.dispatchEvent(new Event('input',{bubbles:true}));}));
   root.querySelectorAll('.icp-blacklist textarea').forEach(area=>area.addEventListener('input',()=>{const n=area.value.split(/[\s,;]+/).filter(Boolean).length;area.closest('.icp-blacklist').querySelector('[data-blacklist-count]').textContent=n+' 个域名';queryPreview(root);}));
@@ -302,13 +279,12 @@ export function bindStep0(root) {
       const keywordWrap=input.closest('.icp-keyword-tags');if(keywordWrap){paintKeywordTags(keywordWrap);return;}
       const wrap = input.closest('.cds-select, .cds-multi');
       if (wrap?.matches('.cds-multi')) {
-        wrap.querySelectorAll('.cds-multi-options cds-checkbox').forEach(option => { option.checked = false; option.closest('.cds-multi-option').hidden = false; });
+        wrap.querySelectorAll('cds-multi-select-item').forEach(option => { option.selected = false; option.closest('.cds-multi-option').hidden = false; });
         const search = wrap.querySelector('.cds-multi-search'); if (search) search.value = '';
         updateMultiLabel(wrap); return;
       }
       if (!wrap) return;
-      const first = wrap.querySelector('.cds-select-option[data-value=""]');
-      if (first) { updateSelectedLabel(wrap, first); wrap.querySelectorAll('.cds-select-option').forEach(item => item.setAttribute('aria-selected', String(item === first))); }
+      const dropdown=wrap.querySelector('cds-dropdown'); if(dropdown) dropdown.value='';
     });
     if (savedProfileId) {
       const { error } = await supabase.from('icp_profiles').delete().eq('id', savedProfileId);
@@ -330,22 +306,18 @@ export function bindStep0(root) {
       input.value = String(value ?? '');
       const keywordWrap=input.closest('.icp-keyword-tags');if(keywordWrap){paintKeywordTags(keywordWrap);return;}
       if(input.dataset.icpField==='translatedQuery'){const output=root.querySelector('[data-translated-query]');if(output&&input.value)output.textContent=input.value;}
-      if(input.dataset.icpField==='translatedLanguage'){const select=root.querySelector('[data-translation-select]');const option=[...(select?.querySelectorAll('.cds-select-option')||[])].find(item=>item.dataset.value===input.value);if(option){select.querySelector('[data-translation-language]').value=input.value;select.querySelector('[data-translation-current]').textContent=option.textContent;select.querySelectorAll('.cds-select-option').forEach(item=>item.setAttribute('aria-selected',String(item===option)));}}
+      if(input.dataset.icpField==='translatedLanguage'){const select=root.querySelector('[data-translation-select]');const dropdown=select?.querySelector('cds-dropdown');if(dropdown){dropdown.value=input.value;select.querySelector('[data-translation-language]').value=input.value;}}
       const wrap = input.closest('.cds-select, .cds-multi');
       if (wrap?.matches('.cds-multi')) {
         const values = input.value.split(',').map(value => value.trim());
-        wrap.querySelectorAll('.cds-multi-options cds-checkbox').forEach(option => { option.checked = values.includes(option.value); });
+        wrap.querySelectorAll('cds-multi-select-item').forEach(option => { option.selected = values.includes(option.value); });
         updateMultiLabel(wrap);
         const countNode = wrap.querySelector('[data-blacklist-count]');
         if (countNode) countNode.textContent = input.value.split(/[\s,;]+/).filter(Boolean).length + ' 个域名';
         return;
       }
       if (!wrap) return;
-      const option = [...wrap.querySelectorAll('.cds-select-option')].find(item => item.dataset.value === input.value);
-      if (option) {
-        updateSelectedLabel(wrap, option);
-        wrap.querySelectorAll('.cds-select-option').forEach(item => item.setAttribute('aria-selected', String(item === option)));
-      }
+      const dropdown=wrap.querySelector('cds-dropdown'); if(dropdown) dropdown.value=input.value;
     });
     queryPreview(root);
   });
@@ -353,12 +325,8 @@ export function bindStep0(root) {
     const stored = localStorage.getItem('euresis.icp.model');
     if (stored) {
       const hidden = modelWrap.querySelector('input[type="hidden"]');
-      const option = [...modelWrap.querySelectorAll('.cds-select-option')].find(item => item.dataset.value === stored);
-      if (hidden && option) {
-        hidden.value = stored;
-        updateSelectedLabel(modelWrap, option);
-      }
+      const dropdown=modelWrap.querySelector('cds-dropdown'); if(hidden && dropdown?.querySelector('cds-dropdown-item[value="'+CSS.escape(stored)+'"]')) { hidden.value=stored; dropdown.value=stored; }
     }
-    modelWrap.querySelectorAll('.cds-select-option').forEach(option => option.addEventListener('click', () => localStorage.setItem('euresis.icp.model', option.dataset.value)));
+    modelWrap.querySelector('cds-dropdown')?.addEventListener('cds-dropdown-selected',event=>localStorage.setItem('euresis.icp.model',event.detail?.item?.value||''));
   }
 }
