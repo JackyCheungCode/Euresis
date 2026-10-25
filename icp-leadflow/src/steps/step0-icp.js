@@ -207,6 +207,7 @@ function bindSelects(root) {
 export function bindStep0(root) {
   bindSelects(root);
   bindKeywordTags(root);
+  root.querySelectorAll('[data-translation-select] .cds-select-option').forEach(option=>option.addEventListener('click',()=>{const translated=root.querySelector('[data-icp-field="translatedQuery"]');if(translated)translated.value='';const output=root.querySelector('[data-translated-query]');if(output)output.textContent='目标语言已变更，请重新翻译。';const status=root.querySelector('[data-translation-status]');if(status)status.textContent='请选择目标语言后重新翻译，避免使用旧语言结果。';}));
   root.querySelector('[data-translate-query]')?.addEventListener('click', async event => {
     const button=event.currentTarget, source=root.querySelector('[data-query-syntax]')?.textContent||'';
     const target=root.querySelector('[data-translation-language]')?.value||'EN-US';
