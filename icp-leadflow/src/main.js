@@ -228,9 +228,7 @@ function initAuth() {
     }
   };
 
-  // Bind both the physical button tap and form submit; either path reaches the same handler.
-  submitButton.addEventListener('click', authenticate);
-  form.addEventListener('submit', authenticate);
+  // Login is handled by the cache-busted native handler in index.html so it still works if app initialization fails.
   modeButton.addEventListener('click', () => {
     signupMode = !signupMode;
     updateAuthMode();
