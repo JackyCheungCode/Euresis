@@ -32,8 +32,8 @@ export function bindStagePage(root,stage){
  let busy=false;
  const selectedIds=()=>[...root.querySelectorAll('[data-select-lead]')].filter(el=>el.checked).map(el=>el.dataset.selectLead);
  const updateSelection=()=>{const ids=selectedIds();button.disabled=ids.length===0;button.textContent=c.action+'（已选 '+ids.length+'）';};
- root.querySelectorAll('[data-select-lead]').forEach(el=>el.addEventListener('change',updateSelection));
- root.querySelector('[data-select-visible]')?.addEventListener('change',event=>{root.querySelectorAll('[data-select-lead]').forEach(el=>el.checked=event.target.checked);updateSelection();});
+ root.querySelectorAll('[data-select-lead]').forEach(el=>el.addEventListener('cds-checkbox-changed',updateSelection));
+ root.querySelector('[data-select-visible]')?.addEventListener('cds-checkbox-changed',event=>{root.querySelectorAll('[data-select-lead]').forEach(el=>el.checked=event.target.checked);updateSelection();});
  const updateProgress=(n,title,desc)=>{const v=Math.max(0,Math.min(100,Math.round(n)));progress.hidden=false;fill.style.width=v+'%';bar.setAttribute('aria-valuenow',String(v));percent.textContent=v+'%';label.textContent=title;detail.textContent=desc;};
  async function refreshLogs(){const {data:{user}}=await supabase.auth.getUser();if(!user)return;const {data,error}=await supabase.from('lead_activity_logs').select('id,lead_id,action,provider,status,input,output,error_message,started_at,completed_at,created_at').eq('user_id',user.id).order('created_at',{ascending:false}).limit(20);const tbody=root.querySelector('[data-stage-logs]');if(tbody)tbody.innerHTML=error?'<tr><td colspan="9">日志读取失败：'+esc(error.message)+'</td></tr>':renderLogRows(data);}
  async function runSelected(ids){
