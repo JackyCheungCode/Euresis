@@ -13,7 +13,7 @@ const AUTH_OPTIONS = [
   { value: 'none', label: '无认证' },
 ];
 const METHOD_OPTIONS = ['GET','POST','PUT','PATCH','DELETE','HEAD'].map(value => ({ value, label: value }));
-const METHOD_LABELS = { tavily: 'POST', serper: 'POST', openai: 'GET / POST', anthropic: 'POST', apollo: 'GET / POST', hunter: 'GET', apify: 'GET / POST', n8n: 'POST' };
+const METHOD_LABELS = { tavily: 'POST', serper: 'POST', deepl: 'POST', openai: 'GET / POST', anthropic: 'POST', apollo: 'GET / POST', hunter: 'GET', apify: 'GET / POST', n8n: 'POST' };
 const MODEL_OPTIONS = {
   openai: ['gpt-4o','gpt-4o-mini','gpt-4.1','gpt-4.1-mini','o3','o4-mini','自定义模型 ID'],
   anthropic: ['claude-sonnet-4-20250514','claude-3-7-sonnet-latest','claude-3-5-haiku-latest','claude-opus-4-1','自定义模型 ID'],
