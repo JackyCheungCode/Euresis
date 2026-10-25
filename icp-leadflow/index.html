@@ -1037,7 +1037,37 @@ svg {
   svg { width: 1.25rem; height: 1.25rem; }
 }
 
-  </style>
+  
+/* Hotfix: ensure login form sits above any custom-element/backdrop layer.
+   Native inputs must receive pointer, touch and keyboard events on mobile. */
+#authGate.auth-gate {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 2147483000 !important;
+  isolation: isolate !important;
+  pointer-events: auto !important;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+#authGate.auth-gate *,
+#authGate.auth-gate .auth-card,
+#authGate.authGate .auth-native-input {
+  pointer-events: auto !important;
+}
+#authGate .auth-card {
+  position: relative !important;
+  z-index: 1 !important;
+  width: min(28rem, calc(100vw - 2rem));
+}
+#authGate .auth-native-input {
+  position: relative !important;
+  z-index: 2 !important;
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  cursor: text !important;
+}
+
+</style>
   <script type="module" src="https://1.www.s81c.com/common/carbon/web-components/version/v2.66.0/button.min.js"></script>
   <script type="module" src="https://1.www.s81c.com/common/carbon/web-components/version/v2.66.0/input.min.js"></script>
   <script type="module" src="https://1.www.s81c.com/common/carbon/web-components/version/v2.66.0/textarea.min.js"></script>
