@@ -962,6 +962,36 @@ body.authenticated .auth-gate { display: none; }
 @media(max-width:600px){.icp-keyword-entry{align-items:stretch}.query-translation-controls{align-items:stretch;flex-direction:column;width:100%}.query-translation-controls .cds-select,.query-translation-controls .btn{width:100%}}
 
 
+
+/* Authentication inputs use native form controls for reliable mobile typing. */
+.auth-card .auth-native-input {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  height: 2.5rem;
+  margin: .25rem 0 1rem;
+  padding: 0 .75rem;
+  border: 0;
+  border-bottom: 1px solid #8d8d8d;
+  border-radius: 0;
+  background: #f4f4f4;
+  color: #161616;
+  font: inherit;
+  font-size: 1rem;
+  line-height: normal;
+  appearance: none;
+  -webkit-appearance: none;
+  pointer-events: auto;
+  touch-action: manipulation;
+}
+.auth-card .auth-native-input:focus {
+  outline: 2px solid #0f62fe;
+  outline-offset: -2px;
+  border-bottom-color: #0f62fe;
+  background: #fff;
+}
+.auth-card label { display:block; margin-top:.75rem; }
+
 /* Emergency layout hardening: keep inline SVG icons from using the browser's
    default replaced-element dimensions when rendered inside Carbon components. */
 svg {
@@ -1134,9 +1164,9 @@ svg {
       <h1 id="authTitle">登录 Euresis</h1>
       <p class="auth-copy">使用你的工作账号安全访问 ICP 获客工作区。客户数据按账号隔离存储。</p>
       <label for="authEmail">邮箱</label>
-      <cds-text-input class="cds-text-input" id="authEmail" type="email" autocomplete="email" required placeholder="name@company.com" aria-label="name@company.com"></cds-text-input>
+      <input class="auth-native-input" id="authEmail" name="email" type="email" autocomplete="email" required placeholder="name@company.com" aria-label="邮箱" />
       <label for="authPassword">密码</label>
-      <cds-text-input class="cds-text-input" id="authPassword" type="password" autocomplete="current-password" required minlength="8" placeholder="至少 8 位字符" aria-label="至少 8 位字符"></cds-text-input>
+      <input class="auth-native-input" id="authPassword" name="password" type="password" autocomplete="current-password" required minlength="8" placeholder="至少 8 位字符" aria-label="密码" />
       <p id="authMessage" class="auth-message" role="status"></p>
       <cds-button id="authSubmit" class="btn btn-primary auth-submit" type="submit" kind="primary">登录</cds-button>
       <cds-button id="authModeToggle" class="auth-mode-toggle" type="button" kind="ghost">没有账号？创建账号</cds-button>
