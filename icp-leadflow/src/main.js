@@ -32,9 +32,9 @@ async function setView(view) {
 function openRecordDetails(row) {
   const modal = document.getElementById('recordModal');
   const body = document.getElementById('recordModalBody');
-  const table = row.closest('table');
-  const headers = [...table.querySelectorAll('thead th')].map(th => th.textContent.trim());
-  const cells = [...row.querySelectorAll('td')].map(td => td.textContent.trim());
+  const table = row.closest('cds-table');
+  const headers = [...table.querySelectorAll('cds-table-header-cell')].map(th => th.textContent.trim());
+  const cells = [...row.querySelectorAll('cds-table-cell')].map(td => td.textContent.trim());
   body.innerHTML = '';
   const list = document.createElement('dl');
   list.className = 'record-detail-list';
@@ -111,14 +111,14 @@ function init() {
     else showToast('当前阶段暂无可重新运行的操作');
   });
   document.addEventListener('click', event => {
-    const row = event.target.closest('tr[data-record-row]');
-    if (row && !event.target.closest('a,button,input,select,textarea')) openRecordDetails(row);
+    const row = event.target.closest('cds-table-row[data-record-row]');
+    if (row && !event.target.closest('a,button,input,select,textarea,cds-button,cds-checkbox,cds-text-input,cds-dropdown,cds-multi-select,cds-toggle')) openRecordDetails(row);
     if (event.target.closest('#recordModalClose, #recordModalDone')) closeRecordDetails();
     if (event.target.id === 'recordModal') closeRecordDetails();
   });
   document.addEventListener('keydown', event => {
     if (event.key === 'Escape' && !document.getElementById('recordModal').hidden) closeRecordDetails();
-    if ((event.key === 'Enter' || event.key === ' ') && event.target.matches('tr[data-record-row]')) {
+    if ((event.key === 'Enter' || event.key === ' ') && event.target.matches('cds-table-row[data-record-row]')) {
       event.preventDefault();
       openRecordDetails(event.target);
     }
