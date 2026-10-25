@@ -5,6 +5,7 @@ import { tag } from '../components/tag.js';
 import { showToast } from '../components/toast.js';
 import { supabase } from '../services/supabase.js';
 import { leads, loadLeads } from '../data/lead.js';
+import { integrationClient, loadIntegrations } from '../services/integrations.js';
 
 const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
 let savedProfileId = null;
@@ -79,13 +80,13 @@ function queryPreview(root) {
   const format=items=>items.length?items.map(item=>item.label+'：'+item.value).join('；'):'';
   const values=(layer,index)=>String(layers[layer]?.querySelectorAll('.icp-field')[index]?.querySelector('[data-icp-field]')?.value||'').split(/[,;\n]+/).map(v=>v.trim()).filter(v=>v&&v!=='不限'&&v!=='不排除');
   const phrase=arr=>arr.length?'('+arr.map(v=>'"'+v.replace(/"/g,'\\"')+'"').join(' OR ')+')':'';
-  const industry=values(0,0), geography=values(0,5), size=values(0,1), companyType=values(0,4), supply=values(0,8), products=values(0,11), markets=values(0,12);
-  const syntax=[phrase(industry),phrase(geography),phrase(size),phrase(companyType),phrase(supply),phrase(products),phrase(markets)].filter(Boolean);
+  const industry=values(0,0), geography=values(0,5), size=values(0,1), companyType=values(0,4), supply=values(0,8), products=values(0,11), markets=values(0,12), productKeywords=values(8,0);
+  const syntax=[phrase(industry),phrase(geography),phrase(size),phrase(companyType),phrase(supply),phrase(products),phrase(markets),phrase(productKeywords)].filter(Boolean);
   const persona=[...values(1,0),...values(1,1),...values(1,2)]; if(persona.length)syntax.push(phrase(persona));
   const signals=[...values(2,0),...values(2,1),...values(2,2),...values(2,3),...values(2,6),...values(2,7)]; if(signals.length)syntax.push(phrase(signals));
   const blacklist=[...values(3,5),...values(3,6)].map(v=>v.toLowerCase().replace(/^https?:\/\//,'').replace(/^www\./,'').split('/')[0]).filter(Boolean);
-  const exclude=[...values(3,0),...values(3,1),...values(3,2),...values(3,3),...values(3,4)];
-  const advanced=(syntax.filter(Boolean).join(' ')||'B2B distributors manufacturers')+' companies official website'+(blacklist.length?' '+[...new Set(blacklist)].map(v=>'-site:'+v).join(' '):'')+(exclude.length?' -'+exclude.map(v=>'"'+v+'"').join(' -'):'');
+  const exclude=[...values(3,0),...values(3,1),...values(3,2),...values(3,3),...values(3,4),...values(3,7)];
+  const advanced=(syntax.filter(Boolean).join(' ')||'B2B distributors manufacturers')+' companies businesses official website'+(blacklist.length?' '+[...new Set(blacklist)].map(v=>'-site:'+v).join(' '):'')+(exclude.length?' -'+exclude.map(v=>'"'+v+'"').join(' -'):'');
   const company=root.querySelector('[data-query-preview]'),personaNode=root.querySelector('[data-persona-preview]'),exclusion=root.querySelector('[data-exclusion-preview]'),syntaxNode=root.querySelector('[data-query-syntax]');
   if(company)company.textContent=format(selections.flatMap((items,index)=>[1,3,6].includes(index)?[]:items))||'选择企业属性和购买信号后，实时生成筛选条件';
   if(personaNode)personaNode.textContent=format(selections[1]||[])||'选择职位、决策权限、部门或资历层级';
@@ -326,6 +327,9 @@ export function bindStep0(root) {
       const input = root.querySelector(`[data-icp-field="${key}"]`);
       if (!input) return;
       input.value = String(value ?? '');
+      const keywordWrap=input.closest('.icp-keyword-tags');if(keywordWrap){paintKeywordTags(keywordWrap);return;}
+      if(input.dataset.icpField==='translatedQuery'){const output=root.querySelector('[data-translated-query]');if(output&&input.value)output.textContent=input.value;}
+      if(input.dataset.icpField==='translatedLanguage'){const select=root.querySelector('[data-translation-select]');const option=[...(select?.querySelectorAll('.cds-select-option')||[])].find(item=>item.dataset.value===input.value);if(option){select.querySelector('[data-translation-language]').value=input.value;select.querySelector('[data-translation-current]').textContent=option.textContent;select.querySelectorAll('.cds-select-option').forEach(item=>item.setAttribute('aria-selected',String(item===option)));}}
       const wrap = input.closest('.cds-select, .cds-multi');
       if (wrap?.matches('.cds-multi')) {
         const values = input.value.split(',').map(value => value.trim());
