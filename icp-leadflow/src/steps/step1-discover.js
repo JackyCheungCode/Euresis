@@ -73,7 +73,7 @@ export function bindStep1(root) {
       const response=await integrationClient.call(provider.id,provider.id==='serper'?{query:finalQuery,num:effectiveLimit}:{query:finalQuery,max_results:effectiveLimit,search_depth:'advanced',include_answer:false});
       updateProgress(60,'搜索结果已返回','正在规范化域名、检查现有线索并去重');
       const results=provider.id==='serper'?(response.organic||[]):(response.results||[]);
-      const existingRoots=new Set(leads.map(lead=>rootDomain(lead.domain||lead.website)).filter(Boolean));
+      const existingRoots=new Set(leads.map(lead=>lead.rootDomain||rootDomain(lead.domain||lead.website)).filter(Boolean));
       const seen=new Set();let duplicateCount=0;
       const records=results.map(item=>{
         const sourceUrl=item.link||item.url||'';const domain=rootDomain(sourceUrl);if(!domain)return null;
