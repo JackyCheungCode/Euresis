@@ -42,6 +42,22 @@ function renderGeography(key,label) {
  const regions=Object.keys(REGIONS).map(r=>'<button type="button" class="btn btn-ghost btn-sm" data-region="'+escapeHtml(r)+'">'+escapeHtml(r)+'</button>').join('');
  return '<div class="cds-multi icp-multi icp-geography" data-multi-wrap="'+escapeHtml(key)+'"><button type="button" class="cds-select-trigger" aria-expanded="false"><span class="cds-multi-current">选择大区或国家/地区（可多选）</span><span class="cds-select-chevron">⌄</span></button><div class="cds-multi-menu" hidden><input class="cds-text-input cds-multi-search" type="search" placeholder="搜索国家/地区…"><div class="cds-region-pills">'+regions+'</div><div class="cds-multi-options">'+options+'</div><div class="cds-multi-footer"><button type="button" class="btn btn-ghost btn-sm" data-multi-clear>清除选择</button><button type="button" class="btn btn-primary btn-sm" data-multi-done>完成</button></div></div><input type="hidden" data-icp-field="'+escapeHtml(key)+'" value=""></div>';
 }
+function renderKeywordTags(key,label) {
+ const placeholder=label==='企业产品关键字描述'?'输入产品、设备、技术或解决方案关键词后按 Enter':'输入需要排除的产品关键词后按 Enter';
+ return '<div class="icp-keyword-tags"><div class="icp-keyword-entry"><input class="cds-text-input" data-keyword-input type="text" autocomplete="off" placeholder="'+escapeHtml(placeholder)+'"><button type="button" class="btn btn-secondary btn-sm" data-keyword-add>添加</button></div><div class="icp-keyword-chip-list"></div><input type="hidden" data-icp-field="'+escapeHtml(key)+'" value=""></div>';
+}
+function paintKeywordTags(wrap) {
+ const hidden=wrap.querySelector('[data-icp-field]'),list=wrap.querySelector('.icp-keyword-chip-list');if(!hidden||!list)return;
+ const values=[...new Set(String(hidden.value||'').split(/[,;\\n]+/).map(v=>v.trim()).filter(Boolean))];hidden.value=values.join(', ');
+ list.innerHTML=values.map(v=>'<span class="icp-keyword-chip">'+escapeHtml(v)+'<button type="button" data-remove-keyword="'+escapeHtml(v)+'" aria-label="删除关键词">×</button></span>').join('');
+ list.querySelectorAll('[data-remove-keyword]').forEach(button=>button.addEventListener('click',()=>{hidden.value=values.filter(v=>v!==button.dataset.removeKeyword).join(', ');paintKeywordTags(wrap);hidden.dispatchEvent(new Event('change',{bubbles:true}));}));
+}
+function bindKeywordTags(root) {
+ root.querySelectorAll('.icp-keyword-tags').forEach(wrap=>{const input=wrap.querySelector('[data-keyword-input]'),hidden=wrap.querySelector('[data-icp-field]');
+ const add=()=>{const value=input.value.trim(),values=String(hidden.value||'').split(/[,;\\n]+/).map(v=>v.trim()).filter(Boolean);if(value&&!values.some(v=>v.toLowerCase()===value.toLowerCase()))values.push(value);hidden.value=values.join(', ');input.value='';paintKeywordTags(wrap);hidden.dispatchEvent(new Event('change',{bubbles:true}));};
+ wrap.querySelector('[data-keyword-add]').addEventListener('click',add);input.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();add();}});paintKeywordTags(wrap);
+ });
+}
 function renderField(key,label) {
  if(label==='目标地理位置'||label==='国家 / 地区'||label==='排除国家 / 地区') return renderGeography(key,label);
  if(label==='排除渠道域名（黑名单）') return '<div class="icp-blacklist"><textarea class="cds-textarea" rows="4" data-icp-field="'+escapeHtml(key)+'" placeholder="输入域名，使用逗号或换行分隔"></textarea><div class="icp-blacklist-actions"><button type="button" class="btn btn-ghost btn-sm" data-fill-blacklist>一键填充默认黑名单</button><span class="field-help" data-blacklist-count>0 个域名</span></div></div>';
