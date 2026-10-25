@@ -10,6 +10,8 @@
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/src/styles/carbon.css">
   <script type="module" src="https://1.www.s81c.com/common/carbon/web-components/version/v2.66.0/button.min.js"></script>
+  <script type="module" src="https://1.www.s81c.com/common/carbon/web-components/version/v2.66.0/input.min.js"></script>
+  <script type="module" src="https://1.www.s81c.com/common/carbon/web-components/version/v2.66.0/textarea.min.js"></script>
 </head>
 <body>
   <header class="global-header">
@@ -113,9 +115,9 @@
       <h1 id="authTitle">登录 Euresis</h1>
       <p class="auth-copy">使用你的工作账号安全访问 ICP 获客工作区。客户数据按账号隔离存储。</p>
       <label for="authEmail">邮箱</label>
-      <input class="cds-text-input" id="authEmail" type="email" autocomplete="email" required placeholder="name@company.com">
+      <cds-text-input class="cds-text-input" id="authEmail" type="email" autocomplete="email" required placeholder="name@company.com" aria-label="name@company.com"></cds-text-input>
       <label for="authPassword">密码</label>
-      <input class="cds-text-input" id="authPassword" type="password" autocomplete="current-password" required minlength="8" placeholder="至少 8 位字符">
+      <cds-text-input class="cds-text-input" id="authPassword" type="password" autocomplete="current-password" required minlength="8" placeholder="至少 8 位字符" aria-label="至少 8 位字符"></cds-text-input>
       <p id="authMessage" class="auth-message" role="status"></p>
       <cds-button id="authSubmit" class="btn btn-primary auth-submit" type="submit" kind="primary">登录</cds-button>
       <cds-button id="authModeToggle" class="auth-mode-toggle" type="button" kind="ghost">没有账号？创建账号</cds-button>
