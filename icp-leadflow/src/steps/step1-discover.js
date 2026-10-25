@@ -45,7 +45,7 @@ export function bindStep1(root) {
   const blockedDomain=(host,blacklist)=>blacklist.some(domain=>host===domain||host.endsWith('.'+domain));
   refreshDiscoverLogs().catch(error=>console.warn('加载搜索日志失败',error));
   button?.addEventListener('click',async()=>{
-    button.disabled=true;let runId=null,logId=null;button.textContent='正在搜索…';
+    button.disabled=true;let runId=null,logId=null,providerId='unknown';button.textContent='正在搜索…';
     const requested=Math.max(1,Math.min(100,Number(limitInput.value)||10));
     message.textContent='正在读取 ICP 条件并检查搜索服务…';updateProgress(0,'正在准备搜索任务','验证登录、读取 ICP 条件、检查服务配置');
     const startedAt=new Date().toISOString();
@@ -93,7 +93,7 @@ export function bindStep1(root) {
       showToast('搜索完成：新增 '+savedCount+' 条，跳过重复 '+duplicateCount+' 条');await refreshDiscoverLogs();document.dispatchEvent(new CustomEvent('euresis:leads-updated'));
     }catch(error){
       const {data:{user}}=await supabase.auth.getUser();
-      if(runId&&user)await supabase.from('workflow_runs').update({status:'failed',error_message:error.message||'搜索失败',output:{requested_count:requested,provider:'unknown',completed_at:new Date().toISOString()},updated_at:new Date().toISOString()}).eq('id',runId).eq('user_id',user.id);
+      if(runId&&user)await supabase.from('workflow_runs').update({status:'failed',error_message:error.message||'搜索失败',output:{requested_count:requested,provider:providerId,completed_at:new Date().toISOString()},updated_at:new Date().toISOString()}).eq('id',runId).eq('user_id',user.id);
       if(logId&&user)await supabase.from('lead_activity_logs').update({status:'failed',error_message:error.message||'搜索失败',output:{requested_count:requested},completed_at:new Date().toISOString()}).eq('id',logId).eq('user_id',user.id);
       message.textContent=error.message||'搜索失败';updateProgress(100,'搜索任务失败',error.message||'搜索失败');await refreshDiscoverLogs();showToast('企业搜索失败：'+(error.message||'未知错误'));
     }finally{button.disabled=false;button.textContent='运行企业搜索';}
