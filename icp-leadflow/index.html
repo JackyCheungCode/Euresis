@@ -117,13 +117,16 @@
       </section>
     </div>
   </div>
-  <div id="recordModal" class="cds-modal-backdrop" hidden>
-    <section class="cds-modal" role="dialog" aria-modal="true" aria-labelledby="recordModalTitle">
-      <header class="cds-modal-header"><h2 id="recordModalTitle">记录详情</h2><cds-button type="button" class="cds-icon-button" id="recordModalClose" aria-label="关闭详情" kind="ghost">×</cds-button></header>
-      <div id="recordModalBody" class="cds-modal-body"></div>
-      <footer class="cds-modal-footer"><cds-button type="button" class="btn btn-primary" id="recordModalDone" kind="primary">完成</cds-button></footer>
-    </section>
-  </div>
+  <cds-modal id="recordModal" size="lg" aria-label="记录详情" prevent-close-on-click-outside>
+    <cds-modal-header>
+      <cds-modal-heading id="recordModalTitle">记录详情</cds-modal-heading>
+      <cds-modal-close-button id="recordModalClose" aria-label="关闭详情"></cds-modal-close-button>
+    </cds-modal-header>
+    <cds-modal-body id="recordModalBody"></cds-modal-body>
+    <cds-modal-footer>
+      <cds-button id="recordModalDone" slot="primary-button" kind="primary">完成</cds-button>
+    </cds-modal-footer>
+  </cds-modal>
   <section id="authGate" class="auth-gate">
     <form id="authForm" class="auth-card">
       <div class="auth-eyebrow">EURESIS WORKSPACE</div>
