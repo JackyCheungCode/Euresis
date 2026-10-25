@@ -34,10 +34,10 @@ export function renderStats() {
   state.stats[5].value = leads.filter(l => l.data && l.data.research_completed === true).length;
   const row = document.getElementById('statsRow');
   row.innerHTML = state.stats.map(s => `
-    <div class="stat">
+    <cds-tile class="stat">
       <div class="label">${s.label}</div>
       <div class="value" ${s.color ? `style="color:${s.color}"` : ''}>${s.value} <small>${s.unit}</small></div>
-    </div>`).join('');
+    </cds-tile>`).join('');
 }
 
 export async function renderStep() {
