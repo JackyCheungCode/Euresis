@@ -56,6 +56,9 @@ export function bindStep1(root) {
       const criteria=profile?.criteria||{};
       const labels=Object.entries(criteria).filter(([k,v])=>String(v||'').trim()&&k!=='aiModel').map(([k,v])=>({key:k,value:String(v)}));
       const get=(layer,index)=>String(criteria['layer-'+layer+'-field-'+index]||'').trim();
+      const geo=splitValues(get(0,5));
+      const industry=splitValues(get(0,0));
+      const roles=splitValues(get(0,8));
       const excluded=[get(3,0),get(3,1),get(3,2),get(3,3),get(3,4),get(3,7)].filter(Boolean).flatMap(splitValues);
       const blacklist=[...splitValues(get(3,5)),...splitValues(get(3,6))].map(x=>rootDomain(x)||x.toLowerCase().replace(/^www\./,''));
       const queryParts=[];
@@ -69,7 +72,7 @@ export function bindStep1(root) {
       const exclusionSyntax=excluded.length?' -'+excluded.map(x=>'\"'+x+'\"').join(' -'):'';
       const originalFinalQuery=query.trim()+exclusionSyntax+(blacklist.length?' '+[...new Set(blacklist)].map(d=>'-site:'+d).join(' '):'');
       const finalQuery=criteria.translatedQuery&&criteria.translatedSourceQuery===originalFinalQuery?String(criteria.translatedQuery):originalFinalQuery;
-      await loadIntegrations();const configs=listIntegrations();const provider=configs.find(x=>x.id==='serper'&&x.enabled)||configs.find(x=>x.id==='tavily'&&x.enabled);
+      await loadIntegrations();const configs=listIntegrations();const provider=configs.find(x=>x.id==='serper'&&x.enabled)||configs.find(x=>x.id==='tavily'&&x.enabled);if(provider)providerId=provider.id;
       if(!provider)throw new Error('请先在「API 和 AI 集成」保存并启用 Serper 或 Tavily');
       const effectiveLimit=provider.id==='tavily'?Math.min(requested,20):requested;
       const {data:run,error:runError}=await supabase.from('workflow_runs').insert({user_id:user.id,workflow_key:'discover',current_step:1,status:'running',input:{query:finalQuery,original_query:originalFinalQuery,translation_used:finalQuery!==originalFinalQuery,translation_language:criteria.translatedLanguage||null,requested_limit:requested,effective_limit:effectiveLimit,provider:provider.id,started_at:startedAt,icp_profile_id:profile?.id||null},output:{}}).select('id').single();if(runError)throw runError;runId=run.id;
