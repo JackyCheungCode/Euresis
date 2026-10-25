@@ -57,6 +57,19 @@ function openRecordDetails(row) {
     list.append(wrap);
   });
   body.append(list);
+  const leadId = row.dataset.leadId;
+  if (leadId) {
+    const actions = document.createElement('div');
+    actions.className = 'record-detail-actions';
+    actions.innerHTML = '<button type="button" class="btn btn-secondary btn-sm" data-detail-action="enrich">补全联系方式</button><button type="button" class="btn btn-primary btn-sm" data-detail-action="research">企业背调</button>';
+    actions.querySelectorAll('[data-detail-action]').forEach(button => button.addEventListener('click', async () => {
+      const stage = button.dataset.detailAction;
+      closeRecordDetails();
+      await goToStep(stage === 'enrich' ? 1 : 3);
+      document.getElementById('stepContainer').dispatchEvent(new CustomEvent('euresis:run-lead-action', { detail: { stage, leadId } }));
+    }));
+    body.append(actions);
+  }
   modal.hidden = false;
   document.getElementById('recordModalClose').focus();
   document.body.classList.add('modal-open');
