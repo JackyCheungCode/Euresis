@@ -29,9 +29,9 @@ function modelControl(config) {
 function customSelect(id, selected, options, label) {
   const choice = options.find(option => option.value === selected) || options[0];
   return `<div class="cds-select" data-select="${id}">
-    <button class="cds-select-trigger" type="button" aria-haspopup="listbox" aria-expanded="false"><span>${escapeHtml(choice?.label || '')}</span><span aria-hidden="true">⌄</span></button>
+    <cds-button class="cds-select-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" kind="ghost"><span>${escapeHtml(choice?.label || '')}</span><span aria-hidden="true">⌄</span></cds-button>
     <div class="cds-select-menu" role="listbox" aria-label="${escapeHtml(label)}" hidden>
-      ${options.map(option => `<button class="cds-select-option" type="button" role="option" data-value="${escapeHtml(option.value)}" aria-selected="${option.value === selected}">${escapeHtml(option.label)}</button>`).join('')}
+      ${options.map(option => `<cds-button class="cds-select-option" type="button" role="option" data-value="${escapeHtml(option.value)}" aria-selected="${option.value === selected}" kind="ghost">${escapeHtml(option.label)}</cds-button>`).join('')}
     </div>
     <input type="hidden" data-field="${id}" value="${escapeHtml(selected)}">
   </div>`;
@@ -52,7 +52,7 @@ function renderCard(config) {
       ${config.supportsMethod ? `<div class="integration-field"><label>请求方式</label>${customSelect('requestMethod', config.requestMethod, METHOD_OPTIONS, '请求方式')}</div><div class="integration-field"><label>认证方式</label>${customSelect('auth', config.auth, AUTH_OPTIONS, '认证方式')}</div>` : ''}
     </div></div>
     <div class="integration-card-footer"><div class="integration-message ${escapeHtml(message.type)}" data-message role="status">${escapeHtml(message.text)}</div>
-      <div class="integration-footer-actions"><button class="btn btn-ghost btn-sm" type="button" data-action="test" ${busy.has(config.id) ? 'disabled' : ''}>${busy.has(config.id) ? '测试中…' : '测试连接'}</button><button class="btn btn-primary btn-sm" type="button" data-action="save">保存配置</button></div>
+      <div class="integration-footer-actions"><cds-button class="btn btn-ghost btn-sm" type="button" data-action="test" ${busy.has(config.id) ? 'disabled' : ''} kind="ghost" size="sm">${busy.has(config.id) ? '测试中…' : '测试连接'}</cds-button><cds-button class="btn btn-primary btn-sm" type="button" data-action="save" kind="primary" size="sm">保存配置</cds-button></div>
     </div>
   </article>`;
 }
