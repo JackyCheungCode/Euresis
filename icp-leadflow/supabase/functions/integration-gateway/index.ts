@@ -68,6 +68,9 @@ async function callProvider(config: any, action: string, payload: any = {}) {
   } else if (id === "tavily") {
     method = "POST"; headers["Content-Type"] = "application/json";
     body = JSON.stringify({ api_key: config.api_key, query: action === "test" ? "solar distributors Germany" : (payload.query || "solar distributors Germany"), max_results: 1, ...payload });
+  } else if (id === "deepl") {
+    method = "POST"; headers["Authorization"] = "DeepL-Auth-Key " + (config.api_key || ""); headers["Content-Type"] = "application/json";
+    body = JSON.stringify(action === "test" ? { text: ["industrial automation"], target_lang: "DE" } : payload);
   } else if (id === "anthropic") {
     method = "POST"; headers["Content-Type"] = "application/json"; headers["x-api-key"] = config.api_key || ""; headers["anthropic-version"] = "2023-06-01";
     body = JSON.stringify({ model: config.model || "claude-3-5-haiku-latest", max_tokens: action === "test" ? 8 : 1024, messages: payload.messages || [{ role: "user", content: action === "test" ? "Reply with OK" : (payload.query || "Hello") }], ...payload });
