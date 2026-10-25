@@ -14,7 +14,7 @@ export function renderStep1() {
   ]);
   const empty = leads.length ? '' : '<div class="empty-state"><h3>还没有候选企业</h3><p>先在「企业 ICP」保存目标市场，然后在「API 和 AI 集成」启用 Serper 或 Tavily。</p></div>';
   return `
-    <div class="notification"><span class="notif-icon">i</span><div>搜索只负责发现候选企业；联系方式补全与企业背调必须在后续页面手动选择记录后执行。系统会按企业根域名去重，并记录每次搜索的数量、来源和去重结果。</div></div>
+    <cds-inline-notification class="notification" kind="info" title="搜索流程说明" hide-close-button>搜索只负责发现候选企业；联系方式补全与企业背调必须在后续页面手动选择记录后执行。系统会按企业根域名去重，并记录每次搜索的数量、来源和去重结果。</cds-inline-notification>
     <section class="panel discover-panel"><div class="panel-header"><div><h2>候选企业发现</h2><p class="panel-meta">搜索服务 · ICP 条件驱动</p></div><cds-button type="button" id="discoverLeads" class="btn btn-primary btn-sm" kind="primary" size="sm">运行企业搜索</cds-button></div>
       <div class="panel-body"><div class="discover-controls"><label class="form-group"><span class="form-label">本次目标返回数量</span><div class="cds-select discover-limit-select"><cds-dropdown id="discoverLimitControl" class="carbon-select-control" title-text="本次目标返回数量" label="10 条" value="10"><cds-dropdown-item value="10" selected>10 条</cds-dropdown-item><cds-dropdown-item value="20">20 条</cds-dropdown-item><cds-dropdown-item value="50">50 条</cds-dropdown-item><cds-dropdown-item value="100">100 条</cds-dropdown-item></cds-dropdown><input type="hidden" id="discoverLimit" value="10"></div></label><p class="field-help">Serper 单次最多请求 100 条；Tavily 单次最多请求 20 条。实际数量受搜索服务返回结果影响。</p></div>
       <p id="discoverMessage" class="field-help">选择本次数量后运行搜索。重复企业会被跳过，不会再次创建。</p>
