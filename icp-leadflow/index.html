@@ -1204,6 +1204,62 @@ svg {
     </form>
   </section>
   <div id="toast" role="status" aria-live="polite"></div>
-  <script type="module" src="/src/main.js"></script>
+
+  <script>
+    (function () {
+      var button = document.getElementById('authSubmit');
+      var form = document.getElementById('authForm');
+      var message = document.getElementById('authMessage');
+      var modeButton = document.getElementById('authModeToggle');
+      if (!button || !form || !message) return;
+      form.noValidate = true;
+      button.addEventListener('click', async function (event) {
+        event.preventDefault();
+        if (button.dataset.busy === '1') return;
+        var email = document.getElementById('authEmail').value.trim();
+        var password = document.getElementById('authPassword').value;
+        var signup = !!modeButton && modeButton.textContent.indexOf('已有账号') >= 0;
+        function show(text, error) {
+          message.textContent = text;
+          message.classList.toggle('error', !!error);
+        }
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          show('请输入有效的邮箱地址。', true);
+          document.getElementById('authEmail').focus();
+          return;
+        }
+        if (!password || (signup && password.length < 8)) {
+          show(signup ? '密码至少需要 8 位字符。' : '请输入密码。', true);
+          document.getElementById('authPassword').focus();
+          return;
+        }
+        button.dataset.busy = '1';
+        button.disabled = true;
+        button.textContent = signup ? '正在创建账号…' : '正在登录…';
+        show(signup ? '正在创建账号…' : '正在连接身份验证服务…', false);
+        try {
+          var mod = await import('/src/services/supabase.js?v=loginfix-20261026-2');
+          var result = signup
+            ? await mod.supabase.auth.signUp({ email: email, password: password })
+            : await mod.supabase.auth.signInWithPassword({ email: email, password: password });
+          if (result.error) throw result.error;
+          if (signup && !result.data.session) {
+            show('账号已创建。请检查邮箱完成验证，然后返回登录。', false);
+          } else {
+            show('登录成功，正在打开工作区…', false);
+            window.location.reload();
+          }
+        } catch (err) {
+          show((err && err.message) || '身份验证失败，请稍后重试。', true);
+        } finally {
+          button.dataset.busy = '0';
+          button.disabled = false;
+          button.textContent = signup ? '创建账号' : '登录';
+        }
+      });
+    })();
+  </script>
+
+  <script type="module" src="/src/main.js?v=loginfix-20261026-2"></script>
 </body>
 </html>
