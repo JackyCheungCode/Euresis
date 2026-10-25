@@ -65,7 +65,7 @@ function openRecordDetails(row) {
     actions.querySelectorAll('[data-detail-action]').forEach(button => button.addEventListener('click', async () => {
       const stage = button.dataset.detailAction;
       closeRecordDetails();
-      await goToStep(stage === 'enrich' ? 1 : 3);
+      await goToStep(stage === 'enrich' ? 2 : 4);
       document.getElementById('stepContainer').dispatchEvent(new CustomEvent('euresis:run-lead-action', { detail: { stage, leadId } }));
     }));
     body.append(actions);
