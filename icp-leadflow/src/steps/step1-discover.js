@@ -1,5 +1,6 @@
 import { leads, loadLeads } from '../data/lead.js';
 import { panelNoPad, panel } from '../components/panel.js';
+import { table } from '../components/table.js';
 import { tag, statusTag } from '../components/tag.js';
 import { integrationClient, listIntegrations, loadIntegrations } from '../services/integrations.js';
 import { supabase } from '../services/supabase.js';
