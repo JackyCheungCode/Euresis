@@ -1,162 +1,71 @@
 import { leads, loadLeads } from '../data/lead.js';
 import { panelNoPad } from './panel.js';
-import { table } from './table.js';
 import { tag } from './tag.js';
 import { integrationClient, loadIntegrations, listIntegrations } from '../services/integrations.js';
 import { supabase } from '../services/supabase.js';
 import { showToast } from './toast.js';
-
-const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const STAGES = {
-  scrape: { title:'公开信号抓取', desc:'通过 Tavily 查询公开网页内容，并将摘要保存到当前账号的线索记录。', provider:'tavily', action:'抓取公开信号', columns:['企业','网站','公开信号摘要','处理状态'] },
-  enrich: { title:'联系方式补齐', desc:'调用已配置的 Apollo 企业接口，保存返回的企业补全数据；API 返回哪些字段，就只更新哪些字段。', provider:'apollo', action:'补齐企业信息', columns:['企业','网站','联系人','邮箱','电话','处理状态'] },
-  verify: { title:'联系方式验证', desc:'调用 Hunter 检查已有邮箱；没有邮箱时尝试按域名发现公开邮箱。', provider:'hunter', action:'验证联系方式', columns:['企业','邮箱','邮箱状态','电话','处理状态'] },
-  research: { title:'企业背调', desc:'使用 Tavily 汇总企业公开新闻、融资、招聘和扩张信号，结果保存在每条线索的研究数据中。', provider:'tavily', action:'运行企业背调', columns:['企业','网站','研究摘要','研究状态'] },
-  route: { title:'渠道路由', desc:'根据已验证的联系方式为线索分配后续渠道。此步骤不调用外部 API。', provider:null, action:'生成渠道路由', columns:['企业','邮箱','电话','路由结果','状态'] },
+ scrape:{title:'公开信号抓取',desc:'按用户勾选的企业抓取公开网页信号。',provider:'tavily',action:'抓取公开信号',columns:['企业','网站','公开信号摘要','处理状态']},
+ enrich:{title:'联系方式补齐',desc:'仅对手动选择的企业调用 Apollo 补齐联系人与联系方式。',provider:'apollo',action:'补齐联系方式',columns:['企业','网站','联系人','邮箱','电话','处理状态']},
+ verify:{title:'联系方式验证',desc:'仅对手动选择的企业调用 Hunter 验证或发现邮箱。',provider:'hunter',action:'验证联系方式',columns:['企业','邮箱','邮箱状态','电话','处理状态']},
+ research:{title:'企业背调',desc:'仅对手动选择的企业查询公开新闻、融资、招聘与扩张信号。',provider:'tavily',action:'运行企业背调',columns:['企业','网站','研究摘要','研究状态']},
+ route:{title:'渠道路由',desc:'仅对手动选择的企业生成后续跟进渠道。',provider:null,action:'生成渠道路由',columns:['企业','邮箱','电话','路由结果','状态']}
 };
-function stateLabel(lead, stage) {
-  const data = lead.data || {};
-  if (stage === 'scrape') return data.public_signals?.length ? '已抓取' : '待处理';
-  if (stage === 'enrich') return data.enrichment ? '已补全' : '待处理';
-  if (stage === 'verify') return data.emailStatus || '待验证';
-  if (stage === 'research') return data.research ? '已完成' : '待处理';
-  return data.route || '待分流';
+function stageState(lead,stage){const d=lead.data||{};if(stage==='scrape')return d.public_signals?.length?'已抓取':'待处理';if(stage==='enrich')return d.enrichment?'已补全':'待处理';if(stage==='verify')return d.emailStatus||'待验证';if(stage==='research')return d.research_completed?'已完成':'待处理';return d.route||'待分流';}
+function stageCells(lead,stage){const d=lead.data||{},name=esc(lead.title||lead.domain),site=esc(lead.website||lead.domain||'—');if(stage==='scrape')return[name,site,esc(d.public_signal_summary||'—'),tag(stageState(lead,stage),d.public_signals?.length?'green':'gray')];if(stage==='enrich')return[name,site,esc(lead.contactName||d.enrichment?.contact_name||'—'),esc(lead.email||'—'),esc(lead.phone||'—'),tag(stageState(lead,stage),d.enrichment?'green':'gray')];if(stage==='verify')return[name,esc(lead.email||'—'),tag(d.emailStatus||'待验证',d.emailStatus==='valid'?'green':'gray'),esc(lead.phone||'—'),tag(stageState(lead,stage),d.emailStatus==='valid'?'green':'gray')];if(stage==='research')return[name,site,esc(d.research_summary||'—'),tag(stageState(lead,stage),d.research_completed?'green':'gray')];return[name,esc(lead.email||'—'),esc(lead.phone||'—'),tag(d.route||'待分流','blue'),tag(lead.status||'new','gray')];}
+function renderRows(stage){return leads.map(lead=>{const cells=stageCells(lead,stage).map(v=>'<td>'+v+'</td>').join('');const action='<button class="btn btn-ghost btn-sm" type="button" data-run-one="'+esc(lead.id)+'">'+esc(STAGES[stage].action)+'</button>';return '<tr data-record-row data-lead-id="'+esc(lead.id)+'" tabindex="0" aria-label="查看 '+esc(lead.title)+' 详情"><td class="selection-cell"><input type="checkbox" class="cds-checkbox" data-select-lead="'+esc(lead.id)+'" aria-label="选择 '+esc(lead.title)+'"></td>'+cells+'<td class="stage-row-action">'+action+'</td></tr>';}).join('');}
+function renderLogRows(rows){if(!rows?.length)return '<tr><td colspan="7">暂无操作日志。执行单条操作后，这里会显示完整记录。</td></tr>';return rows.map(log=>'<tr><td>'+esc(new Date(log.started_at||log.created_at).toLocaleString())+'</td><td>'+esc(log.action)+'</td><td>'+esc(log.provider||'本地规则')+'</td><td>'+esc(log.status)+'</td><td>'+esc(log.lead_id||'—')+'</td><td>'+esc(log.error_message||'—')+'</td><td>'+esc(JSON.stringify(log.output||{}).slice(0,260))+'</td></tr>').join('');}
+export function renderStagePage(stage){
+ const c=STAGES[stage],hint=c.provider?'需要启用 '+c.provider+' 服务；选择记录后才会产生 API 调用。':'仅对手动选择的记录生成路由。';
+ const empty=leads.length?'':'<div class="empty-state"><h3>当前账号还没有线索</h3><p>请先运行搜索 API 发现候选企业。</p></div>';
+ const header=c.columns.map(v=>'<th scope="col">'+esc(v)+'</th>').join('');
+ const content=leads.length?'<div class="cds-data-table-container"><table class="data-table stage-data-table" aria-label="'+esc(c.title)+'"><thead><tr><th><input type="checkbox" data-select-visible aria-label="选择当前显示记录"></th>'+header+'<th>手动操作</th></tr></thead><tbody>'+renderRows(stage)+'</tbody></table></div>':empty;
+ return '<div class="notification"><span class="notif-icon">i</span><div>'+esc(c.desc)+'</div></div>'+
+ '<section class="panel stage-action-panel"><div class="panel-header"><div><h2>'+esc(c.title)+'</h2><p class="panel-meta">'+esc(hint)+'</p></div><button class="btn btn-primary btn-sm" type="button" data-run-stage="'+stage+'" disabled>'+esc(c.action)+'（已选 0）</button></div><div class="panel-body"><p class="field-help" data-stage-message>当前账号共 '+leads.length+' 条线索。必须先勾选记录；不会自动处理全部线索。</p><div class="stage-progress" data-stage-progress hidden aria-live="polite"><div class="stage-progress-heading"><span data-stage-progress-label>等待任务开始</span><strong data-stage-progress-percent>0%</strong></div><div class="stage-progress-track" role="progressbar" aria-label="当前节点任务进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" data-stage-progressbar><span data-stage-progress-fill></span></div><p class="stage-progress-detail" data-stage-progress-detail>等待执行</p></div></div></section>'+
+ panelNoPad(c.title+' · 结果记录',content,leads.length+' 条数据库记录')+
+ panelNoPad('最近操作日志','<div class="cds-data-table-container"><table class="data-table stage-log-table"><thead><tr><th>开始时间</th><th>操作</th><th>服务</th><th>状态</th><th>记录 ID</th><th>错误</th><th>结果摘要</th></tr></thead><tbody data-stage-logs><tr><td colspan="7">正在加载操作日志…</td></tr></tbody></table></div>','显示最近 20 条记录');
 }
-function stageRows(stage) {
-  return leads.map((lead, i) => {
-    const data = lead.data || {};
-    const name = escapeHtml(lead.title || lead.domain);
-    const website = escapeHtml(lead.website || lead.domain || '—');
-    if (stage === 'scrape') return [name, website, escapeHtml(data.public_signal_summary || '—'), tag(stateLabel(lead, stage), data.public_signals?.length ? 'green' : 'gray')];
-    if (stage === 'enrich') return [name, website, escapeHtml(lead.contactName || data.enrichment?.contact_name || '—'), escapeHtml(lead.email || '—'), escapeHtml(lead.phone || '—'), tag(stateLabel(lead, stage), data.enrichment ? 'green' : 'gray')];
-    if (stage === 'verify') return [name, escapeHtml(lead.email || '—'), tag(data.emailStatus || '待验证', data.emailStatus === 'valid' ? 'green' : 'gray'), escapeHtml(lead.phone || '—'), tag(stateLabel(lead, stage), data.emailStatus === 'valid' ? 'green' : 'gray')];
-    if (stage === 'research') return [name, website, escapeHtml(data.research_summary || '—'), tag(stateLabel(lead, stage), data.research ? 'green' : 'gray')];
-    return [name, escapeHtml(lead.email || '—'), escapeHtml(lead.phone || '—'), tag(data.route || '待分流', 'blue'), tag(lead.status || 'new', 'gray')];
-  });
-}
-export function renderStagePage(stage) {
-  const config = STAGES[stage];
-  const rows = stageRows(stage);
-  const empty = leads.length ? '' : '<div class="empty-state"><h3>当前账号还没有线索</h3><p>请先到「候选发现」运行已配置的搜索 API。所有阶段都读取真实 Supabase 数据，不再使用预置演示记录。</p></div>';
-  const providerHint = config.provider ? `需要已启用的 ${config.provider} 服务。请先在侧边栏「API 与 AI 集成」保存并测试连接。` : '按数据库中的真实联系人字段生成路由规则。';
-  return `
-    <div class="notification"><span class="notif-icon">i</span><div>${escapeHtml(config.desc)}</div></div>
-    <section class="panel stage-action-panel"><div class="panel-header"><div><h2>${escapeHtml(config.title)}</h2><p class="panel-meta">${escapeHtml(providerHint)}</p></div><button class="btn btn-primary btn-sm" type="button" data-run-stage="${stage}" ${leads.length ? '' : 'disabled'}>${escapeHtml(config.action)}</button></div><div class="panel-body"><p class="field-help" data-stage-message>当前账号共有 ${leads.length} 条线索；每次最多处理 10 条，失败记录会保留并显示原因。</p><div class="stage-progress" data-stage-progress hidden aria-live="polite"><div class="stage-progress-heading"><span data-stage-progress-label>等待任务开始</span><strong data-stage-progress-percent>0%</strong></div><div class="stage-progress-track" role="progressbar" aria-label="当前节点任务进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" data-stage-progressbar><span data-stage-progress-fill></span></div><p class="stage-progress-detail" data-stage-progress-detail>等待执行</p></div></div></section>
-    ${panelNoPad(config.title + ' · 结果记录', rows.length ? table(config.columns, rows, config.title) : empty, `${leads.length} 条数据库记录`)}
-  `;
-}
-export function bindStagePage(root, stage) {
-  const button = root.querySelector('[data-run-stage]');
-  const message = root.querySelector('[data-stage-message]');
-  const progress = root.querySelector('[data-stage-progress]');
-  const progressBar = root.querySelector('[data-stage-progressbar]');
-  const progressFill = root.querySelector('[data-stage-progress-fill]');
-  const progressLabel = root.querySelector('[data-stage-progress-label]');
-  const progressPercent = root.querySelector('[data-stage-progress-percent]');
-  const progressDetail = root.querySelector('[data-stage-progress-detail]');
-  const updateProgress = (percent, label, detail) => {
-    const value = Math.max(0, Math.min(100, Math.round(percent)));
-    if (progress) progress.hidden = false;
-    if (progressFill) progressFill.style.width = value + '%';
-    if (progressBar) progressBar.setAttribute('aria-valuenow', String(value));
-    if (progressPercent) progressPercent.textContent = value + '%';
-    if (progressLabel) progressLabel.textContent = label;
-    if (progressDetail) progressDetail.textContent = detail;
-  };
-  button?.addEventListener('click', async () => {
-    button.disabled = true;
-    const config = STAGES[stage];
-    let runId = null;
-    button.textContent = '处理中…';
-    message.textContent = '正在连接 Supabase 并处理线索…';
-    updateProgress(0, '正在启动节点任务', '验证登录状态、检查服务配置并读取待处理线索');
-    try {
-      const { data: { user }, error: authError } = await supabase.auth.getUser();
-      if (authError || !user) throw new Error('登录会话已失效，请重新登录');
-      await loadLeads();
-      if (config.provider) {
-        await loadIntegrations();
-        const service = listIntegrations().find(item => item.id === config.provider && item.enabled);
-        if (!service) throw new Error('请先在 API 与 AI 集成页面配置并启用 ' + config.provider);
-      }
-      const stepNumber = ({ scrape: 2, enrich: 3, verify: 4, research: 5, route: 6 })[stage];
-      const { data: runRow, error: runError } = await supabase.from('workflow_runs').insert({ user_id: user.id, workflow_key: stage, current_step: stepNumber, status: 'running', input: { limit: 10, provider: config.provider } }).select('id').single();
-      if (runError) throw runError;
-      runId = runRow.id;
-      const batch = leads.slice(0, 10);
-      updateProgress(0, '开始处理线索', `共 ${batch.length} 条任务，正在处理第 0/${batch.length} 条`);
-      let success = 0;
-      const errors = [];
-      for (let index = 0; index < batch.length; index++) {
-        const lead = batch[index];
-        const data = { ...(lead.data || {}) };
-        const patch = { data, updated_at: new Date().toISOString() };
-        try {
-          if (stage === 'scrape') {
-            const result = await integrationClient.call('tavily', { query: [lead.title, lead.website || lead.domain].filter(Boolean).join(' '), max_results: 3 });
-            data.public_signals = result.results || [];
-            data.public_signal_summary = (data.public_signals || []).slice(0, 3).map(x => x.title || x.content || x.url).filter(Boolean).join(' · ').slice(0, 900);
-            patch.status = 'scraped';
-          } else if (stage === 'enrich') {
-            const result = await integrationClient.call('apollo', { q_organization_name: lead.title, q_organization_domains: lead.domain ? [lead.domain] : [], per_page: 1 });
-            const organization = result.organization || result.organizations?.[0] || result.account || result;
-            data.enrichment = organization;
-            const contact = result.contacts?.[0] || result.person || {};
-            if (!lead.contactName && (contact.name || contact.first_name || contact.last_name)) patch.contact_name = contact.name || [contact.first_name, contact.last_name].filter(Boolean).join(' ');
-            if (!lead.email && contact.email) patch.email = contact.email;
-            if (!lead.phone && (contact.phone_number || organization.phone)) patch.phone = contact.phone_number || organization.phone;
-            if (organization.name && !lead.companyName) patch.company_name = organization.name;
-            if (organization.website_url && !lead.website) patch.website = organization.website_url;
-          } else if (stage === 'verify') {
-            if (!lead.email && !lead.domain) throw new Error('缺少邮箱或企业域名');
-            const result = await integrationClient.call('hunter', lead.email ? { email: lead.email } : { domain: lead.domain });
-            if (!lead.email && result.emails?.length) {
-              patch.email = result.emails[0].value || result.emails[0].email;
-              data.emailStatus = result.emails[0].verification?.status || result.emails[0].confidence ? 'valid' : 'discovered';
-            } else {
-              data.emailStatus = result.data?.status || result.status || result.result || 'checked';
-            }
-          } else if (stage === 'research') {
-            const result = await integrationClient.call('tavily', { query: `${lead.title} ${lead.website || lead.domain} company news funding hiring growth`, max_results: 5 });
-            data.research = result.results || [];
-            data.research_summary = (data.research || []).slice(0, 5).map(x => x.title || x.content || x.url).filter(Boolean).join(' · ').slice(0, 1500);
-            data.research_completed = true;
-          } else if (stage === 'route') {
-            const email = lead.email && lead.email !== '—';
-            const phone = lead.phone && lead.phone !== '—';
-            data.route = email && phone ? '邮件 + 电话' : email ? '邮件序列' : phone ? '电话外呼' : '人工补全';
-            data.route_updated_at = new Date().toISOString();
-            patch.status = 'routed';
-          }
-          const { error } = await supabase.from('leads').update(patch).eq('id', lead.id).eq('user_id', user.id);
-          if (error) throw error;
-          success++;
-        } catch (error) {
-          errors.push((lead.title || lead.domain) + '：' + (error.message || '处理失败'));
-          const { error: saveError } = await supabase.from('leads').update({ data: { ...data, stage_errors: { ...(data.stage_errors || {}), [stage]: error.message || '处理失败' } }, updated_at: new Date().toISOString() }).eq('id', lead.id).eq('user_id', user.id);
-          if (saveError) console.error(saveError);
-        }
-        const percent = Math.round(((index + 1) / batch.length) * 100);
-        message.textContent = `处理进度 ${index + 1}/${batch.length}；成功 ${success} 条。`;
-        updateProgress(percent, `正在执行：${config.title}`, `已处理 ${index + 1}/${batch.length} 条 · 成功 ${success} 条 · 失败 ${errors.length} 条`);
-      }
-      await loadLeads();
-      message.textContent = `处理结束：成功 ${success} 条，失败 ${errors.length} 条。` + (errors.length ? ' 首个错误：' + errors[0] : '');
-      updateProgress(100, errors.length ? '任务已结束（含失败项）' : '任务已完成', `总计 ${batch.length} 条 · 成功 ${success} 条 · 失败 ${errors.length} 条`);
-      await supabase.from('workflow_runs').update({ status: errors.length && !success ? 'failed' : 'completed', output: { success, failed: errors.length, errors: errors.slice(0, 20) }, updated_at: new Date().toISOString() }).eq('id', runId).eq('user_id', user.id);
-      showToast(`${config.action}完成：成功 ${success} 条，失败 ${errors.length} 条`);
-      document.dispatchEvent(new CustomEvent('euresis:leads-updated'));
-    } catch (error) {
-      if (runId) {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (user) await supabase.from('workflow_runs').update({ status: 'failed', error_message: error.message || '阶段处理失败', updated_at: new Date().toISOString() }).eq('id', runId).eq('user_id', user.id);
-      }
-      message.textContent = error.message || '阶段处理失败';
-      updateProgress(100, '任务失败', error.message || '阶段处理失败');
-      showToast('处理失败：' + (error.message || '未知错误'));
-    } finally {
-      button.disabled = false;
-      button.textContent = config.action;
-    }
-  });
+export function bindStagePage(root,stage){
+ const c=STAGES[stage],button=root.querySelector('[data-run-stage]'),message=root.querySelector('[data-stage-message]');
+ const progress=root.querySelector('[data-stage-progress]'),bar=root.querySelector('[data-stage-progressbar]'),fill=root.querySelector('[data-stage-progress-fill]'),label=root.querySelector('[data-stage-progress-label]'),percent=root.querySelector('[data-stage-progress-percent]'),detail=root.querySelector('[data-stage-progress-detail]');
+ const selectedIds=()=>[...root.querySelectorAll('[data-select-lead]:checked')].map(el=>el.dataset.selectLead);
+ const updateSelection=()=>{const ids=selectedIds();button.disabled=ids.length===0;button.textContent=c.action+'（已选 '+ids.length+'）';};
+ root.querySelectorAll('[data-select-lead]').forEach(el=>el.addEventListener('change',updateSelection));
+ root.querySelector('[data-select-visible]')?.addEventListener('change',event=>{root.querySelectorAll('[data-select-lead]').forEach(el=>el.checked=event.target.checked);updateSelection();});
+ const updateProgress=(n,title,desc)=>{const v=Math.max(0,Math.min(100,Math.round(n)));progress.hidden=false;fill.style.width=v+'%';bar.setAttribute('aria-valuenow',String(v));percent.textContent=v+'%';label.textContent=title;detail.textContent=desc;};
+ async function refreshLogs(){const {data:{user}}=await supabase.auth.getUser();if(!user)return;const {data,error}=await supabase.from('lead_activity_logs').select('id,lead_id,action,provider,status,output,error_message,started_at,created_at').eq('user_id',user.id).order('created_at',{ascending:false}).limit(20);const tbody=root.querySelector('[data-stage-logs]');if(tbody)tbody.innerHTML=error?'<tr><td colspan="7">日志读取失败：'+esc(error.message)+'</td></tr>':renderLogRows(data);}
+ async function runSelected(ids){
+  if(!ids.length){showToast('请先勾选要处理的记录');return;}
+  button.disabled=true;const startedAt=new Date().toISOString();let runId=null;
+  try{
+   const {data:{user},error:authError}=await supabase.auth.getUser();if(authError||!user)throw new Error('登录会话已失效，请重新登录');
+   await loadLeads();if(c.provider){await loadIntegrations();if(!listIntegrations().some(x=>x.id===c.provider&&x.enabled))throw new Error('请先在 API 和 AI 集成页面启用 '+c.provider);}
+   const {data:run,error:runError}=await supabase.from('workflow_runs').insert({user_id:user.id,workflow_key:stage,current_step:({scrape:2,enrich:3,verify:4,research:5,route:6})[stage],status:'running',input:{selected_ids:ids,selected_count:ids.length,provider:c.provider,manual:true,started_at:startedAt},output:{}}).select('id').single();if(runError)throw runError;runId=run.id;
+   let success=0,failed=0;const errors=[];const batch=leads.filter(x=>ids.includes(x.id));
+   for(let i=0;i<batch.length;i++){
+    const lead=batch[i],data={...(lead.data||{})};
+    const {data:log,error:logError}=await supabase.from('lead_activity_logs').insert({user_id:user.id,lead_id:lead.id,workflow_run_id:runId,action:stage,provider:c.provider,status:'running',input:{company:lead.title,domain:lead.domain,stage,attempt:1,started_at:new Date().toISOString()},output:{}}).select('id').single();if(logError)throw logError;
+    updateProgress(i/batch.length*100,'正在执行 '+c.title,'当前：'+lead.title+' · '+(i+1)+'/'+batch.length+' · 成功 '+success+' · 失败 '+failed);
+    try{
+     const patch={data,updated_at:new Date().toISOString()};
+     if(stage==='scrape'){const r=await integrationClient.call('tavily',{query:[lead.title,lead.website||lead.domain].filter(Boolean).join(' '),max_results:3});data.public_signals=r.results||[];data.public_signal_summary=data.public_signals.slice(0,3).map(x=>x.title||x.content||x.url).filter(Boolean).join(' · ').slice(0,900);data.public_signals_checked_at=new Date().toISOString();patch.status='scraped';}
+     else if(stage==='enrich'){const r=await integrationClient.call('apollo',{q_organization_name:lead.title,q_organization_domains:lead.domain?[lead.domain]:[],per_page:1});const org=r.organization||r.organizations?.[0]||r.account||r;const contact=r.contacts?.[0]||r.person||org.primary_contact||{};data.enrichment=org;data.enrichment_checked_at=new Date().toISOString();if((!lead.contactName||lead.contactName==='—')&&(contact.name||contact.first_name||contact.last_name))patch.contact_name=contact.name||[contact.first_name,contact.last_name].filter(Boolean).join(' ');if((!lead.email||lead.email==='—')&&contact.email)patch.email=contact.email;if((!lead.phone||lead.phone==='—')&&(contact.phone_number||org.phone))patch.phone=contact.phone_number||org.phone;if(org.name&&(!lead.companyName||lead.companyName==='—'))patch.company_name=org.name;if(org.website_url&&(!lead.website||lead.website==='—'))patch.website=org.website_url;}
+     else if(stage==='verify'){if((!lead.email||lead.email==='—')&&!lead.domain)throw new Error('缺少邮箱或企业域名');const r=await integrationClient.call('hunter',lead.email&&lead.email!=='—'?{email:lead.email}:{domain:lead.domain});data.emailStatus=r.data?.status||r.status||r.result||(r.emails?.length?'discovered':'checked');data.verification=r;data.verified_at=new Date().toISOString();if((!lead.email||lead.email==='—')&&r.emails?.length)patch.email=r.emails[0].value||r.emails[0].email;}
+     else if(stage==='research'){const r=await integrationClient.call('tavily',{query:lead.title+' '+(lead.website||lead.domain)+' company news funding hiring expansion products',max_results:5});data.research=r.results||[];data.research_summary=data.research.slice(0,5).map(x=>x.title||x.content||x.url).filter(Boolean).join(' · ').slice(0,1500);data.research_completed=true;data.research_completed_at=new Date().toISOString();}
+     else if(stage==='route'){const email=lead.email&&lead.email!=='—',phone=lead.phone&&lead.phone!=='—';data.route=email&&phone?'邮件 + 电话':email?'邮件序列':phone?'电话外呼':'人工补全';data.route_updated_at=new Date().toISOString();patch.status='routed';}
+     const {error:updateError}=await supabase.from('leads').update(patch).eq('id',lead.id).eq('user_id',user.id);if(updateError)throw updateError;success++;
+     await supabase.from('lead_activity_logs').update({status:'completed',output:{company:lead.title,domain:lead.domain,fields_updated:Object.keys(patch).filter(k=>k!=='updated_at'),summary:stage==='enrich'?{contact_name:patch.contact_name||lead.contactName,email:patch.email||lead.email,phone:patch.phone||lead.phone}:stage==='research'?data.research_summary:stage==='scrape'?data.public_signal_summary:stage==='verify'?data.emailStatus:data.route},completed_at:new Date().toISOString()}).eq('id',log.id).eq('user_id',user.id);
+    }catch(error){failed++;errors.push({lead:lead.title,error:error.message||'处理失败'});await supabase.from('lead_activity_logs').update({status:'failed',error_message:error.message||'处理失败',output:{company:lead.title,domain:lead.domain,stage},completed_at:new Date().toISOString()}).eq('id',log.id).eq('user_id',user.id);await supabase.from('leads').update({data:{...data,stage_errors:{...(data.stage_errors||{}),[stage]:error.message||'处理失败'}},updated_at:new Date().toISOString()}).eq('id',lead.id).eq('user_id',user.id);}
+    updateProgress((i+1)/batch.length*100,'正在执行 '+c.title,'已处理 '+(i+1)+'/'+batch.length+' · 成功 '+success+' · 失败 '+failed);
+   }
+   await loadLeads();await supabase.from('workflow_runs').update({status:failed&&!success?'failed':'completed',output:{selected_count:batch.length,success,failed,errors,provider:c.provider,completed_at:new Date().toISOString()},updated_at:new Date().toISOString()}).eq('id',runId).eq('user_id',user.id);
+   message.textContent='完成：选中 '+batch.length+' 条，成功 '+success+' 条，失败 '+failed+' 条。'+(errors.length?' 首个错误：'+errors[0].error:'');updateProgress(100,failed?'任务结束（含失败项）':'任务完成','总计 '+batch.length+' · 成功 '+success+' · 失败 '+failed);showToast(c.action+'完成：成功 '+success+'，失败 '+failed);document.dispatchEvent(new CustomEvent('euresis:leads-updated'));await refreshLogs();
+  }catch(error){if(runId)await supabase.from('workflow_runs').update({status:'failed',error_message:error.message||'处理失败',output:{selected_count:ids.length},updated_at:new Date().toISOString()}).eq('id',runId);message.textContent=error.message||'处理失败';updateProgress(100,'任务失败',error.message||'处理失败');showToast('处理失败：'+(error.message||'未知错误'));}
+  finally{button.disabled=selectedIds().length===0;button.textContent=c.action+'（已选 '+selectedIds().length+'）';}
+ }
+ button?.addEventListener('click',()=>runSelected(selectedIds()));
+ root.querySelectorAll('[data-run-one]').forEach(el=>el.addEventListener('click',()=>runSelected([el.dataset.runOne])));
+ root.addEventListener('euresis:run-lead-action',event=>{if(event.detail?.stage===stage)runSelected([event.detail.leadId]);});
+ refreshLogs().catch(error=>console.warn('加载操作日志失败',error));
 }
