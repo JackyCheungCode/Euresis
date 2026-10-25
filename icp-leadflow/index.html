@@ -35,10 +35,6 @@
           <svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="13" cy="13" r="7" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="m18 18 8 8M5 27h22" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
           <span>搜索 API 发现</span>
         </button>
-        <button class="side-nav-item" data-view="icp" type="button">
-          <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M5 6h22v5H5zM5 14h22v5H5zM5 22h14v5H5z" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
-          <span>企业 ICP</span>
-        </button>
       </div>
       <div class="nav-group">
         <div class="nav-section-label">设置与集成</div>
@@ -63,6 +59,13 @@
           </div>
         </div>
         <main class="main">
+          <section class="panel icp-inline-panel" aria-labelledby="icpInlineTitle">
+            <div class="panel-header">
+              <div><h2 id="icpInlineTitle">企业 ICP · 理想客户画像</h2><p class="helper-copy">先定义目标企业、购买信号与排除规则；搜索 API 发现及后续获客步骤将与此画像在同一工作区协同使用。</p></div>
+              <button class="btn btn-secondary btn-sm" id="toggleIcpConfig" type="button" aria-expanded="false" aria-controls="icpDefinitionContainer">展开 ICP 配置</button>
+            </div>
+            <div id="icpDefinitionContainer" hidden></div>
+          </section>
           <div class="stats-row" id="statsRow"></div>
           <div class="cds-progress-indicator" id="stepsNav" aria-label="获客流程进度"></div>
           <div id="stepContainer"></div>
@@ -75,13 +78,6 @@
             </div>
           </div>
         </main>
-      </section>
-      <section id="icpView" hidden>
-        <div class="page-header">
-          <div class="breadcrumb"><span>潜客发现</span><span>›</span><span class="current">企业 ICP</span></div>
-          <div class="page-title-row"><div><h1>企业 ICP</h1><div class="subtitle">定义理想客户画像，配置企业属性、决策角色、购买信号、商业匹配度与排除规则。</div></div><span class="cds-chip">独立配置页</span></div>
-        </div>
-        <main class="main"><div id="icpDefinitionContainer"></div></main>
       </section>
       <section id="integrationsView" hidden>
         <div class="page-header">
