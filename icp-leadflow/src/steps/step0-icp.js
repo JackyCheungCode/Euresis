@@ -159,14 +159,6 @@ export function renderStep0() {
       <section class="panel icp-schema-panel"><div class="panel-header"><h2>AI 判定 Schema</h2><span class="panel-meta">结构化输出字段</span></div><div class="panel-body"><p class="field-help">Schema v2.0 · 仅允许定义字段；未知信息留空并标记缺失，关键字段附可访问证据 URL 与原文摘录。置信度统一为 0–1。</p><div class="field-tags">${Object.keys(aiSchema.properties).map(field => tag(field, 'blue')).join('')}</div><cds-accordion><cds-accordion-item title="查看完整 JSON Schema"><pre class="cds-code-snippet">${escapeHtml(JSON.stringify(aiSchema,null,2))}</pre></cds-accordion-item></cds-accordion><div class="model-picker-wrap"><label class="form-label">AI 模型</label>${modelSelect()}<p class="field-help">仅显示常用模型。实际调用前需在「API 与 AI 集成」配置对应服务及可用模型。</p></div></div></section>
     </div>`;
 }
-function updateSelectedLabel(wrap, option) {
-  const label = wrap.querySelector('.cds-select-current');
-  label.innerHTML = '';
-  if (option.querySelector('.flag-circle')) label.append(option.querySelector('.flag-circle').cloneNode(true));
-  const text = document.createElement('span');
-  text.textContent = option.querySelector('span:last-child')?.textContent || option.textContent.trim();
-  label.append(text);
-}
 function bindSelects(root) {
  root.querySelectorAll('[data-select-wrap] cds-dropdown').forEach(dropdown=>{
   const hidden=dropdown.closest('[data-select-wrap]')?.querySelector('[data-icp-field]');
