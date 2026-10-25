@@ -53,7 +53,7 @@ function openRecordDetails(row) {
   if (leadId) {
     const actions = document.createElement('div');
     actions.className = 'record-detail-actions';
-    actions.innerHTML = '<button type="button" class="btn btn-secondary btn-sm" data-detail-action="enrich">补全联系方式</button><button type="button" class="btn btn-primary btn-sm" data-detail-action="research">企业背调</button>';
+    actions.innerHTML = '<cds-button type="button" class="btn btn-secondary btn-sm" data-detail-action="enrich" kind="secondary" size="sm">补全联系方式</cds-button><cds-button type="button" class="btn btn-primary btn-sm" data-detail-action="research" kind="primary" size="sm">企业背调</cds-button>';
     actions.querySelectorAll('[data-detail-action]').forEach(button => button.addEventListener('click', async () => {
       const stage = button.dataset.detailAction;
       closeRecordDetails();
