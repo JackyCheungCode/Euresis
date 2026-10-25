@@ -1,13 +1,14 @@
 export const state = {
   currentStep: 0,
-  totalSteps: 6,
+  totalSteps: 7,
   steps: [
-    { id: 0, label: '候选发现', desc: '搜索 API · SERP · Maps' },
-    { id: 1, label: '公开信号抓取', desc: 'Domain Contact Scraper' },
-    { id: 2, label: '联系方式补齐', desc: 'Apollo · Clay · WhatsApp' },
-    { id: 3, label: '验证层', desc: 'Twilio · Hunter' },
-    { id: 4, label: '企业背调', desc: 'Apollo · Bright Data' },
-    { id: 5, label: '渠道路由', desc: '输出 · 分流' },
+    { id: 0, label: '企业 ICP 配置', desc: '定义理想客户画像' },
+    { id: 1, label: '候选发现', desc: '搜索 API · SERP · Maps' },
+    { id: 2, label: '公开信号抓取', desc: 'Domain Contact Scraper' },
+    { id: 3, label: '联系方式补齐', desc: 'Apollo · Clay · WhatsApp' },
+    { id: 4, label: '验证层', desc: 'Twilio · Hunter' },
+    { id: 5, label: '企业背调', desc: 'Apollo · Bright Data' },
+    { id: 6, label: '渠道路由', desc: '输出 · 分流' },
   ],
   stats: [
     { label: '候选公司', value: 0, unit: '家' },
