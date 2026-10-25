@@ -62,12 +62,12 @@ function openRecordDetails(row) {
     }));
     body.append(actions);
   }
-  modal.hidden = false;
+  modal.open = true;
   document.getElementById('recordModalClose').focus();
   document.body.classList.add('modal-open');
 }
 function closeRecordDetails() {
-  document.getElementById('recordModal').hidden = true;
+  document.getElementById('recordModal').open = false;
   document.body.classList.remove('modal-open');
 }
 function init() {
@@ -116,8 +116,9 @@ function init() {
     if (event.target.closest('#recordModalClose, #recordModalDone')) closeRecordDetails();
     if (event.target.id === 'recordModal') closeRecordDetails();
   });
+  document.getElementById('recordModal')?.addEventListener('cds-modal-closed', closeRecordDetails);
   document.addEventListener('keydown', event => {
-    if (event.key === 'Escape' && !document.getElementById('recordModal').hidden) closeRecordDetails();
+    if (event.key === 'Escape' && document.getElementById('recordModal').open) closeRecordDetails();
     if ((event.key === 'Enter' || event.key === ' ') && event.target.matches('cds-table-row[data-record-row]')) {
       event.preventDefault();
       openRecordDetails(event.target);
