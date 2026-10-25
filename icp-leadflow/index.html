@@ -99,7 +99,7 @@
           </div>
         </div>
         <main class="main integrations-main">
-          <div class="notification warning"><span class="notif-icon">!</span><div><strong>安全说明：</strong>API 密钥通过需要登录的 Supabase Edge Function 保存到服务端，不会回传给浏览器。各账号的连接配置与线索数据隔离；请仅配置你有权使用的 API 凭据。</div></div>
+          <cds-inline-notification class="notification warning" kind="warning" title="安全说明" hide-close-button>API 密钥通过需要登录的 Supabase Edge Function 保存到服务端，不会回传给浏览器。各账号的连接配置与线索数据隔离；请仅配置你有权使用的 API 凭据。</cds-inline-notification>
           <div id="integrationSummary" class="integration-summary"></div>
           <div class="integration-toolbar">
             <div><h2>服务连接</h2><p>选择服务、填写端点与凭据，再测试连接。非必需服务可以保持禁用。</p></div>
