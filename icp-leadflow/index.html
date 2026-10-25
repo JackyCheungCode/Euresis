@@ -961,6 +961,52 @@ body.authenticated .auth-gate { display: none; }
 .translated-query-code{display:block;white-space:pre-wrap;overflow-wrap:anywhere;color:#161616;background:#f4f4f4;border-left:3px solid #24a148;padding:.75rem;font-family:var(--cds-font-mono);font-size:.75rem;line-height:1.6}
 @media(max-width:600px){.icp-keyword-entry{align-items:stretch}.query-translation-controls{align-items:stretch;flex-direction:column;width:100%}.query-translation-controls .cds-select,.query-translation-controls .btn{width:100%}}
 
+
+/* Emergency layout hardening: keep inline SVG icons from using the browser's
+   default replaced-element dimensions when rendered inside Carbon components. */
+svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  max-width: 100%;
+  max-height: 100%;
+  vertical-align: middle;
+  flex: 0 0 auto;
+}
+.global-header svg,
+.side-nav-item svg,
+.shell-toggle svg,
+.cds-icon-button svg {
+  width: 1.25rem !important;
+  height: 1.25rem !important;
+  min-width: 1.25rem;
+  min-height: 1.25rem;
+}
+.global-header cds-button,
+.side-nav cds-button,
+.side-nav-item,
+.shell-toggle,
+.header-logout {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  max-width: 100%;
+}
+.side-nav-item {
+  width: 100%;
+  justify-content: flex-start;
+}
+@media (max-width: 600px) {
+  html, body { width: 100%; min-width: 0; overflow-x: hidden; }
+  .app-shell, .main, #workflowView, #integrationsView { min-width: 0; max-width: 100%; }
+  .main { padding: 1rem; }
+  .page-header { padding: 1rem; }
+  .global-header { width: 100%; min-width: 0; }
+  .global-header .brand-name { overflow: hidden; text-overflow: ellipsis; }
+  .global-header .actions { overflow: hidden; }
+  svg { width: 1.25rem; height: 1.25rem; }
+}
+
   </style>
   <script type="module" src="https://1.www.s81c.com/common/carbon/web-components/version/v2.66.0/button.min.js"></script>
   <script type="module" src="https://1.www.s81c.com/common/carbon/web-components/version/v2.66.0/input.min.js"></script>
