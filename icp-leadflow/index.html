@@ -1200,7 +1200,7 @@ svg {
       <p id="authMessage" class="auth-message" role="status"></p>
       <button id="authSubmit" class="btn btn-primary auth-submit" type="submit">登录</button>
       <button id="authModeToggle" class="auth-mode-toggle" type="button">没有账号？创建账号</button>
-      <button id="authSkip" class="auth-mode-toggle" type="button" onclick="window.__EURESIS_SKIP_AUTH(event)">跳过鉴权，进入演示工作区</button>
+      <a id="authSkip" class="auth-mode-toggle" href="/?demo=1&amp;build=20261026-4" style="display:block;text-decoration:none" onclick="if(window.__EURESIS_SKIP_AUTH){window.__EURESIS_SKIP_AUTH(event)}">跳过鉴权，进入演示工作区</a>
       <p class="auth-footnote">请勿与他人共享登录凭据。API 密钥由服务端保存，不会在浏览器中明文持久化。</p>
     </form>
   </section>
@@ -1227,6 +1227,7 @@ svg {
         window.dispatchEvent(new CustomEvent('euresis:demo-mode'));
       };
       if (skipButton) skipButton.addEventListener('click', window.__EURESIS_SKIP_AUTH);
+      if (new URLSearchParams(window.location.search).get('demo') === '1') window.__EURESIS_SKIP_AUTH();
       if (!button || !form || !message) return;
       form.noValidate = true;
       button.addEventListener('click', async function (event) {
@@ -1276,6 +1277,6 @@ svg {
     })();
   </script>
 
-  <script type="module" src="/src/main.js?v=demo-bypass-20261026-3"></script>
+  <script type="module" src="/src/main.js?v=demo-bypass-20261026-4"></script>
 </body>
 </html>
