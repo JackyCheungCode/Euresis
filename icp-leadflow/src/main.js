@@ -185,6 +185,8 @@ function updateAuthMode() {
   document.getElementById('authPassword').autocomplete = signupMode ? 'new-password' : 'current-password';
   setAuthMessage('');
 }
+window.addEventListener('euresis:demo-mode', () => setAuthenticated(null));
+
 function initAuth() {
   const form = document.getElementById('authForm');
   const submitButton = document.getElementById('authSubmit');
