@@ -1200,7 +1200,7 @@ svg {
       <p id="authMessage" class="auth-message" role="status"></p>
       <button id="authSubmit" class="btn btn-primary auth-submit" type="submit">登录</button>
       <button id="authModeToggle" class="auth-mode-toggle" type="button">没有账号？创建账号</button>
-      <button id="authSkip" class="auth-mode-toggle" type="button">跳过鉴权，进入演示工作区</button>
+      <button id="authSkip" class="auth-mode-toggle" type="button" onclick="window.__EURESIS_SKIP_AUTH(event)">跳过鉴权，进入演示工作区</button>
       <p class="auth-footnote">请勿与他人共享登录凭据。API 密钥由服务端保存，不会在浏览器中明文持久化。</p>
     </form>
   </section>
@@ -1213,7 +1213,20 @@ svg {
       var message = document.getElementById('authMessage');
       var modeButton = document.getElementById('authModeToggle');
       var skipButton = document.getElementById('authSkip');
-      if (skipButton) skipButton.addEventListener('click', function (event) { event.preventDefault(); window.__EURESIS_DEMO_MODE = true; document.body.classList.add('authenticated'); document.getElementById('authGate').hidden = true; document.querySelector('.app-shell').hidden = false; document.querySelector('.global-header').hidden = false; message.textContent = '演示模式：已跳过鉴权。请注意，受保护的数据操作仍可能需要真实登录。'; window.dispatchEvent(new CustomEvent('euresis:demo-mode')); });
+      window.__EURESIS_SKIP_AUTH = function (event) {
+        if (event) { event.preventDefault(); event.stopPropagation(); }
+        window.__EURESIS_DEMO_MODE = true;
+        document.body.classList.add('authenticated');
+        var gate = document.getElementById('authGate');
+        var shell = document.querySelector('.app-shell');
+        var header = document.querySelector('.global-header');
+        if (gate) { gate.hidden = true; gate.style.display = 'none'; }
+        if (shell) { shell.hidden = false; shell.style.display = ''; }
+        if (header) { header.hidden = false; header.style.display = ''; }
+        if (message) message.textContent = '演示模式：已跳过鉴权。受保护的数据读写仍可能需要真实登录。';
+        window.dispatchEvent(new CustomEvent('euresis:demo-mode'));
+      };
+      if (skipButton) skipButton.addEventListener('click', window.__EURESIS_SKIP_AUTH);
       if (!button || !form || !message) return;
       form.noValidate = true;
       button.addEventListener('click', async function (event) {
@@ -1263,6 +1276,6 @@ svg {
     })();
   </script>
 
-  <script type="module" src="/src/main.js?v=loginfix-20261026-2"></script>
+  <script type="module" src="/src/main.js?v=demo-bypass-20261026-3"></script>
 </body>
 </html>
