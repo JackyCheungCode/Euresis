@@ -135,6 +135,14 @@ function setAuthenticated(session) {
   const header = document.querySelector('.global-header');
   if (!session) {
     activeUserId = null;
+    if (window.__EURESIS_DEMO_MODE) {
+      document.body.classList.add('authenticated');
+      gate.hidden = true;
+      shell.hidden = false;
+      header.hidden = false;
+      if (!initialized) { initialized = true; init(); }
+      return;
+    }
     document.body.classList.remove('authenticated');
     gate.hidden = false;
     shell.hidden = true;
