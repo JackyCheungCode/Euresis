@@ -22,7 +22,7 @@ The account-level workers.dev subdomain is `xg-y`. The Worker name is exactly `e
 
 ## Local development
 
-Requires Node.js 22.18 or later.
+Requires Node.js 22.23.0 or later.
 
 ```bash
 npm install
