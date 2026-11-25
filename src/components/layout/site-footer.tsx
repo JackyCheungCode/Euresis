@@ -1,18 +1,25 @@
+import { PLink } from "@porsche-design-system/components-react/ssr";
+
 const footerLinks = [
-  { label: "Collections", href: "/collections" },
-  { label: "Fitment guide", href: "/fitment" },
-  { label: "Contact", href: "/contact" },
-  { label: "Privacy", href: "/privacy" },
+  { label: "Collections", href: "#collections" },
+  { label: "Fitment guide", href: "#fitment" },
+  { label: "Engineering", href: "#engineering" },
 ];
 
 export function SiteFooter() {
   return (
     <footer className="site-footer">
-      <a className="wordmark" href="/" aria-label="Euresis home">EURESIS</a>
-      <nav aria-label="Footer navigation">
-        {footerLinks.map((item) => <a key={item.href} href={item.href}>{item.label}</a>)}
+      <a className="wordmark" href="/" aria-label="Euresis home">
+        EURESIS
+      </a>
+      <nav className="site-footer__nav" aria-label="Footer navigation">
+        {footerLinks.map((item) => (
+          <PLink key={item.href} href={item.href}>
+            {item.label}
+          </PLink>
+        ))}
       </nav>
-      <span>© {new Date().getFullYear()} Euresis</span>
+      <small className="site-footer__copyright">© {new Date().getFullYear()} Euresis</small>
     </footer>
   );
 }
