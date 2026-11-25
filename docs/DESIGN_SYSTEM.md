@@ -1,85 +1,68 @@
 # Euresis Design System
 
-> Status: v1.0 — foundational design rules  
-> Reference: Porsche Design System v4, Landing Page template and documented design tokens  
+> Status: v1.0 — foundational design rules
+> Reference: Porsche Design System v4, Landing Page template and documented design tokens
 > Reference documentation: https://designsystem.porsche.com/v4/templates/landing-page/
 
 ## 1. Product and brand direction
 
-Euresis is a premium automotive wheel storefront. The interface should communicate engineering, precision, fitment confidence and material quality. Use Porsche Design System as a design reference for layout discipline, typography hierarchy, spacing, interaction patterns and accessibility—not as a source of Porsche branding.
+Euresis is a premium automotive wheel storefront. The interface should communicate engineering, precision, fitment confidence and material quality. Use Porsche Design System as the design foundation for layout discipline, typography hierarchy, spacing, interaction patterns and accessibility—not as a source of Porsche branding.
 
 - Do not use Porsche logos, crests, proprietary brand assets or imply affiliation.
 - Do not copy Porsche's proprietary font files. Use a properly licensed typeface with a neutral sans-serif fallback.
 - Product photography and wheel details must remain the visual focus.
 - Prioritize product discovery, vehicle fitment and purchase/contact conversion.
 
-## 2. Visual principles
+## 2. Mandatory PDS v4 usage policy
+
+Porsche Design System v4 is the mandatory UI foundation for Euresis.
+
+- Prefer official PDS React components for all controls and interaction patterns whenever a suitable component exists.
+- Use official PDS design tokens as the source of truth for colors, typography, spacing, sizing, borders, radii, shadows and motion.
+- Do not recreate an existing PDS control with custom HTML/CSS or introduce another component library for controls.
+- Euresis may add thin wrappers in `src/components/ui/` only when they preserve the official component API, behavior, accessibility and visual contract.
+- If PDS does not provide a suitable component, use semantic native HTML and accessible browser behavior, styled with available PDS tokens. Record the gap before introducing a project-specific semantic token or custom component.
+- Custom CSS is for page layout, responsive composition and Euresis-specific content—not for overriding PDS component internals.
+- Do not use arbitrary raw values when an official PDS token exists. Project tokens may be semantic aliases to documented PDS tokens, not a competing token system.
+- Confirm token names and component APIs against the installed PDS v4 package documentation; never guess token identifiers.
+
+## 3. Visual principles
 
 1. **Precision over decoration:** restrained surfaces, clear alignment, deliberate whitespace.
 2. **Large editorial imagery:** high-resolution wheel and vehicle photography; avoid generic gradients and ornamental UI.
 3. **Strong hierarchy:** one dominant headline and one primary action per major section.
 4. **Technical credibility:** show specifications in structured, scannable layouts.
-5. **Consistent interaction:** buttons, links, filters, selectors and cards share predictable states.
+5. **Consistent interaction:** use PDS components and predictable states for buttons, links, filters, selectors and cards.
 6. **Responsive by design:** mobile layouts are designed intentionally, not merely compressed desktop layouts.
 
-## 3. Color system
+## 4. Color system
 
-Start with a neutral, high-contrast palette inspired by the reference system. Keep brand accent configurable until the Euresis brand identity is finalized.
-
-| Token | Initial value | Usage |
-|---|---|---|
-| `--color-canvas` | `#FFFFFF` | Main page background |
-| `--color-surface` | `#F2F2F2` | Secondary surfaces and cards |
-| `--color-primary` | `#111111` | Primary text and dark surfaces |
-| `--color-secondary` | `#5F6368` | Supporting text |
-| `--color-border` | `#D9D9D9` | Dividers and subtle outlines |
-| `--color-accent` | TBD | Euresis brand action/highlight |
-| `--color-success` | `#237A3B` | Success feedback |
-| `--color-warning` | `#A85B00` | Warning feedback |
-| `--color-error` | `#B4232C` | Error feedback |
+Use the official PDS color tokens. Euresis brand accent decisions must be expressed through an approved semantic token mapped to the appropriate documented PDS token or documented extension. Do not hard-code colors in components.
 
 Rules:
 - Maintain WCAG AA contrast for text and interactive controls.
 - Never use low-contrast decorative text for essential information.
-- Accent color should be used sparingly for primary actions, selected states and key highlights.
+- Use accent color sparingly for primary actions, selected states and key highlights.
 - Support light theme first. Add dark theme only when the full component set has defined semantic tokens.
 
-## 4. Typography
+## 5. Typography
 
-- Use a licensed modern sans-serif such as Inter, or the platform sans-serif stack until a brand font is selected.
-- Use a clear scale: display, heading 1–3, body, label and caption.
-- Headlines are concise, high contrast and editorial; body copy remains highly legible.
+Use the official PDS typography tokens and typography components/patterns where available. Do not introduce arbitrary font sizes, weights or line heights in individual controls.
+
+- Use licensed fonts and the PDS-supported font setup.
+- Maintain a clear display, heading, body, label and caption hierarchy.
 - Use tabular numerals for prices, dimensions and technical specifications where supported.
-- Use relative units and preserve readability at 200% text zoom.
+- Preserve readability at 200% text zoom.
 
-Suggested responsive scale:
-- Display: `clamp(2.75rem, 6vw, 6rem)`
-- H1: `clamp(2.25rem, 4vw, 4.5rem)`
-- H2: `clamp(1.75rem, 3vw, 3rem)`
-- H3: `clamp(1.25rem, 2vw, 2rem)`
-- Body: `1rem` to `1.125rem`
-- Caption: `0.8125rem` to `0.875rem`
+## 6. Layout, grid and spacing
 
-## 5. Layout, grid and spacing
+Use PDS layout and spacing tokens wherever available. Project-level layout aliases may be used only when mapped to documented PDS tokens or responsive layout rules.
 
-Use a centered responsive content container with consistent horizontal gutters. Prefer fluid spacing for section-level rhythm and a compact fixed scale for component internals.
+- Keep a centered responsive content container with consistent horizontal gutters.
+- Prefer consistent grid alignment; avoid arbitrary per-section offsets.
+- Use the PDS responsive breakpoints or document any deliberate project mapping.
 
-Reference breakpoints from the Porsche v4 token documentation:
-- XS: 480px
-- SM: 760px
-- MD: 1000px
-- LG: 1300px
-- XL: 1760px
-- 2XL: 1920px
-
-Implementation may consolidate breakpoints where the chosen framework requires it, but behavior must remain responsive across these ranges.
-
-Spacing scale:
-- 4px, 8px, 16px, 32px, 48px, 80px
-- Section spacing should scale fluidly with viewport size.
-- Use consistent grid alignment; avoid arbitrary per-section offsets.
-
-## 6. Landing page structure
+## 7. Landing page structure
 
 The homepage should follow the conversion-focused Landing Page pattern, adapted for wheel commerce:
 
@@ -95,26 +78,29 @@ The homepage should follow the conversion-focused Landing Page pattern, adapted 
 
 The homepage must have a clear primary conversion path. Avoid placing multiple competing primary CTAs in the same section.
 
-## 7. Core component rules
+## 8. Core component rules
 
-- **Header/navigation:** clear active state, keyboard-accessible menus, compact mobile navigation.
-- **Buttons:** primary, secondary and text variants; define default, hover, focus-visible, active, disabled and loading states.
-- **Product cards:** consistent image ratio, wheel name, collection, starting price, finish options and product link.
-- **Filters:** visible selected filters, removable chips, clear-all action and usable mobile filter panel.
-- **Fitment selector:** progressive selection, explicit validation and clear handling of no-match/unknown states.
-- **Specification tables:** aligned labels and values; units always explicit.
-- **Forms:** persistent labels, inline validation, accessible error messaging.
-- **Dialogs/drawers:** focus management, escape-to-close and return focus to trigger.
+Use PDS official components for controls wherever available.
 
-## 8. Motion and imagery
+- **Header/navigation:** use PDS navigation/link patterns where applicable; provide keyboard-accessible menus and compact mobile navigation.
+- **Buttons:** use the PDS button component and supported variants/states.
+- **Product cards:** compose imagery, text and PDS controls; do not replace PDS control primitives with custom lookalikes.
+- **Filters:** use PDS inputs, selects, checkboxes, chips and disclosure patterns where available.
+- **Fitment selector:** use PDS form controls with progressive selection, explicit validation and clear no-match/unknown states.
+- **Specification tables:** use semantic tables and PDS typography/spacing tokens.
+- **Forms:** use PDS form controls where available, persistent labels and accessible validation.
+- **Dialogs/drawers:** use PDS dialog/overlay components where available, preserving focus management, escape-to-close and return focus behavior.
 
+## 9. Motion and imagery
+
+- Use PDS motion tokens and documented interaction patterns where available.
 - Use motion to communicate state or support navigation, not as decoration.
-- Keep transitions short and restrained; respect `prefers-reduced-motion`.
+- Respect `prefers-reduced-motion`.
 - Use real product photography, consistent crops and high-quality responsive assets.
 - Provide meaningful alt text; mark purely decorative images appropriately.
 - Avoid autoplay video with sound.
 
-## 9. Accessibility and quality gates
+## 10. Accessibility and quality gates
 
 - Target WCAG 2.2 AA.
 - Full keyboard operation and visible focus states.
@@ -124,16 +110,16 @@ The homepage must have a clear primary conversion path. Avoid placing multiple c
 - Touch targets are comfortably usable on mobile.
 - Check color contrast, responsive overflow, image loading and reduced-motion behavior before release.
 
-## 10. Engineering conventions
+## 11. Engineering conventions
 
-- Treat design tokens as the single source of truth; do not scatter raw colors, spacing and radii through components.
-- Build reusable components before duplicating page-specific UI.
+- Treat documented PDS design tokens as the single source of truth for UI design values.
+- Build thin reusable wrappers only when they add a clear Euresis-specific benefit.
 - Keep content, product data and presentation separate.
 - Do not hard-code vehicle compatibility; fitment must come from verified structured data.
 - Keep all prices, dimensions and units explicit and locale-aware.
-- Use the Porsche Design System documentation as a reference, and pin any adopted package/version after the application stack is selected.
+- Do not invent PDS component APIs or token names; verify them against the installed v4 package documentation.
 
-## 11. Initial design decisions still open
+## 12. Initial design decisions still open
 
 These require product/brand input before final visual lock:
 - Euresis logo and brand accent color.
@@ -142,7 +128,6 @@ These require product/brand input before final visual lock:
 - Framework and deployment target.
 - Whether the first release supports checkout or lead-generation/contact conversion only.
 
-
-## 12. Code ownership and component structure
+## 13. Code ownership and component structure
 
 Follow [ARCHITECTURE.md](ARCHITECTURE.md) for the required application structure and [API_AI.md](API_AI.md) for API and AI integration boundaries. Header, Footer, navigation, reusable controls, page sections, domain logic and styles must remain separate modules. Route files compose these modules; they do not become containers for unrelated implementation details.
