@@ -16,7 +16,7 @@ import {
   PSegmentedControl,
   PSegmentedControlItem,
   PTextarea,
-} from "@porsche-design-system/components-react";
+} from "@porsche-design-system/components-react/ssr";
 
 const sections = [
   { id: "overview", label: "Overview", number: "00" },
