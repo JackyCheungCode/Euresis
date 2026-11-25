@@ -2,6 +2,9 @@ node_modules
 dist
 .vite
 .cloudflare
+.wrangler
+.cf
+.dev.vars*
 .env
 .env.*
 !.env.example
