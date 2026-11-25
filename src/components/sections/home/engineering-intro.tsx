@@ -111,7 +111,6 @@ export function EngineeringIntro() {
         className="capabilities-carousel"
         slidesPerPage={{ base: 1, s: 1, m: 2, l: 3, xl: 3 }}
         pagination
-        gradient
         rewind
         width="full"
         aria={{ "aria-label": "EURESIS engineering and manufacturing capabilities" }}
