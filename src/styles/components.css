@@ -1,12 +1,36 @@
-.wordmark { font-size: 1.25rem; font-weight: 800; letter-spacing: .22em; }
-.eyebrow { font-size: .68rem; font-weight: 700; letter-spacing: .2em; color: var(--euresis-steel); text-transform: uppercase; }
-.header-action, .text-link { font-size: .75rem; text-transform: uppercase; letter-spacing: .08em; }
-.button { min-height: 52px; padding: 0 1.5rem; display: inline-flex; align-items: center; justify-content: center; gap: 1.25rem; font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; transition: background .2s ease, color .2s ease, border-color .2s ease; }
-.button-primary { background: var(--euresis-black); color: var(--euresis-white); border: 1px solid var(--euresis-black); }
-.button-primary:hover { background: var(--euresis-graphite); }
-.button-secondary { border: 1px solid #aeb2b4; }
-.button-secondary:hover { border-color: var(--euresis-black); }
-.button-text { padding-inline: 0; border: 0; }
-.collection-meta { display: flex; justify-content: space-between; padding: 1.4rem 0; border-bottom: 1px solid var(--euresis-line); }
-.collection-meta h3 { font-size: .85rem; letter-spacing: .12em; margin: 0 0 .5rem; }
-.collection-meta p { color: #666b6d; font-size: .8rem; margin: 0; }
+.wordmark {
+  font-size: var(--p-typescale-sm);
+  font-weight: var(--p-font-weight-bold);
+  letter-spacing: 0.16em;
+}
+
+.eyebrow {
+  color: var(--p-color-contrast-medium);
+  font-size: var(--p-typescale-2xs);
+  font-weight: var(--p-font-weight-bold);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.text-link {
+  font-size: var(--p-typescale-2xs);
+  text-transform: uppercase;
+}
+
+.collection-meta {
+  display: flex;
+  justify-content: space-between;
+  padding: var(--p-spacing-static-md) 0;
+  border-bottom: 1px solid var(--p-color-contrast-lower);
+}
+
+.collection-meta h3 {
+  margin: 0 0 var(--p-spacing-static-xs);
+  font-size: var(--p-typescale-xs);
+}
+
+.collection-meta p {
+  margin: 0;
+  color: var(--p-color-contrast-high);
+  font-size: var(--p-typescale-2xs);
+}
