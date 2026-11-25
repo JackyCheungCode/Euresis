@@ -19,7 +19,7 @@ Do not append additional words to the project or Worker name.
 
 ## Local development
 
-Requires Node.js 22.18+.
+Requires Node.js 22.23.0 or later.
 
 ```bash
 npm install
