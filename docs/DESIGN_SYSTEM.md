@@ -141,3 +141,8 @@ These require product/brand input before final visual lock:
 - Initial wheel catalog and verified fitment data source.
 - Framework and deployment target.
 - Whether the first release supports checkout or lead-generation/contact conversion only.
+
+
+## 12. Code ownership and component structure
+
+Follow [ARCHITECTURE.md](ARCHITECTURE.md) for the required application structure and [API_AI.md](API_AI.md) for API and AI integration boundaries. Header, Footer, navigation, reusable controls, page sections, domain logic and styles must remain separate modules. Route files compose these modules; they do not become containers for unrelated implementation details.
