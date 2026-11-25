@@ -40,7 +40,6 @@ export function SiteHeader() {
           aria={{
             "aria-label": isMobileNavigationOpen ? "Close navigation" : "Open navigation",
             "aria-expanded": String(isMobileNavigationOpen),
-            "aria-controls": "mobile-navigation",
           }}
           onClick={() => setIsMobileNavigationOpen((open) => !open)}
         >
