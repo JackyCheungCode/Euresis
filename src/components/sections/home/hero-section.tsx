@@ -1,27 +1,76 @@
-import { PLink } from "@porsche-design-system/components-react/ssr";
+"use client";
+
+import { useRef, useState } from "react";
+import {
+  PButton,
+  PHeading,
+  PLink,
+} from "@porsche-design-system/components-react/ssr";
 import { homepageContent } from "@/src/data/homepage";
+
+const HERO_VIDEO =
+  "https://videos.pexels.com/video-files/10825393/10825393-hd_1920_1080_24fps.mp4";
 
 export function HeroSection() {
   const { hero } = homepageContent;
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isPaused, setIsPaused] = useState(false);
+
+  const toggleVideo = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (video.paused) {
+      void video.play();
+      setIsPaused(false);
+    } else {
+      video.pause();
+      setIsPaused(true);
+    }
+  };
 
   return (
-    <section className="hero">
-      <div className="hero-copy">
-        <p className="eyebrow">{hero.eyebrow}</p>
-        <h1>Precision in<br />every rotation.</h1>
+    <section className="hero scheme-dark" aria-labelledby="hero-heading">
+      <video
+        ref={videoRef}
+        className="hero-video"
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="metadata"
+        aria-hidden="true"
+        tabIndex={-1}
+      >
+        <source src={HERO_VIDEO} type="video/mp4" />
+      </video>
+
+      <div className="hero-content">
+        <PHeading id="hero-heading" className="hero-heading" tag="h1" size="3xl">
+          <span className="hero-heading__eyebrow">EURESIS</span>
+          Precision in
+          <br />
+          every rotation.
+        </PHeading>
         <p className="hero-description">{hero.description}</p>
         <div className="hero-actions">
-          <PLink href="#collections" icon="arrow-up-right">Explore collections</PLink>
-          <PLink href="#fitment" variant="secondary">Find your fitment</PLink>
+          <PLink href="#collections" icon="arrow-right" className="hero-cta">
+            Explore collections
+          </PLink>
         </div>
       </div>
-      <div className="hero-visual scheme-only-dark" role="img" aria-label="Abstract close-up composition representing precision wheel engineering">
-        <div className="visual-ring visual-ring-one" />
-        <div className="visual-ring visual-ring-two" />
-        <div className="visual-center"><span>E</span></div>
-        <p className="visual-caption">FORM / FUNCTION / PERFORMANCE</p>
-      </div>
-      <div className="hero-index"><span>01</span><span className="index-line" /><span>03</span></div>
+
+      <PButton
+        className="hero-video-control"
+        type="button"
+        variant="secondary"
+        compact
+        hideLabel
+        icon={isPaused ? "play" : "pause"}
+        aria={{ "aria-label": isPaused ? "Play background video" : "Pause background video" }}
+        onClick={toggleVideo}
+      >
+        {isPaused ? "Play background video" : "Pause background video"}
+      </PButton>
     </section>
   );
 }
