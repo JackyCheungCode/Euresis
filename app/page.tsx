@@ -62,7 +62,7 @@ export default function Home() {
 
       <section className="fitment" id="fitment">
         <div><p className="eyebrow">FITMENT FIRST</p><h2>The right wheel.<br />The right fit.</h2></div>
-        <div className="fitment-copy"><p>Wheel fitment is specific. We are building a guided selection experience around verified vehicle and wheel specifications.</p><a className="button button-primary" href="mailto:fitment@euresis.com">Ask about fitment ↗</a></div>
+        <div className="fitment-copy"><p>Wheel fitment is specific. We are building a guided selection experience around verified vehicle and wheel specifications.</p><a className="button button-primary" href="#collections">Explore wheels ↗</a></div>
       </section>
 
       <footer className="site-footer"><a className="wordmark" href="/">EURESIS</a><span>Precision performance wheels.</span><span>© {new Date().getFullYear()} Euresis</span></footer>
