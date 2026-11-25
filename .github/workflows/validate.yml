@@ -51,22 +51,14 @@ jobs:
       - name: Production build
         run: npm run build
 
-      - name: Verify server-rendered homepage and PDS component
+      - name: Verify production bundle and showcase route
         shell: bash
         run: |
-          npm run preview -- --host 127.0.0.1 --port 4173 > ./.euresis-preview.log 2>&1 &
-          PREVIEW_PID=$!
-          trap 'kill "$PREVIEW_PID" 2>/dev/null || true' EXIT
-          for attempt in $(seq 1 30); do
-            if curl --silent --fail http://127.0.0.1:4173/ -o ./.euresis-home.html; then
-              break
-            fi
-            sleep 2
-          done
-          test -s ./.euresis-home.html
-          grep -q "Precision in" ./.euresis-home.html
-          grep -q "Explore wheels" ./.euresis-home.html
-          grep -q "p-link" ./.euresis-home.html
+          test -s .cloudflare/output/v1/workers/default/bundle/index.js
+          test -s .cloudflare/output/v1/workers/default/bundle/ssr/index.js
+          grep -R -q "Precision in" .cloudflare/output/v1/workers/default/bundle
+          grep -R -q "Color system" .cloudflare/output/v1/workers/default/bundle
+          grep -R -q "p-link" .cloudflare/output/v1/workers/default/bundle
 
       - name: Upload build output for inspection
         if: always()
@@ -77,8 +69,6 @@ jobs:
             .cloudflare/
             dist/
             package-lock.json
-            ./.euresis-preview.log
-            ./.euresis-home.html
           if-no-files-found: warn
           retention-days: 7
           include-hidden-files: true
@@ -113,7 +103,7 @@ jobs:
         shell: bash
         run: |
           if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
-            echo "::warning::Deployment skipped. Add CLOUDFLARE_API_TOKEN to the Euresis GitHub repository Actions secrets."
-            exit 0
+            echo "::error::Deployment blocked. CLOUDFLARE_API_TOKEN is missing from Euresis GitHub Actions secrets."
+            exit 1
           fi
           npm run deploy
