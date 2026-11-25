@@ -4,12 +4,13 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "init:vinext": "vinext init --platform=cloudflare --cdn-cache=none --data-cache=none --image-optimization=none --no-prerender --name=euresis",
     "dev": "vite --port 3001",
     "build": "vite build",
     "preview": "vite preview",
     "deploy": "npx @vinext/cloudflare deploy",
     "check": "vinext check",
-    "typecheck": "cf workers types && tsc --noEmit"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@porsche-design-system/components-react": "^4.10.1",
