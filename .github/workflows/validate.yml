@@ -52,10 +52,10 @@ jobs:
             fi
             sleep 2
           done
-          test -s /tmp/euresis-home.html
-          grep -q "Precision in" /tmp/euresis-home.html
-          grep -q "Explore wheels" /tmp/euresis-home.html
-          grep -q "p-link" /tmp/euresis-home.html
+          test -s ./.euresis-home.html
+          grep -q "Precision in" ./.euresis-home.html
+          grep -q "Explore wheels" ./.euresis-home.html
+          grep -q "p-link" ./.euresis-home.html
 
       - name: Upload build output for inspection
         if: always()
@@ -65,7 +65,9 @@ jobs:
           path: |
             .cloudflare/
             dist/
-            /tmp/euresis-preview.log
+            package-lock.json
+            ./.euresis-preview.log
+            ./.euresis-home.html
           if-no-files-found: warn
           retention-days: 7
           include-hidden-files: true
@@ -83,7 +85,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "22.18"
-          cache: npm
 
       - name: Install dependencies
         run: npm install --no-audit --no-fund
