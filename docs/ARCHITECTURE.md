@@ -14,12 +14,16 @@ This document is mandatory for future development. Keep each layer focused; do n
 8. External integrations live in src/integrations/<provider>; environment validation lives in src/config.
 9. Product, price, dimensions and vehicle compatibility must come from validated data, never invented demo values.
 10. Shared components require clear names, typed props and a single responsibility.
+11. Use Porsche Design System v4 official React components and official design tokens as the default and mandatory UI foundation. Do not recreate controls that PDS already provides.
+12. If PDS has no suitable component, use semantic native HTML with accessible behavior and PDS-aligned tokens. Do not introduce a parallel visual system.
+13. Do not hard-code design values in components. Use official PDS tokens; Euresis semantic tokens may alias documented PDS tokens where a project-level name is useful.
+14. Do not override or imitate PDS component internals with custom CSS. Custom styles may handle layout and composition, not replace the component's documented appearance or behavior.
 
 ## Directory map
 
     app/                         Routes, layouts and route handlers only
     src/components/layout/       Header, Footer, navigation, page shell
-    src/components/ui/           Buttons, inputs, selects, dialogs, cards, tables
+    src/components/ui/           PDS-based shared controls and narrow business wrappers
     src/components/sections/     Page-specific composed sections
     src/features/catalog/        Product domain, queries and validation
     src/features/fitment/        Vehicle selection and compatibility rules
@@ -30,25 +34,44 @@ This document is mandatory for future development. Keep each layer focused; do n
     src/lib/ai/                  Provider interface, adapters and prompt services
     src/integrations/             Payment, analytics, search and external vendors
     src/config/                  Runtime configuration and environment validation
-    src/styles/                  Tokens, base, layout, component and section styles
+    src/styles/                  Token aliases, base, layout and section composition styles
     docs/                        Architecture, API/AI, design and deployment rules
 
 ## Component boundaries
 
 - SiteHeader and SiteFooter are independent components, consumed through the root layout. Pages must not recreate them.
 - UI controls are presentation-level and do not know database schemas or provider credentials.
+- Use the official PDS component directly when it satisfies the requirement. Add an Euresis wrapper only for a real shared need such as a stable project API, domain-specific composition or consistent analytics hooks.
+- Wrappers must preserve the PDS component's supported props, semantics, keyboard behavior, focus behavior and accessibility contract. Do not fork or reimplement the underlying control.
 - Feature modules own domain behavior. Components receive typed data and callbacks.
 - Section components compose controls for a specific page purpose.
 - Route files remain short and declarative.
 
 ## Styling boundaries
 
-- tokens.css: design tokens only.
+- PDS official design tokens are the source of truth for component-level design values.
+- tokens.css: project semantic aliases only; alias documented PDS tokens where possible. Do not duplicate the full PDS token set or invent a competing scale.
 - base.css: reset, document defaults and accessibility behavior.
-- components.css: reusable control styles.
-- layout.css: Header, Footer, navigation and shell styles.
-- sections.css: page-section-specific styles.
+- components.css: only minimal project-specific composition styles; do not restyle or reproduce PDS controls.
+- layout.css: Header, Footer, navigation and shell layout.
+- sections.css: page-section-specific layout and composition.
+- Use PDS-provided styling integrations as documented by the installed package version.
 - Import all styles once from app/globals.css.
+
+## Native control and token compliance
+
+Before adding or changing a control:
+1. Check whether PDS v4 provides an official React component for the required interaction.
+2. If it does, use that component and its documented props/events/slots.
+3. Use the official PDS token for each available color, typography, spacing, sizing, border, radius and motion decision.
+4. If a PDS component or token is unavailable, document the gap and use semantic HTML or a narrowly scoped Euresis semantic alias without creating an unrelated design language.
+5. Verify keyboard interaction, visible focus, accessible naming, disabled/error states and responsive behavior.
+
+Prohibited:
+- Rebuilding an existing PDS control with a custom button/input/select/dialog implementation.
+- Arbitrary hex colors, spacing values, radii, shadows or typography values in component styles when a PDS token exists.
+- CSS selectors that target PDS internals or override component internals to force a different visual design.
+- Adding a second component library for controls without an explicit architecture decision.
 
 ## Naming and quality
 
