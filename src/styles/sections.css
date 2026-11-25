@@ -177,12 +177,23 @@
 .fitment-copy { max-width: 460px; }
 .fitment-copy p { color: var(--p-color-contrast-high); line-height: 1.8; margin-bottom: 2rem; }
 @media (max-width: 900px) {
+  .capabilities-header { grid-template-columns: minmax(0, 1fr); align-items: start; gap: var(--p-spacing-fluid-md); }
+  .capabilities-heading { max-width: 100%; }
+  .capabilities-intro { max-width: 42rem; margin: 0; }
   .hero-visual { min-height: 430px; }
   .collection-grid { grid-template-columns: 1fr 1fr; }
   .collection-card:last-child { grid-column: span 2; }
   .collection-card:last-child .collection-art { height: 340px; }
 }
 @media (max-width: 600px) {
+  .capabilities { padding-top: var(--p-spacing-fluid-xl); padding-bottom: var(--p-spacing-fluid-xl); }
+  .capabilities-header { width: min(100% - 2 * var(--p-spacing-fluid-md), 1440px); margin-bottom: var(--p-spacing-fluid-lg); }
+  .capabilities-heading { max-width: 100%; }
+  .capabilities-intro { max-width: 100%; font-size: var(--p-typescale-sm); }
+  .capabilities-carousel { --p-carousel-px: var(--p-spacing-fluid-md); }
+  .capability-copy { padding: var(--p-spacing-fluid-md); }
+  .capability-title { overflow-wrap: anywhere; }
+  .capability-description { max-width: 100%; }
   .intro, .collections, .fitment { padding-top: 5rem; padding-bottom: 5rem; }
   .section-heading { display: block; }
   .section-heading .text-link { display: inline-block; margin-top: 1rem; }
