@@ -1,0 +1,107 @@
+name: Euresis validation
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Initialize, check and build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.18"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Initialize vinext for Cloudflare
+        run: npx vinext init --platform=cloudflare --cdn-cache=none --data-cache=none --image-optimization=none --no-prerender --name=euresis --skip-check
+
+      - name: Install initialized dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Check vinext compatibility
+        run: npm run check
+
+      - name: Type-check
+        run: npm run typecheck
+
+      - name: Production build
+        run: npm run build
+
+      - name: Verify server-rendered homepage and PDS component
+        shell: bash
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4173 > /tmp/euresis-preview.log 2>&1 &
+          PREVIEW_PID=$!
+          trap 'kill "$PREVIEW_PID" 2>/dev/null || true' EXIT
+          for attempt in $(seq 1 30); do
+            if curl --silent --fail http://127.0.0.1:4173/ -o /tmp/euresis-home.html; then
+              break
+            fi
+            sleep 2
+          done
+          test -s /tmp/euresis-home.html
+          grep -q "Precision in" /tmp/euresis-home.html
+          grep -q "Explore wheels" /tmp/euresis-home.html
+          grep -q "p-link" /tmp/euresis-home.html
+
+      - name: Upload build output for inspection
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: euresis-build-output
+          path: |
+            .cloudflare/
+            dist/
+            /tmp/euresis-preview.log
+          if-no-files-found: warn
+          retention-days: 7
+
+  deploy:
+    name: Deploy Euresis Worker
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.18"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Initialize vinext for Cloudflare
+        run: npx vinext init --platform=cloudflare --cdn-cache=none --data-cache=none --image-optimization=none --no-prerender --name=euresis --skip-check
+
+      - name: Install initialized dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Deploy to the existing Euresis Worker
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ea4e98dce9c478d7dd5c07f10e5c722d
+        shell: bash
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
+            echo "::warning::Deployment skipped. Add CLOUDFLARE_API_TOKEN to the Euresis GitHub repository Actions secrets."
+            exit 0
+          fi
+          npm run deploy
