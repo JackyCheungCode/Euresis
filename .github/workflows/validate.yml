@@ -106,4 +106,5 @@ jobs:
             echo "::error::Deployment blocked. CLOUDFLARE_API_TOKEN is missing from Euresis GitHub Actions secrets."
             exit 1
           fi
-          npm run deploy
+          npm run build
+          npx cf deploy --prebuilt --mode production --force
