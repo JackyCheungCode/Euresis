@@ -1,3 +1,5 @@
+import { PLink } from "@porsche-design-system/components-react/ssr";
+
 const collections = [
   { name: "FORGED SERIES", detail: "Lightweight construction. Precision machining." },
   { name: "FLOW FORMED", detail: "Performance-focused strength and weight." },
@@ -14,7 +16,7 @@ export default function Home() {
           <a href="#fitment">Find Your Fitment</a>
           <a href="#engineering">Engineering</a>
         </nav>
-        <a className="header-action" href="#collections">Explore wheels <span aria-hidden="true">↗</span></a>
+        <PLink className="header-action" href="#collections" icon="arrow-up-right">Explore wheels</PLink>
       </header>
 
       <section className="hero">
