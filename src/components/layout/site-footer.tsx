@@ -1,4 +1,4 @@
-import { PLink } from "@porsche-design-system/components-react/ssr";
+import { PLinkPure } from "@porsche-design-system/components-react/ssr";
 
 const footerGroups = [
   {
@@ -18,10 +18,11 @@ const footerGroups = [
     ],
   },
   {
-    title: "Discover",
+    title: "Information",
     links: [
-      { label: "Fitment guide", href: "/#fitment" },
-      { label: "Engineering overview", href: "/#engineering" },
+      { label: "Fitment guidance", href: "/#fitment" },
+      { label: "Product enquiry", href: "/#fitment" },
+      { label: "Back to top", href: "/#top" },
     ],
   },
 ];
@@ -29,28 +30,26 @@ const footerGroups = [
 export function SiteFooter() {
   return (
     <footer className="site-footer">
-      <div className="site-footer__main">
+      <div className="site-footer__inner">
+        <nav className="site-footer__groups" aria-label="Footer">
+          {footerGroups.map((group) => (
+            <section className="site-footer__group" key={group.title}>
+              <h2>{group.title}</h2>
+              <ul>
+                {group.links.map((link) => (
+                  <li key={link.label}>
+                    <PLinkPure icon="none"><a href={link.href}>{link.label}</a></PLinkPure>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ))}
+        </nav>
         <div className="site-footer__brand">
           <a className="wordmark" href="/" aria-label="Euresis home">EURESIS</a>
-          <p>Precision performance wheels.<br />Designed with intent.</p>
+          <p>Precision performance wheels</p>
+          <span>© {new Date().getFullYear()} Euresis. All rights reserved.</span>
         </div>
-        {footerGroups.map((group) => (
-          <nav className="site-footer__group" aria-label={group.title} key={group.title}>
-            <span className="eyebrow">{group.title}</span>
-            {group.links.map((link) => (
-              <PLink href={link.href} key={link.label}>{link.label}</PLink>
-            ))}
-          </nav>
-        ))}
-        <div className="site-footer__contact">
-          <span className="eyebrow">Start a conversation</span>
-          <a href="/#fitment" className="site-footer__contact-link">Product enquiry <span aria-hidden="true">↗</span></a>
-        </div>
-      </div>
-      <div className="site-footer__bottom">
-        <span>© {new Date().getFullYear()} Euresis. All rights reserved.</span>
-        <span>Precision performance wheels</span>
-        <a href="#top">Back to top ↑</a>
       </div>
     </footer>
   );
