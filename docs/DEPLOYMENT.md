@@ -1,20 +1,24 @@
 # Euresis deployment
 
+## Framework decision
+
+Euresis uses vinext as its Next.js-compatible runtime on Vite, with Cloudflare Workers as the deployment target. It is not using the official Next.js runtime or OpenNext in the current architecture.
+
 ## Worker identity
 
 - Worker name: `euresis`
 - Account workers.dev subdomain: `xg-y`
 - URL: `https://euresis.xg-y.workers.dev`
 
-The account-level workers.dev subdomain is already set to `xg-y`. The Worker name is exactly `euresis`; no additional words are appended.
+The account-level workers.dev subdomain is `xg-y`. The Worker name is exactly `euresis`; do not append additional words.
 
-## Runtime
+## Stack
 
-- Next.js-compatible App Router powered by vinext
+- App Router API surface: vinext
 - React + TypeScript
 - Porsche Design System v4
-- Cloudflare Workers with the Cloudflare Vite plugin
-- Typed deployment configuration: `cloudflare.config.ts`
+- Vite + Cloudflare Vite plugin
+- Cloudflare Workers native integration via `cloudflare.config.ts`
 
 ## Local development
 
@@ -28,13 +32,19 @@ npm run dev
 
 ## Build and deploy
 
-Authenticate with Cloudflare using `cf auth login`, then:
+Authenticate using `npx cf auth login`, then:
 
 ```bash
 npm run build
 npm run deploy
 ```
 
-## Production compatibility gate
+The deploy script invokes the official `@vinext/cloudflare` deployment CLI. The CLI validates the vinext Cloudflare setup, builds the application and deploys the Worker configured in `cloudflare.config.ts`.
 
-Cloudflare recommends vinext for new Next.js-compatible Worker applications. vinext reimplements the Next.js API surface on Vite; it is not the official Next.js runtime and remains under active development. Before production commerce launch, validate route handlers, caching, image optimization, server actions, authentication and every required Next.js API. If a required feature is not supported, evaluate the official Next.js runtime with the OpenNext Cloudflare adapter as a fallback.
+## Compatibility and production gate
+
+vinext reimplements the Next.js API surface on Vite. It supports substantial App Router functionality but is not a drop-in replacement for every Next.js feature and remains under active development. Before enabling production checkout, test route handlers, caching, image optimization, Server Actions, authentication, and all required framework APIs. Keep the Worker name in `cloudflare.config.ts` exactly `euresis`.
+
+Official references:
+- https://vinext.dev/docs/deploying/cloudflare
+- https://github.com/cloudflare/vinext
