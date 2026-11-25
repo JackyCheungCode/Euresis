@@ -6,8 +6,7 @@ import {
   getIconLinks,
   getMetaTagsAndIconLinks,
 } from "@porsche-design-system/components-react/partials";
-import { SiteHeader } from "@/src/components/layout/site-header";
-import { SiteFooter } from "@/src/components/layout/site-footer";
+import { SiteLayout } from "@/src/components/layout/site-layout";
 import "./globals.css";
 
 export const metadata = {
@@ -27,9 +26,7 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
       </head>
       <body>
         <PorscheDesignSystemProvider>
-          <SiteHeader />
-          {children}
-          <SiteFooter />
+          <SiteLayout>{children}</SiteLayout>
         </PorscheDesignSystemProvider>
       </body>
     </html>
