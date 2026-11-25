@@ -1,11 +1,10 @@
 :root {
-  --euresis-black: #101112;
-  --euresis-graphite: #292b2d;
-  --euresis-steel: #85898c;
-  --euresis-line: #d9dcde;
-  --euresis-paper: #f4f4f2;
-  --euresis-white: #fff;
-  --euresis-accent: #c6a16b;
-  --euresis-gutter: clamp(1.25rem, 5vw, 5.5rem);
-  color-scheme: light;
+  /* Euresis semantic aliases; values remain owned by Porsche Design System. */
+  --euresis-black: var(--p-color-primary);
+  --euresis-graphite: var(--p-color-contrast-higher);
+  --euresis-steel: var(--p-color-contrast-medium);
+  --euresis-line: var(--p-color-contrast-lower);
+  --euresis-paper: var(--p-color-canvas);
+  --euresis-white: var(--p-color-canvas);
+  --euresis-gutter: var(--p-spacing-fluid-md);
 }
