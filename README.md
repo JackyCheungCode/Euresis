@@ -23,6 +23,7 @@ Requires Node.js 22.18+.
 
 ```bash
 npm install
+npm run init:vinext
 npm run dev
 ```
 
@@ -30,11 +31,12 @@ npm run dev
 
 ```bash
 npm run check
+npm run typecheck
 npm run build
 npm run deploy
 ```
 
-Authenticate with Cloudflare using `cf auth login` before deployment.
+Authenticate with Cloudflare using `cf auth login` before deployment. The official `vinext init` command configures the Cloudflare integration without replacing the Euresis Worker identity.
 
 ## Design system
 
