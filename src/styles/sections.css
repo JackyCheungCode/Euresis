@@ -318,3 +318,81 @@
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
 }
+
+/* Mobile layout: keep collection headings and cards readable on narrow screens. */
+@media (max-width: 600px) {
+  .collections {
+    padding: var(--p-spacing-fluid-2xl) var(--euresis-gutter);
+  }
+  .collections-header {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    gap: var(--p-spacing-fluid-md);
+    margin-bottom: var(--p-spacing-fluid-lg);
+  }
+  .collections-heading-copy,
+  .collections-heading {
+    width: 100%;
+    max-width: 100%;
+  }
+  .collections-heading {
+    overflow-wrap: normal;
+    word-break: normal;
+  }
+  .collections-intro {
+    max-width: 36rem;
+    margin: 0;
+    font-size: var(--p-typescale-sm);
+    line-height: 1.55;
+  }
+  .collections-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--p-spacing-fluid-xl);
+  }
+  .collection-image-wrap {
+    min-height: 0;
+    aspect-ratio: 4 / 3;
+  }
+  .collection-image-copy {
+    padding: var(--p-spacing-fluid-md);
+  }
+  .collection-category {
+    max-width: 100%;
+    font-size: var(--p-typescale-2xs);
+    line-height: 1.4;
+  }
+  .collection-title {
+    max-width: 100%;
+    font-size: clamp(2rem, 9vw, 3rem);
+    line-height: 1.02;
+    overflow-wrap: normal;
+    word-break: normal;
+  }
+  .collection-description {
+    max-width: 30rem;
+    margin-top: var(--p-spacing-fluid-sm);
+    font-size: var(--p-typescale-sm);
+    line-height: 1.5;
+  }
+  .collection-details {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    gap: var(--p-spacing-fluid-sm);
+    padding-top: var(--p-spacing-fluid-md);
+  }
+  .collection-constructions {
+    flex: none;
+    gap: var(--p-spacing-fluid-xs);
+  }
+  .collection-details > * {
+    min-width: 0;
+  }
+  .collection-details .p-button,
+  .collection-details button {
+    width: 100%;
+  }
+  .collections-note {
+    line-height: 1.5;
+  }
+}
