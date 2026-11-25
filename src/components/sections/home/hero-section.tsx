@@ -4,7 +4,6 @@ import { useRef, useState } from "react";
 import {
   PButton,
   PHeading,
-  PLink,
 } from "@porsche-design-system/components-react/ssr";
 import { homepageContent } from "@/src/data/homepage";
 
@@ -53,9 +52,9 @@ export function HeroSection() {
         </PHeading>
         <p className="hero-description">{hero.description}</p>
         <div className="hero-actions">
-          <PLink href="#collections" icon="arrow-right" className="hero-cta">
-            Explore collections
-          </PLink>
+          <PButton variant="secondary" type="button">
+            <a href="#collections">Explore collections</a>
+          </PButton>
         </div>
       </div>
 
