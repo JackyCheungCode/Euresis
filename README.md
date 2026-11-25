@@ -38,6 +38,10 @@ npm run deploy
 
 Authenticate with Cloudflare using `cf auth login` before deployment. The official `vinext init` command configures the Cloudflare integration without replacing the Euresis Worker identity.
 
+## Architecture and development rules
+
+See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for mandatory module boundaries, component ownership and directory conventions. See [docs/API_AI.md](docs/API_AI.md) for API contracts, server-side AI integration and secret handling. New shared components such as Header, Footer and UI controls must be implemented in their dedicated folders and reused by pages.
+
 ## Design system
 
 See [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md). Porsche Design System is used as a component and design-token foundation. Euresis retains its own brand identity and must not use Porsche marks or imply affiliation.
