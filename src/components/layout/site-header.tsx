@@ -39,7 +39,7 @@ export function SiteHeader() {
           hideLabel
           aria={{
             "aria-label": isMobileNavigationOpen ? "Close navigation" : "Open navigation",
-            "aria-expanded": String(isMobileNavigationOpen),
+            "aria-expanded": isMobileNavigationOpen,
           }}
           onClick={() => setIsMobileNavigationOpen((open) => !open)}
         >
