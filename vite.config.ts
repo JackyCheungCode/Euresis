@@ -3,7 +3,11 @@ import { cloudflare } from "@cloudflare/vite-plugin";
 import { defineConfig } from "vite";
 import vinext from "vinext";
 
-export default defineConfig({
+export default defineConfig(({ isSsrBuild }) => ({
+  define: {
+    // PDS SSR components select their server/browser implementation at build time.
+    "process.browser": JSON.stringify(!isSsrBuild),
+  },
   plugins: [
     tailwindcss(),
     vinext(),
@@ -14,4 +18,4 @@ export default defineConfig({
       },
     }),
   ],
-});
+}));
