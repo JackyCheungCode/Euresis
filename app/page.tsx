@@ -7,8 +7,8 @@ export default function HomePage() {
   return (
     <main>
       <HeroSection />
-      <EngineeringIntro />
       <CollectionSection />
+      <EngineeringIntro />
       <FitmentCallout />
     </main>
   );

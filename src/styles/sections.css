@@ -154,14 +154,6 @@
   font-size: var(--p-typescale-sm);
   line-height: 1.55;
 }
-.capability-source {
-  margin-top: auto;
-  color: var(--p-color-contrast-medium);
-  font-size: var(--p-typescale-2xs);
-  text-decoration: underline;
-  text-underline-offset: .2em;
-}
-.capability-source:hover { color: var(--p-color-primary); }
 .collections {
   padding: var(--p-spacing-fluid-2xl) var(--euresis-gutter);
   background: var(--p-color-canvas);
