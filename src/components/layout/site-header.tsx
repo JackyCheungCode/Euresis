@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { PButtonPure, PLink } from "@porsche-design-system/components-react";
+import { PButtonPure, PLink } from "@porsche-design-system/components-react/ssr";
 
 const navigation = [
   { label: "Collections", href: "#collections" },
