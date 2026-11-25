@@ -15,7 +15,7 @@ export function HeroSection() {
           <PLink href="#fitment" variant="secondary">Find your fitment</PLink>
         </div>
       </div>
-      <div className="hero-visual" role="img" aria-label="Abstract close-up composition representing precision wheel engineering">
+      <div className="hero-visual scheme-only-dark" role="img" aria-label="Abstract close-up composition representing precision wheel engineering">
         <div className="visual-ring visual-ring-one" />
         <div className="visual-ring visual-ring-two" />
         <div className="visual-center"><span>E</span></div>
