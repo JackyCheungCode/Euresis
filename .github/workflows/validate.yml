@@ -20,13 +20,13 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "22.18"
+          node-version: "22.23.0"
 
       - name: Install dependencies
         run: npm install --no-audit --no-fund
 
       - name: Initialize vinext for Cloudflare
-        run: npx vinext init --platform=cloudflare --cdn-cache=none --data-cache=none --image-optimization=none --no-prerender --name=euresis --skip-check
+        run: npx vinext init --platform=cloudflare --cdn-cache=none --data-cache=none --image-optimization=none --no-prerender --skip-check
 
       - name: Install initialized dependencies
         run: npm install --no-audit --no-fund
@@ -84,13 +84,13 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "22.18"
+          node-version: "22.23.0"
 
       - name: Install dependencies
         run: npm install --no-audit --no-fund
 
       - name: Initialize vinext for Cloudflare
-        run: npx vinext init --platform=cloudflare --cdn-cache=none --data-cache=none --image-optimization=none --no-prerender --name=euresis --skip-check
+        run: npx vinext init --platform=cloudflare --cdn-cache=none --data-cache=none --image-optimization=none --no-prerender --skip-check
 
       - name: Install initialized dependencies
         run: npm install --no-audit --no-fund
