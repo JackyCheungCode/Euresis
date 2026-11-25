@@ -48,7 +48,7 @@
   max-width: 620px;
   margin: var(--p-spacing-fluid-md) 0 0;
   color: var(--p-color-canvas);
-  font-size: var(--p-font-size-fluid-md);
+  font-size: var(--p-typescale-md);
   line-height: 1.5;
 }
 .hero-actions {
@@ -88,7 +88,7 @@
   max-width: 420px;
   margin: 0 0 var(--p-spacing-fluid-xs);
   color: var(--p-color-contrast-high);
-  font-size: var(--p-font-size-fluid-md);
+  font-size: var(--p-typescale-md);
   line-height: 1.55;
 }
 .capabilities-carousel {
@@ -138,7 +138,7 @@
 .capability-category {
   margin: 0 0 var(--p-spacing-fluid-xs);
   color: var(--p-color-contrast-medium);
-  font-size: var(--p-font-size-x-small);
+  font-size: var(--p-typescale-2xs);
   font-weight: var(--p-font-weight-bold);
   letter-spacing: .12em;
 }
@@ -157,7 +157,7 @@
 .capability-source {
   margin-top: auto;
   color: var(--p-color-contrast-medium);
-  font-size: var(--p-font-size-x-small);
+  font-size: var(--p-typescale-2xs);
   text-decoration: underline;
   text-underline-offset: .2em;
 }
