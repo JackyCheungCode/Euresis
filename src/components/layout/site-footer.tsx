@@ -18,10 +18,10 @@ const footerGroups = [
     ],
   },
   {
-    title: "Information",
+    title: "Discover",
     links: [
-      { label: "Privacy", href: "#privacy" },
-      { label: "Legal", href: "#legal" },
+      { label: "Fitment guide", href: "/#fitment" },
+      { label: "Engineering overview", href: "/#engineering" },
     ],
   },
 ];
