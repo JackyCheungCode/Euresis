@@ -49,3 +49,7 @@ See [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md). Porsche Design System is use
 ## Deployment note
 
 Cloudflare currently recommends vinext for new Next.js-compatible Worker applications. vinext reimplements the Next.js API surface on Vite; it is not the official Next.js runtime and remains under active development. Validate all commerce-critical routes and framework features before production launch. See [Cloudflare's Next.js guide](https://developers.cloudflare.com/workers/framework-guides/web-apps/nextjs/).
+
+## Global site shell
+
+The shared Header, mega menu, full-screen navigation search and Footer are implemented as global components. Navigation links currently target existing homepage sections; catalogue-wide search and account features are not enabled. The site is enquiry-led and does not include cart, checkout, payment or order-management flows.
