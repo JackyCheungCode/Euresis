@@ -1,16 +1,14 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { PButtonPure } from "@porsche-design-system/components-react/ssr";
-
-const navigation = [
-  { id: "wheels", label: "Wheels", href: "/#collections", children: [{ label: "Collections", href: "/#collections" }, { label: "Wheel specifications", href: "/#engineering" }] },
-  { id: "vehicles", label: "Vehicles", href: "/#fitment", children: [{ label: "Vehicle fitment", href: "/#fitment" }] },
-  { id: "technology", label: "Technology", href: "/#engineering", children: [{ label: "Engineering", href: "/#engineering" }, { label: "Materials & construction", href: "/#engineering" }] },
-  { id: "story", label: "Our Story", href: "/#engineering", children: [{ label: "About Euresis", href: "/#engineering" }] },
-  { id: "journal", label: "Journal", href: "/#collections", children: [{ label: "Stories & builds", href: "/#collections" }] },
-  { id: "contact", label: "Contact", href: "/#fitment", children: [{ label: "Product enquiry", href: "/#fitment" }] },
-];
+import {
+  PButtonPure,
+  PDrilldown,
+  PDrilldownItem,
+  PDrilldownLink,
+  type DrilldownDismissEventDetail,
+  type DrilldownUpdateEventDetail,
+} from "@porsche-design-system/components-react/ssr";
 
 const searchSuggestions = [
   { label: "Forged wheels", href: "/#collections" },
@@ -20,20 +18,11 @@ const searchSuggestions = [
 
 export function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [activeItem, setActiveItem] = useState<string | null>(null);
+  const [activeIdentifier, setActiveIdentifier] =
+    useState<DrilldownUpdateEventDetail["activeIdentifier"]>(undefined);
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
-  const [isHome, setIsHome] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
   const searchRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    setIsHome(window.location.pathname === "/");
-    const updateScroll = () => setIsScrolled(window.scrollY > 24);
-    updateScroll();
-    window.addEventListener("scroll", updateScroll, { passive: true });
-    return () => window.removeEventListener("scroll", updateScroll);
-  }, []);
 
   useEffect(() => {
     if (!menuOpen && !searchOpen) return;
@@ -41,7 +30,7 @@ export function SiteHeader() {
       if (event.key === "Escape") {
         setMenuOpen(false);
         setSearchOpen(false);
-        setActiveItem(null);
+        setActiveIdentifier(undefined);
       }
     };
     document.addEventListener("keydown", onKeyDown);
@@ -59,7 +48,16 @@ export function SiteHeader() {
   const closePanels = () => {
     setMenuOpen(false);
     setSearchOpen(false);
-    setActiveItem(null);
+    setActiveIdentifier(undefined);
+  };
+
+  const onDrilldownUpdate = (event: CustomEvent<DrilldownUpdateEventDetail>) => {
+    setActiveIdentifier(event.detail.activeIdentifier);
+  };
+
+  const onDrilldownDismiss = (_event: CustomEvent<DrilldownDismissEventDetail>) => {
+    setMenuOpen(false);
+    setActiveIdentifier(undefined);
   };
 
   const filteredSuggestions = searchSuggestions.filter((item) =>
@@ -68,23 +66,74 @@ export function SiteHeader() {
 
   return (
     <>
-      <header className={`site-header ${isHome ? "site-header--home" : ""} ${isScrolled ? "site-header--scrolled" : ""}`}>
+      <header className="site-header">
         <div className="site-header__inner">
           <div className="site-header__start">
-            <PButtonPure
-              className={`site-header__control ${isHome && !isScrolled ? "site-header__control--hero" : ""}`}
-              type="button"
-              icon="menu-lines"
-              hideLabel
-              aria={{ "aria-label": "Open menu", "aria-haspopup": "dialog", "aria-expanded": menuOpen }}
-              onClick={() => { setMenuOpen(true); setSearchOpen(false); }}
-            >Menu</PButtonPure>
+            <nav aria-label="Main">
+              <PButtonPure
+                className="site-header__control"
+                type="button"
+                icon="menu-lines"
+                hideLabel
+                aria={{ "aria-haspopup": "dialog", "aria-expanded": menuOpen, "aria-label": "Open menu" }}
+                onClick={() => { setMenuOpen(true); setSearchOpen(false); }}
+              >Menu</PButtonPure>
+              <PDrilldown
+                open={menuOpen}
+                activeIdentifier={activeIdentifier}
+                onDismiss={onDrilldownDismiss}
+                onUpdate={onDrilldownUpdate}
+              >
+                <PDrilldownItem identifier="wheels" label="Wheels">
+                  <PDrilldownItem identifier="wheels-collections" label="Collections">
+                    <PDrilldownLink href="/#collections">All wheel collections</PDrilldownLink>
+                    <PDrilldownLink href="/#collections">Forged wheel series</PDrilldownLink>
+                  </PDrilldownItem>
+                  <PDrilldownItem identifier="wheels-specifications" label="Wheel specifications">
+                    <PDrilldownLink href="/#engineering">Sizes & dimensions</PDrilldownLink>
+                    <PDrilldownLink href="/#engineering">Finishes & details</PDrilldownLink>
+                  </PDrilldownItem>
+                  <PDrilldownLink href="/#collections">Explore wheels</PDrilldownLink>
+                </PDrilldownItem>
+
+                <PDrilldownItem identifier="vehicles" label="Vehicles">
+                  <PDrilldownItem identifier="vehicles-fitment" label="Vehicle fitment">
+                    <PDrilldownLink href="/#fitment">Find wheels for your vehicle</PDrilldownLink>
+                    <PDrilldownLink href="/#fitment">Fitment guidance</PDrilldownLink>
+                  </PDrilldownItem>
+                  <PDrilldownLink href="/#fitment">Explore vehicle fitment</PDrilldownLink>
+                </PDrilldownItem>
+
+                <PDrilldownItem identifier="technology" label="Technology">
+                  <PDrilldownItem identifier="technology-engineering" label="Engineering">
+                    <PDrilldownLink href="/#engineering">Forging process</PDrilldownLink>
+                    <PDrilldownLink href="/#engineering">Materials & construction</PDrilldownLink>
+                  </PDrilldownItem>
+                  <PDrilldownLink href="/#engineering">Explore technology</PDrilldownLink>
+                </PDrilldownItem>
+
+                <PDrilldownItem identifier="story" label="Our Story">
+                  <PDrilldownLink href="/#engineering">About Euresis</PDrilldownLink>
+                  <PDrilldownLink href="/#engineering">Design philosophy</PDrilldownLink>
+                </PDrilldownItem>
+
+                <PDrilldownItem identifier="journal" label="Journal">
+                  <PDrilldownLink href="/#collections">Stories & builds</PDrilldownLink>
+                  <PDrilldownLink href="/#collections">Latest articles</PDrilldownLink>
+                </PDrilldownItem>
+
+                <PDrilldownItem identifier="contact" label="Contact">
+                  <PDrilldownLink href="/#fitment">Product enquiry</PDrilldownLink>
+                  <PDrilldownLink href="/#fitment">Contact Euresis</PDrilldownLink>
+                </PDrilldownItem>
+              </PDrilldown>
+            </nav>
             <span className="site-header__menu-label">Menu</span>
           </div>
           <a className="wordmark" href="/" aria-label="Euresis home">EURESIS</a>
           <div className="site-header__end">
             <PButtonPure
-              className={`site-header__control ${isHome && !isScrolled ? "site-header__control--hero" : ""}`}
+              className="site-header__control"
               type="button"
               icon="search"
               hideLabel
@@ -92,7 +141,7 @@ export function SiteHeader() {
               onClick={() => { setSearchOpen(true); setMenuOpen(false); }}
             >Search</PButtonPure>
             <PButtonPure
-              className={`site-header__control ${isHome && !isScrolled ? "site-header__control--hero" : ""}`}
+              className="site-header__control"
               type="button"
               icon="user"
               hideLabel
@@ -101,45 +150,6 @@ export function SiteHeader() {
           </div>
         </div>
       </header>
-
-      {menuOpen && (
-        <div className="global-overlay global-overlay--menu" role="dialog" aria-modal="true" aria-label="Main navigation">
-          <button className="global-overlay__backdrop" type="button" aria-label="Close menu" onClick={closePanels} />
-          <aside className="navigation-panel">
-            <div className="navigation-panel__header">
-              <span className="navigation-panel__heading">Menu</span>
-              <PButtonPure icon="close" hideLabel type="button" aria={{ "aria-label": "Close menu" }} onClick={closePanels}>Close</PButtonPure>
-            </div>
-            <nav className="navigation-panel__nav" aria-label="Main">
-              {navigation.map((item) => (
-                <div className="navigation-panel__group" key={item.id}>
-                  <button
-                    className={`navigation-panel__item ${activeItem === item.id ? "is-active" : ""}`}
-                    type="button"
-                    aria-expanded={activeItem === item.id}
-                    onClick={() => setActiveItem(activeItem === item.id ? null : item.id)}
-                  >
-                    <span>{item.label}</span>
-                    <span className="navigation-panel__chevron" aria-hidden="true">{activeItem === item.id ? "−" : "+"}</span>
-                  </button>
-                  {activeItem === item.id && (
-                    <div className="navigation-panel__children">
-                      {item.children.map((child) => (
-                        <a href={child.href} key={child.label} onClick={closePanels}>{child.label}</a>
-                      ))}
-                      <a className="navigation-panel__all" href={item.href} onClick={closePanels}>Explore {item.label}</a>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </nav>
-            <div className="navigation-panel__footer">
-              <span>Precision performance wheels</span>
-              <a href="/#fitment" onClick={closePanels}>Product enquiry <span aria-hidden="true">↗</span></a>
-            </div>
-          </aside>
-        </div>
-      )}
 
       {searchOpen && (
         <div className="global-overlay global-overlay--search" role="dialog" aria-modal="true" aria-label="Site search">

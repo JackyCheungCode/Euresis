@@ -1,9 +1,9 @@
-/* Global shell follows the structure and spacing principles of PDS v4 Header, Footer and Landing Page examples. */
+/* PDS v4 landing-page header geometry: absolute, three-column alignment, no sticky transition. */
 .wordmark {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: inherit;
+  color: var(--p-color-primary);
   font-family: var(--p-font-sans);
   font-size: clamp(1rem, 1.2vw, 1.25rem);
   font-weight: var(--p-font-weight-bold);
@@ -12,27 +12,22 @@
   white-space: nowrap;
   text-decoration: none;
 }
-
 .site-header {
-  position: relative;
+  position: absolute;
   z-index: 40;
+  inset: 0 0 auto;
   width: 100%;
   min-height: 80px;
-  background: var(--p-color-canvas);
   color: var(--p-color-primary);
-  transition: background-color 180ms ease, color 180ms ease;
-}
-.site-header--home {
-  position: absolute;
-  inset: 0 0 auto;
   background: transparent;
-  color: #fff;
 }
-.site-header--home.site-header--scrolled {
-  position: fixed;
-  background: var(--p-color-canvas);
-  color: var(--p-color-primary);
-  box-shadow: 0 1px 0 var(--p-color-contrast-lower);
+.site-header::before {
+  position: absolute;
+  z-index: -1;
+  inset: 0 0 -60px;
+  content: "";
+  pointer-events: none;
+  background: linear-gradient(to bottom, rgb(0 0 0 / 12%), transparent);
 }
 .site-header__inner {
   display: grid;
@@ -52,14 +47,18 @@
 }
 .site-header__start { justify-content: flex-start; }
 .site-header__end { justify-content: flex-end; }
-.site-header__control { color: inherit; }
-.site-header__control--hero { color: #fff; }
+.site-header__start nav { display: flex; align-items: center; }
+.site-header__control { color: var(--p-color-primary); }
 .site-header__menu-label {
   font-size: var(--p-typescale-xs);
-  color: inherit;
+  color: var(--p-color-primary);
 }
-.site-header--home:not(.site-header--scrolled) .wordmark { color: #fff; }
+.site-header .wordmark { color: var(--p-color-primary) !important; }
 
+/* The PDS Drilldown owns all menu levels, transitions, back navigation and responsive behaviour. */
+.site-header p-drilldown { --p-drilldown-grid-template: repeat(3, auto) minmax(0, 1fr) / auto; }
+
+/* Full-screen search retained unchanged. */
 .global-overlay {
   position: fixed;
   z-index: 100;
@@ -77,87 +76,6 @@
   background: rgb(0 0 0 / 48%);
   cursor: default;
 }
-
-/* Navigation drawer: restrained PDS surface, typography and divider treatment. */
-.navigation-panel {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  width: min(100%, 560px);
-  height: 100%;
-  margin-inline-end: auto;
-  padding: var(--p-spacing-fluid-lg) var(--euresis-gutter) var(--p-spacing-static-md);
-  overflow-y: auto;
-  background: var(--p-color-canvas);
-  color: var(--p-color-primary);
-  animation: global-panel-in 180ms ease both;
-}
-.navigation-panel__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  min-height: 48px;
-  padding-bottom: var(--p-spacing-static-md);
-  border-bottom: 1px solid var(--p-color-contrast-lower);
-}
-.navigation-panel__heading {
-  font-size: var(--p-typescale-sm);
-  font-weight: var(--p-font-weight-semibold);
-}
-.navigation-panel__nav {
-  flex: 1;
-  padding-block: var(--p-spacing-fluid-md);
-}
-.navigation-panel__group { border-bottom: 1px solid var(--p-color-contrast-lower); }
-.navigation-panel__item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  min-height: 64px;
-  padding-block: var(--p-spacing-static-sm);
-  border: 0;
-  background: transparent;
-  color: inherit;
-  text-align: start;
-  font: inherit;
-  font-size: clamp(1.35rem, 2.5vw, 1.8rem);
-  cursor: pointer;
-}
-.navigation-panel__item:hover,
-.navigation-panel__item.is-active { color: var(--p-color-primary); }
-.navigation-panel__chevron {
-  color: var(--p-color-contrast-medium);
-  font-size: var(--p-typescale-lg);
-  font-weight: var(--p-font-weight-light);
-}
-.navigation-panel__children {
-  display: grid;
-  gap: var(--p-spacing-static-md);
-  padding: 0 0 var(--p-spacing-fluid-md) var(--p-spacing-fluid-md);
-}
-.navigation-panel__children a {
-  color: var(--p-color-contrast-high);
-  font-size: var(--p-typescale-sm);
-}
-.navigation-panel__children .navigation-panel__all {
-  margin-top: var(--p-spacing-static-sm);
-  color: var(--p-color-primary);
-  font-weight: var(--p-font-weight-semibold);
-}
-.navigation-panel__footer {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: var(--p-spacing-static-md);
-  padding-top: var(--p-spacing-static-md);
-  border-top: 1px solid var(--p-color-contrast-lower);
-  color: var(--p-color-contrast-medium);
-  font-size: var(--p-typescale-xs);
-}
-.navigation-panel__footer a { color: var(--p-color-primary); }
-
-/* Full-screen search retained from the previously approved implementation. */
 .global-overlay--search {
   place-items: stretch;
   background: var(--p-color-canvas);
@@ -247,9 +165,9 @@
 }
 .search-panel__note { margin-top: var(--p-spacing-fluid-lg); }
 
-/* PDS Footer pattern adapted for enquiry-only brand content. */
+/* PDS Footer pattern: surface background, three-column navigation, centered brand signature. */
 .site-footer {
-  padding-block: var(--p-spacing-fluid-xl) var(--p-spacing-fluid-lg);
+  padding-block: var(--p-spacing-fluid-lg);
   background: var(--p-color-surface);
   color: var(--p-color-primary);
 }
@@ -261,18 +179,19 @@
 .site-footer__groups {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--p-spacing-fluid-lg);
-  padding-bottom: var(--p-spacing-fluid-xl);
+  gap: var(--p-spacing-fluid-md);
+  margin-top: var(--p-spacing-fluid-sm);
+  margin-bottom: var(--p-spacing-fluid-lg);
 }
 .site-footer__group h2 {
-  margin: 0 0 var(--p-spacing-fluid-md);
+  margin: 0 0 var(--p-spacing-fluid-sm);
   color: var(--p-color-contrast-medium);
   font-size: var(--p-typescale-2xs);
   font-weight: var(--p-font-weight-semibold);
 }
 .site-footer__group ul {
   display: grid;
-  gap: var(--p-spacing-static-md);
+  gap: var(--p-spacing-fluid-sm);
   margin: 0;
   padding: 0;
   list-style: none;
@@ -284,9 +203,8 @@
 .site-footer__brand {
   display: grid;
   justify-items: center;
-  gap: var(--p-spacing-static-md);
-  padding-top: var(--p-spacing-fluid-lg);
-  border-top: 1px solid var(--p-color-contrast-lower);
+  gap: var(--p-spacing-fluid-sm);
+  margin-top: var(--p-spacing-fluid-md);
   text-align: center;
 }
 .site-footer__brand .wordmark { font-size: 1rem; }
@@ -299,7 +217,6 @@
   color: var(--p-color-contrast-medium);
   font-size: var(--p-typescale-2xs);
 }
-
 @keyframes global-panel-in {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
@@ -310,9 +227,7 @@
   .site-header__menu-label { display: none; }
   .site-header__start, .site-header__end { gap: var(--p-spacing-static-sm); }
   .site-header__inner .wordmark { font-size: .9rem; letter-spacing: .16em; }
-  .navigation-panel { width: 100%; padding: var(--p-spacing-static-md) var(--euresis-gutter); }
-  .navigation-panel__item { min-height: 58px; font-size: 1.35rem; }
-  .site-footer__groups { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--p-spacing-fluid-lg) var(--p-spacing-static-md); }
+  .site-footer__groups { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--p-spacing-fluid-md); }
   .site-footer__group:last-child { grid-column: 1 / -1; }
   .search-panel { padding: var(--p-spacing-static-md) var(--euresis-gutter); }
   .search-panel__content { padding-block: 12vh; }
@@ -321,6 +236,5 @@
   .search-panel__form kbd { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .site-header { transition: none; }
-  .navigation-panel, .search-panel { animation: none; }
+  .search-panel { animation: none; }
 }
