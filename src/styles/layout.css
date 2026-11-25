@@ -30,13 +30,13 @@
   inset: 0 0 auto;
   background: transparent;
   border-bottom-color: transparent;
-  color: #fff;
+  color: var(--p-color-primary);
 }
 
 .site-header--home .site-header__icon,
 .site-header--home .site-header__avatar {
-  color: #fff;
-  --p-color-primary: #fff;
+  color: var(--p-color-primary);
+  --p-color-primary: var(--p-color-primary);
 }
 
 .site-header--home.site-header--scrolled {
