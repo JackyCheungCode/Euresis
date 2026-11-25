@@ -40,7 +40,7 @@
 .ds-section__heading { display:flex; align-items:end; justify-content:space-between; gap:var(--p-spacing-fluid-lg); margin-bottom:var(--p-spacing-fluid-lg); }
 .ds-section__heading h2 { margin:var(--p-spacing-static-sm) 0 0; font-size:clamp(2.2rem,4vw,4.2rem); line-height:1; letter-spacing:-.06em; font-weight:var(--p-font-weight-normal); }
 .ds-section__heading > p { max-width:360px; margin:0 0 4px; color:var(--p-color-contrast-high); font-size:var(--p-typescale-sm); line-height:1.6; }
-.ds-theme-panel { display:flex; justify-content:space-between; align-items:center; gap:var(--p-spacing-md); padding:var(--p-spacing-static-md); border:1px solid var(--p-color-contrast-lower); }
+.ds-theme-panel { display:flex; justify-content:space-between; align-items:center; gap:var(--p-spacing-static-md); padding:var(--p-spacing-static-md); border:1px solid var(--p-color-contrast-lower); }
 .ds-theme-panel div { display:grid; gap:4px; }
 .ds-theme-panel strong { font-size:var(--p-typescale-sm); }
 .ds-theme-panel span { color:var(--p-color-contrast-medium); font-size:var(--p-typescale-xs); }
