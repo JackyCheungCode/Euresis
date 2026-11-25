@@ -2,23 +2,23 @@ import { PLinkPure } from "@porsche-design-system/components-react/ssr";
 
 const footerGroups = [
   {
-    title: "Explore",
+    title: "Wheels & Vehicles",
     links: [
-      { label: "Wheels & Collections", href: "/#collections" },
-      { label: "Vehicle Fitment", href: "/#fitment" },
-      { label: "Technology", href: "/#engineering" },
+      { label: "Wheel collections", href: "/#collections" },
+      { label: "Vehicle fitment", href: "/#fitment" },
+      { label: "Technical specifications", href: "/#engineering" },
     ],
   },
   {
     title: "Euresis",
     links: [
-      { label: "Our Story", href: "/#engineering" },
+      { label: "Our story", href: "/#engineering" },
       { label: "Journal", href: "/#collections" },
       { label: "Contact", href: "/#fitment" },
     ],
   },
   {
-    title: "Information",
+    title: "Support",
     links: [
       { label: "Fitment guidance", href: "/#fitment" },
       { label: "Product enquiry", href: "/#fitment" },
@@ -46,7 +46,7 @@ export function SiteFooter() {
           ))}
         </nav>
         <div className="site-footer__brand">
-          <a className="wordmark" href="/" aria-label="Euresis home">EURESIS</a>
+          <a className="site-header__wordmark" href="/" aria-label="Euresis home">EURESIS</a>
           <p>Precision performance wheels</p>
           <span>© {new Date().getFullYear()} Euresis. All rights reserved.</span>
         </div>

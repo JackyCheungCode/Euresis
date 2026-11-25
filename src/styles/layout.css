@@ -1,34 +1,27 @@
-/* PDS v4 landing-page header geometry: absolute, three-column alignment, no sticky transition. */
-.wordmark {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--p-color-primary);
-  font-family: var(--p-font-sans);
-  font-size: clamp(1rem, 1.2vw, 1.25rem);
-  font-weight: var(--p-font-weight-bold);
-  letter-spacing: .2em;
-  line-height: 1;
-  white-space: nowrap;
-  text-decoration: none;
-}
+/* PDS v4 Landing Page / Header pattern adaptation. Brand assets remain EURESIS-owned. */
 .site-header {
-  position: absolute;
+  position: relative;
   z-index: 40;
-  inset: 0 0 auto;
   width: 100%;
   min-height: 80px;
   color: var(--p-color-primary);
+  background: var(--p-color-canvas);
+}
+.site-header--home {
+  position: absolute;
+  inset: 0 0 auto;
+  color: #fff;
   background: transparent;
 }
-.site-header::before {
+.site-header--home::before {
   position: absolute;
   z-index: -1;
   inset: 0 0 -60px;
-  content: "";
   pointer-events: none;
-  background: linear-gradient(to bottom, rgb(0 0 0 / 12%), transparent);
+  content: "";
+  background: linear-gradient(to bottom, rgb(0 0 0 / 28%), transparent);
 }
+.site-header--inner { position: relative; }
 .site-header__inner {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
@@ -47,18 +40,27 @@
 }
 .site-header__start { justify-content: flex-start; }
 .site-header__end { justify-content: flex-end; }
-.site-header__start nav { display: flex; align-items: center; }
-.site-header__control { color: var(--p-color-primary); }
-.site-header__menu-label {
-  font-size: var(--p-typescale-xs);
-  color: var(--p-color-primary);
+.site-header__control { color: inherit; }
+.site-header__wordmark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  justify-self: center;
+  color: inherit;
+  font-family: var(--p-font-sans);
+  font-size: clamp(1rem, 1.2vw, 1.25rem);
+  font-weight: var(--p-font-weight-bold);
+  letter-spacing: .2em;
+  line-height: 1;
+  white-space: nowrap;
+  text-decoration: none;
+  visibility: visible;
+  opacity: 1;
 }
-.site-header .wordmark { color: var(--p-color-primary) !important; }
+.site-header--home .site-header__wordmark { color: #fff; }
+.site-header--inner .site-header__wordmark { color: var(--p-color-primary); }
+.site-header__drilldown { display: contents; }
 
-/* The PDS Drilldown owns all menu levels, transitions, back navigation and responsive behaviour. */
-.site-header p-drilldown { --p-drilldown-grid-template: repeat(3, auto) minmax(0, 1fr) / auto; }
-
-/* Full-screen search retained unchanged. */
 .global-overlay {
   position: fixed;
   z-index: 100;
@@ -66,22 +68,11 @@
   display: grid;
   isolation: isolate;
 }
-.global-overlay__backdrop {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  width: 100%;
-  height: 100%;
-  border: 0;
-  background: rgb(0 0 0 / 48%);
-  cursor: default;
-}
 .global-overlay--search {
   place-items: stretch;
   background: var(--p-color-canvas);
   color: var(--p-color-primary);
 }
-.global-overlay--search .global-overlay__backdrop { display: none; }
 .search-panel {
   display: flex;
   flex-direction: column;
@@ -165,13 +156,16 @@
 }
 .search-panel__note { margin-top: var(--p-spacing-fluid-lg); }
 
-/* PDS Footer pattern: surface background, three-column navigation, centered brand signature. */
+/* Footer follows the PDS Footer pattern's grid, headings, links and surface treatment. */
 .site-footer {
   padding-block: var(--p-spacing-fluid-lg);
   background: var(--p-color-surface);
   color: var(--p-color-primary);
 }
 .site-footer__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--p-spacing-fluid-lg);
   width: min(100%, 1600px);
   margin-inline: auto;
   padding-inline: var(--euresis-gutter);
@@ -180,8 +174,7 @@
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--p-spacing-fluid-md);
-  margin-top: var(--p-spacing-fluid-sm);
-  margin-bottom: var(--p-spacing-fluid-lg);
+  margin-block: var(--p-spacing-fluid-sm) var(--p-spacing-fluid-lg);
 }
 .site-footer__group h2 {
   margin: 0 0 var(--p-spacing-fluid-sm);
@@ -203,11 +196,12 @@
 .site-footer__brand {
   display: grid;
   justify-items: center;
-  gap: var(--p-spacing-fluid-sm);
-  margin-top: var(--p-spacing-fluid-md);
+  gap: var(--p-spacing-static-md);
+  padding-top: var(--p-spacing-fluid-md);
+  border-top: 1px solid var(--p-color-contrast-lower);
   text-align: center;
 }
-.site-footer__brand .wordmark { font-size: 1rem; }
+.site-footer__brand .site-header__wordmark { font-size: 1rem; }
 .site-footer__brand p {
   margin: 0;
   color: var(--p-color-contrast-medium);
@@ -217,17 +211,16 @@
   color: var(--p-color-contrast-medium);
   font-size: var(--p-typescale-2xs);
 }
+
 @keyframes global-panel-in {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
 @media (max-width: 700px) {
-  .site-header, .site-header__inner { min-height: 64px; }
-  .site-header__inner { gap: var(--p-spacing-static-sm); }
-  .site-header__menu-label { display: none; }
+  .site-header__inner { min-height: 64px; gap: var(--p-spacing-static-sm); }
   .site-header__start, .site-header__end { gap: var(--p-spacing-static-sm); }
-  .site-header__inner .wordmark { font-size: .9rem; letter-spacing: .16em; }
-  .site-footer__groups { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--p-spacing-fluid-md); }
+  .site-header__wordmark { font-size: .9rem; letter-spacing: .16em; }
+  .site-footer__groups { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--p-spacing-fluid-lg) var(--p-spacing-static-md); }
   .site-footer__group:last-child { grid-column: 1 / -1; }
   .search-panel { padding: var(--p-spacing-static-md) var(--euresis-gutter); }
   .search-panel__content { padding-block: 12vh; }
