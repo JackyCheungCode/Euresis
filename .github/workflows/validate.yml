@@ -43,11 +43,11 @@ jobs:
       - name: Verify server-rendered homepage and PDS component
         shell: bash
         run: |
-          npm run preview -- --host 127.0.0.1 --port 4173 > /tmp/euresis-preview.log 2>&1 &
+          npm run preview -- --host 127.0.0.1 --port 4173 > ./.euresis-preview.log 2>&1 &
           PREVIEW_PID=$!
           trap 'kill "$PREVIEW_PID" 2>/dev/null || true' EXIT
           for attempt in $(seq 1 30); do
-            if curl --silent --fail http://127.0.0.1:4173/ -o /tmp/euresis-home.html; then
+            if curl --silent --fail http://127.0.0.1:4173/ -o ./.euresis-home.html; then
               break
             fi
             sleep 2
@@ -68,6 +68,7 @@ jobs:
             /tmp/euresis-preview.log
           if-no-files-found: warn
           retention-days: 7
+          include-hidden-files: true
 
   deploy:
     name: Deploy Euresis Worker
