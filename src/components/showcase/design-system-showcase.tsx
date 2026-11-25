@@ -204,7 +204,7 @@ export function DesignSystemShowcase() {
                 <span className="ds-component-card__label">TEXT INPUT</span>
                 <PInputText label="Full name" name="showcase-name" placeholder="Enter your name" />
                 <PInputEmail label="Email address" name="showcase-email" placeholder="name@example.com" />
-                <PInputText label="Disabled field" value="Not editable" disabled />
+                <PInputText label="Disabled field" name="showcase-disabled" value="Not editable" disabled />
               </div>
               <div className="ds-form-card">
                 <span className="ds-component-card__label">SELECT & TEXTAREA</span>
