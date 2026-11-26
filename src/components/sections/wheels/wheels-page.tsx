@@ -32,7 +32,7 @@ export function WheelsPage() {
   const [submitted, setSubmitted] = useState(false);
 
   const products = useMemo(() => wheelProducts.filter((product) => {
-    const range = product.diameterRange.match(/\\d+/g)?.map(Number) ?? [];
+    const range = product.diameterRange.match(/\d+/g)?.map(Number) ?? [];
     const diameterMatches = diameter === all || (range.length > 0 && Number(diameter) >= Math.min(...range) && Number(diameter) <= Math.max(...range));
     return (manufacturing === all || product.manufacturing === manufacturing)
       && (collection === all || product.collection === collection)
@@ -108,18 +108,40 @@ export function WheelsPage() {
         </div>
       </section>
 
-      <section className="wheels-discovery" id="discovery" aria-labelledby="discovery-title">\n        <div className="wheels-section-heading">\n          <div><p className="wheels-eyebrow">02 / PRODUCT DISCOVERY</p><PHeading id="discovery-title" tag="h2" size="2xl">TWO WAYS TO<br />FIND YOUR WHEELS.</PHeading></div>\n          <PText color="contrast-high">Start with your vehicle and refine the fitment, or start with wheel specifications directly. Both paths lead to the same catalogue.</PText>\n        </div>\n        <div className="wheels-discovery__grid">\n          <a className="wheels-discovery__card" href="#vehicle-fitment"><span>01 / VEHICLE FIRST</span><strong>Find wheels for<br />your vehicle.</strong><small>Make · Model · Year · Modification</small><b>START WITH VEHICLE ↗</b></a>\n          <a className="wheels-discovery__card" href="#specification-finder"><span>02 / SPECIFICATION FIRST</span><strong>Know your fitment?<br />Start with the numbers.</strong><small>Collection · Diameter · Width · PCD · Offset</small><b>FILTER BY SPECIFICATION ↗</b></a>\n        </div>\n      </section>\n\n      <section className="wheels-collections" id="specification-finder" aria-labelledby="collections-title">
+      <section className="wheels-discovery" id="discovery" aria-labelledby="discovery-title">
+        <div className="wheels-section-heading">
+          <div><p className="wheels-eyebrow">02 / PRODUCT DISCOVERY</p><PHeading id="discovery-title" tag="h2" size="2xl">TWO WAYS TO<br />FIND YOUR WHEELS.</PHeading></div>
+          <PText color="contrast-high">Start with your vehicle and refine the fitment, or start with wheel specifications directly. Both paths lead to the same catalogue.</PText>
+        </div>
+        <div className="wheels-discovery__grid">
+          <a className="wheels-discovery__card" href="#vehicle-fitment"><span>01 / VEHICLE FIRST</span><strong>Find wheels for<br />your vehicle.</strong><small>Make · Model · Year · Modification</small><b>START WITH VEHICLE ↗</b></a>
+          <a className="wheels-discovery__card" href="#specification-finder"><span>02 / SPECIFICATION FIRST</span><strong>Know your fitment?<br />Start with the numbers.</strong><small>Collection · Diameter · Width · PCD · Offset</small><b>FILTER BY SPECIFICATION ↗</b></a>
+        </div>
+      </section>
+
+      <section className="wheels-collections" id="specification-finder" aria-labelledby="collections-title">
         <div className="wheels-section-heading wheels-section-heading--light">
           <div>
-            <p className="wheels-eyebrow">02 / COLLECTIONS</p>
-            <PHeading id="collections-title" tag="h2" size="2xl">SIX DISTINCT<br />DESIGN DIRECTIONS.</PHeading>
+            <p className="wheels-eyebrow">03 / SPECIFICATION FINDER</p>
+            <PHeading id="collections-title" tag="h2" size="2xl">START WITH<br />YOUR SPECIFICATION.</PHeading>
           </div>
           <div className="wheels-section-heading__statement">
             
             <p>A shared Euresis design philosophy, expressed through six individual motorsport-inspired collections.</p>
           </div>
         </div>
-        <div className="wheels-specification-fields" aria-label="Wheel specification filters">\n          <PSelect label="Diameter" name="filter-diameter" value={diameter} onChange={(event: SelectUpdateEvent) => setDiameter(String(event.detail.value ?? "ALL"))}>\n            <PSelectOption value="ALL">All diameters</PSelectOption>\n            {["17","18","19","20","21","22"].map((value) => <PSelectOption key={value} value={value}>{value} inch</PSelectOption>)}\n          </PSelect>\n          <PInputText label="Width (J)" name="filter-width" value={fitmentWidth} onChange={(event: SelectUpdateEvent) => setFitmentWidth(String(event.detail.value ?? ""))} placeholder="e.g. 8.5" />\n          <PInputText label="Offset (ET)" name="filter-offset" value={fitmentOffset} onChange={(event: SelectUpdateEvent) => setFitmentOffset(String(event.detail.value ?? ""))} placeholder="e.g. 35" />\n          <PInputText label="Bolt pattern (PCD)" name="filter-pcd" value={fitmentPcd} onChange={(event: SelectUpdateEvent) => setFitmentPcd(String(event.detail.value ?? ""))} placeholder="e.g. 5×112" />\n        </div>\n        <p className="wheels-specification-note">Width, offset and PCD are editable criteria. The current sample range does not yet contain verified dimensional data, so these values are not used to claim product compatibility.</p>\n        <div className="wheels-collection-list">
+        <div className="wheels-specification-fields" aria-label="Wheel specification filters">
+          <PSelect label="Diameter" name="filter-diameter" value={diameter} onChange={(event: SelectUpdateEvent) => setDiameter(String(event.detail.value ?? "ALL"))}>
+            <PSelectOption value="ALL">All diameters</PSelectOption>
+            {["17","18","19","20","21","22"].map((value) => <PSelectOption key={value} value={value}>{value} inch</PSelectOption>)}
+          </PSelect>
+          <PInputText label="Width (J)" name="filter-width" value={fitmentWidth} onChange={(event: SelectUpdateEvent) => setFitmentWidth(String(event.detail.value ?? ""))} placeholder="e.g. 8.5" />
+          <PInputText label="Offset (ET)" name="filter-offset" value={fitmentOffset} onChange={(event: SelectUpdateEvent) => setFitmentOffset(String(event.detail.value ?? ""))} placeholder="e.g. 35" />
+          <PInputText label="Bolt pattern (PCD)" name="filter-pcd" value={fitmentPcd} onChange={(event: SelectUpdateEvent) => setFitmentPcd(String(event.detail.value ?? ""))} placeholder="e.g. 5×112" />
+          <PInputText label="Center bore (CB)" name="filter-center-bore" placeholder="e.g. 66.6" />
+        </div>
+        <p className="wheels-specification-note">Width, offset and PCD are editable criteria. The current sample range does not yet contain verified dimensional data, so these values are not used to claim product compatibility.</p>
+        <div className="wheels-collection-list">
           {wheelCollections.map((item, index) => (
             <button className={`wheels-collection-item ${collection === item.id ? "is-active" : ""}`} type="button" key={item.id} onClick={() => { setCollection(collection === item.id ? "ALL" : item.id); document.getElementById("catalogue")?.scrollIntoView({ behavior: "smooth" }); }}>
               <span className="wheels-collection-item__index">0{index + 1}</span>
@@ -162,9 +184,9 @@ export function WheelsPage() {
             <PSelectOption value="3">3+ finishes</PSelectOption>
             <PSelectOption value="4">4+ finishes</PSelectOption>
           </PSelect>
-          <PInputText label="Rim width (J)" name="filter-width" value={fitmentWidth} disabled />
-          <PInputText label="Offset (ET)" name="filter-offset" value={fitmentOffset} disabled />
-          <PInputText label="Bolt pattern (PCD)" name="filter-pcd" value={fitmentPcd} disabled />
+          <PInputText label="Width (J)" name="catalogue-width" value={fitmentWidth} onChange={(event: SelectUpdateEvent) => setFitmentWidth(String(event.detail.value ?? ""))} />
+          <PInputText label="Offset (ET)" name="catalogue-offset" value={fitmentOffset} onChange={(event: SelectUpdateEvent) => setFitmentOffset(String(event.detail.value ?? ""))} />
+          <PInputText label="Bolt pattern (PCD)" name="catalogue-pcd" value={fitmentPcd} onChange={(event: SelectUpdateEvent) => setFitmentPcd(String(event.detail.value ?? ""))} />
           <PButton type="button" variant="secondary" onClick={() => { resetFilters(); setFitmentWidth(""); setFitmentOffset(""); setFitmentPcd(""); setVehicleSummary(""); }}>Reset filters</PButton>
         </div>
         <div className="wheels-catalogue__meta"><span>{products.length.toString().padStart(2, "0")} SAMPLE MODELS</span><span>NO PRICING · NO CHECKOUT</span></div>
