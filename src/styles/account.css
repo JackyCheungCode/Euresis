@@ -1,4 +1,4 @@
-/* Customer account portal — PDS-aligned Euresis interface */
+/* Customer account portal — Carbon-aligned Euresis interface */
 .account-page, .account-auth { color: var(--euresis-black); background: var(--euresis-white); min-height: 72vh; }
 .account-loading { min-height: 60vh; display:grid; place-items:center; color:var(--euresis-steel); }
 .account-auth { display:grid; grid-template-columns:minmax(0,1.05fr) minmax(420px,.95fr); min-height:calc(100vh - 76px); }
