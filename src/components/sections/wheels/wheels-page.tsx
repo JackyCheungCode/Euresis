@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
-  PButton,
+  Button,
   PHeading,
   PIcon,
   PInputEmail,
@@ -11,7 +11,7 @@ import {
   PSelectOption,
   PTextarea,
   PText,
-} from "@porsche-design-system/components-react/ssr";
+} from "@/src/components/ui/carbon-primitives";
 import { wheelCollections, wheelProducts } from "@/src/data/wheels";
 import { LiveFitment } from "./live-fitment";
 import { CountryRegionSelect } from "./country-region-select";
@@ -105,7 +105,7 @@ export function WheelsPage() {
           </div>
         </div>
         <span className="wheels-hero__index">EURESIS / PERFORMANCE WHEELS</span>
-        <PButton className="wheels-hero__video-control" type="button" variant="secondary" compact hideLabel icon={heroVideoPaused ? "play" : "pause"} aria={{ "aria-label": heroVideoPaused ? "Play background video" : "Pause background video" }} onClick={toggleHeroVideo}>{heroVideoPaused ? "Play background video" : "Pause background video"}</PButton>
+        <Button className="wheels-hero__video-control" type="button" variant="secondary" compact hideLabel icon={heroVideoPaused ? "play" : "pause"} aria={{ "aria-label": heroVideoPaused ? "Play background video" : "Pause background video" }} onClick={toggleHeroVideo}>{heroVideoPaused ? "Play background video" : "Pause background video"}</Button>
       </section>
 
       <section className="wheels-manufacturing scheme-light" aria-labelledby="manufacturing-title">
@@ -177,7 +177,7 @@ export function WheelsPage() {
           <PInputText label="Offset (ET)" name="catalogue-offset" value={fitmentOffset} onChange={(event: InputUpdateEvent) => setFitmentOffset(inputValue(event))} />
           <PInputText label="Bolt pattern (PCD)" name="catalogue-pcd" value={fitmentPcd} onChange={(event: InputUpdateEvent) => setFitmentPcd(inputValue(event))} />
           <PInputText label="Center bore (CB)" name="catalogue-center-bore" value={fitmentCenterBore} onChange={(event: InputUpdateEvent) => setFitmentCenterBore(inputValue(event))} />
-          <PButton type="button" variant="secondary" onClick={resetFilters}>Reset filters</PButton>
+          <Button type="button" variant="secondary" onClick={resetFilters}>Reset filters</Button>
         </div>
         <div className="wheels-catalogue__meta"><span>{products.length.toString().padStart(2, "0")} SAMPLE MODELS</span><span>NO PRICING · NO CHECKOUT</span></div>
         {vehicleSummary && <p className="wheels-selected-fitment">Vehicle reference: <strong>{vehicleSummary}</strong> Vehicle specifications are shown for reference only and have not been used to assert product compatibility. Catalogue sample models do not yet contain verified fitment data.</p>}
@@ -218,7 +218,7 @@ export function WheelsPage() {
           <PHeading id="inquiry-title" tag="h2" size="2xl" color="inherit">LET'S FIND<br />YOUR FIT.</PHeading>
           <p>Tell us which wheel and vehicle you are considering. The current demo form validates the enquiry layout locally; it does not transmit or store personal information.</p>
         </div>
-        {submitted ? <div className="wheels-inquiry__success" role="status"><strong>Demo enquiry captured in this session.</strong><p>No message was sent. Connect an enquiry endpoint before accepting real customer requests.</p><PButton type="button" variant="secondary" onClick={() => setSubmitted(false)}>Create another demo enquiry</PButton></div> :
+        {submitted ? <div className="wheels-inquiry__success" role="status"><strong>Demo enquiry captured in this session.</strong><p>No message was sent. Connect an enquiry endpoint before accepting real customer requests.</p><Button type="button" variant="secondary" onClick={() => setSubmitted(false)}>Create another demo enquiry</Button></div> :
           <form className="wheels-inquiry__form scheme-light" onSubmit={submitDemoInquiry}>
             <div className="wheels-inquiry__fields">
               <PInputText label="Name" name="name" required />
@@ -227,7 +227,7 @@ export function WheelsPage() {
               <PInputText label="Vehicle" name="vehicle" value={vehicleSummary} placeholder="Make / Model / Year / Trim" />
               <PTextarea label="Wheel model and requirements" name="message" required />
             </div>
-            <PButton type="submit">Submit demo enquiry</PButton>
+            <Button type="submit">Submit demo enquiry</Button>
             <span className="wheels-demo-note">DEMO ONLY / FORM DATA IS NOT TRANSMITTED</span>
           </form>}
       </section>
