@@ -36,6 +36,7 @@ export type WheelProduct = {
   pcd?: string[];
   centerBores?: string[];
   variants?: WheelProductVariant[];
+  galleryImages?: string[];
   image: string;
   imageAlt: string;
   imageSource: string;
