@@ -92,10 +92,10 @@ export function PRadioGroupOption({ value, label }: any) {
   return <RadioButton id={String(value)} value={value} labelText={label} />;
 }
 export function PSegmentedControl({ label, name, value, children, onChange, ...props }: any) {
-  return <div className="euresis-segmented-control"><span className="cds--label">{label}</span><ToggleGroup name={name} selectedIndex={undefined} onChange={(selected) => onChange?.(eventOf(selected))} {...props}>{children}</ToggleGroup></div>;
+  return <div className="euresis-segmented-control"><span className="cds--label">{label}</span><ToggleGroup name={name} value={value} onChange={(_name, selected) => onChange?.(eventOf(selected))} {...props}>{children}</ToggleGroup></div>;
 }
 export function PSegmentedControlItem({ value, children }: any) {
-  return <ToggleGroupItem id={String(value)} value={value} label={flattenText(children)} />;
+  return <ToggleGroupItem id={String(value)} value={value} text={flattenText(children)} />;
 }
 
 export function PDivider() { return <hr className="cds--popover-caret" />; }
