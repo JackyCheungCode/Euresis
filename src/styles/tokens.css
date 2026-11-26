@@ -1,29 +1,24 @@
 :root {
-  /* Euresis semantic aliases; values remain owned by Porsche Design System. */
-  --euresis-black: var(--p-color-primary);
-  --euresis-graphite: var(--p-color-contrast-higher);
-  --euresis-steel: var(--p-color-contrast-medium);
-  --euresis-line: var(--p-color-contrast-lower);
-  --euresis-paper: var(--p-color-canvas);
-  --euresis-white: var(--p-color-canvas);
-  --euresis-gutter: var(--p-spacing-fluid-md);
+  --euresis-font-sans: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+  --euresis-black: #111111;
+  --euresis-graphite: #1b1b1b;
+  --euresis-steel: #6f6f6f;
+  --euresis-line: #d9d9d6;
+  --euresis-paper: #f4f4f2;
+  --euresis-white: #ffffff;
+  --euresis-gutter: clamp(1.25rem, 4vw, 4.5rem);
   --euresis-content-width: 1440px;
-  --euresis-section-space: var(--p-spacing-fluid-2xl);
-  --euresis-section-space-mobile: var(--p-spacing-fluid-xl);
-  --euresis-surface-subtle: var(--p-color-surface);
-  --euresis-section-gap: var(--p-spacing-fluid-2xl);
-  --euresis-card-gap: var(--p-spacing-fluid-md);
+  --euresis-section-space: clamp(5rem, 10vw, 10rem);
+  --euresis-section-space-mobile: clamp(3.5rem, 9vw, 5.5rem);
+  --euresis-surface-subtle: #f4f4f2;
+  --euresis-section-gap: clamp(3rem, 7vw, 7rem);
+  --euresis-card-gap: clamp(1rem, 2vw, 2rem);
   --euresis-radius: 0;
   --euresis-text-measure: 68ch;
-}
-
-
-/* Euresis semantic layout and interaction tokens. */
-:root {
   --euresis-content-width-wide: 1440px;
   --euresis-content-width-reading: 68ch;
-  --euresis-focus-ring: 2px solid var(--p-color-primary);
+  --euresis-focus-ring: 2px solid var(--cds-focus, #0f62fe);
   --euresis-control-min-height: 44px;
-  --euresis-grid-gap: var(--p-spacing-fluid-md);
-  --euresis-border-subtle: var(--p-color-contrast-low);
+  --euresis-grid-gap: clamp(1rem, 2vw, 2rem);
+  --euresis-border-subtle: #c6c6c6;
 }

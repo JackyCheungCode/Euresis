@@ -203,3 +203,70 @@
   .global-fitment__result > span:nth-of-type(4) { grid-column: 2 / -1; }
   .global-fitment__results-head > div { align-items: flex-start; flex-direction: column; gap: 3px; }
 }
+
+
+/* Carbon React form controls inside the compact vehicle finder */
+.global-fitment__fields > .cds--form-item {
+  min-width: 0;
+  min-height: 48px;
+  display: flex;
+  justify-content: center;
+  padding: 5px 9px;
+  border: 1px solid #d7d7d4;
+  background: #fff;
+}
+.global-fitment__fields .cds--select,
+.global-fitment__fields .cds--select-input__wrapper { width: 100%; min-width: 0; }
+.global-fitment__fields .cds--label {
+  margin: 0 0 2px;
+  color: #777;
+  font-size: 8px;
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: .11em;
+}
+.global-fitment__fields .cds--select-input {
+  min-height: 22px;
+  padding: 0 1.75rem 0 0;
+  border: 0;
+  background: transparent;
+  color: #171717;
+  font-size: 11px;
+  font-weight: 600;
+}
+.global-fitment__fields .cds--select__arrow { right: 2px; }
+.global-fitment__search.cds--btn,
+.global-fitment__results-foot .cds--btn {
+  min-height: 40px;
+  justify-content: center;
+  border-color: #171717;
+  background: #171717;
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .1em;
+}
+.global-fitment__search.cds--btn:hover,
+.global-fitment__results-foot .cds--btn:hover { border-color: #333; background: #333; }
+.global-fitment__chip .cds--btn,
+.global-fitment__results-head .cds--btn {
+  min-height: 22px;
+  padding-inline: 5px;
+  color: inherit;
+}
+.global-fitment__edit.cds--btn { min-height: 28px; padding-inline: 8px; color: #333; font-size: 8px; letter-spacing: .1em; }
+.global-fitment__result .cds--checkbox-wrapper { margin: 0; }
+.global-fitment__result .cds--checkbox-label-text {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+@media (max-width: 700px) {
+  .global-fitment__fields > .cds--form-item { min-height: 43px; padding: 4px 7px; }
+  .global-fitment__fields > .cds--form-item:first-child { grid-column: span 2; }
+  .global-fitment__fields .cds--select-input { font-size: 10px; }
+  .global-fitment__search.cds--btn { grid-column: span 2; }
+}

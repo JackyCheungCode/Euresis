@@ -1,7 +1,7 @@
-/* Euresis Wheels catalogue — page composition only; controls remain PDS components. */
-.wheels-page { color: var(--p-color-primary); background: var(--p-color-canvas); }
-.wheels-eyebrow { margin: 0; color: var(--p-color-contrast-medium); font-size: 10px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; }
-.wheels-hero { position: relative; display: flex; min-height: min(780px, 88svh); align-items: flex-end; overflow: hidden; background: var(--p-color-primary); color: var(--p-color-canvas); }
+/* Euresis Wheels catalogue — Carbon component integration and page composition. */
+.wheels-page { color: var(--euresis-black); background: var(--euresis-white); }
+.wheels-eyebrow { margin: 0; color: var(--euresis-steel); font-size: 10px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; }
+.wheels-hero { position: relative; display: flex; min-height: min(780px, 88svh); align-items: flex-end; overflow: hidden; background: var(--euresis-black); color: var(--euresis-white); }
 .wheels-hero__video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 54%; transform: scale(1.01); }
 .wheels-hero::after { position: absolute; inset: 0; z-index: 0; pointer-events: none; content: ""; background: linear-gradient(90deg, rgb(0 0 0 / .68), rgb(0 0 0 / .12) 78%), linear-gradient(0deg, rgb(0 0 0 / .52), transparent 64%); }
 .wheels-hero__video-control { position: absolute; right: var(--euresis-gutter); bottom: 26px; z-index: 2; }
@@ -13,83 +13,83 @@
 .wheels-hero__index { position: absolute; right: var(--euresis-gutter); bottom: 34px; z-index: 1; color: rgb(255 255 255 / .72); font-size: 9px; letter-spacing: .16em; }
 .wheels-section-heading { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(260px, .65fr); align-items: end; gap: clamp(30px, 7vw, 108px); max-width: var(--euresis-content-width); margin: 0 auto clamp(38px, 5vw, 72px); }
 .wheels-section-heading h2 { max-width: 900px; margin: 22px 0 0; font-size: clamp(3rem, 7vw, 7rem); font-weight: 500; letter-spacing: -.075em; line-height: .89; }
-.wheels-section-heading > p { max-width: 440px; margin: 0 0 5px; color: var(--p-color-contrast-high); font-size: clamp(1rem, 1.25vw, 1.15rem); line-height: 1.65; }
+.wheels-section-heading > p { max-width: 440px; margin: 0 0 5px; color: var(--euresis-graphite); font-size: clamp(1rem, 1.25vw, 1.15rem); line-height: 1.65; }
 .wheels-manufacturing { padding: var(--euresis-section-space) var(--euresis-gutter); }
 .wheels-manufacturing__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(14px, 2vw, 28px); max-width: var(--euresis-content-width); margin: 0 auto; }
-.manufacturing-card { position: relative; display: flex; min-width: 0; aspect-ratio: 1.35 / 1; flex-direction: column; justify-content: flex-end; overflow: hidden; padding: clamp(24px, 3vw, 44px); border: 2px solid transparent; background: var(--p-color-primary); color: #fff; text-align: left; cursor: pointer; }
+.manufacturing-card { position: relative; display: flex; min-width: 0; aspect-ratio: 1.35 / 1; flex-direction: column; justify-content: flex-end; overflow: hidden; padding: clamp(24px, 3vw, 44px); border: 2px solid transparent; background: var(--euresis-black); color: #fff; text-align: left; cursor: pointer; }
 .manufacturing-card::after { position: absolute; inset: 30% 0 0; content: ""; background: linear-gradient(0deg, rgb(0 0 0 / .78), transparent); }
 .manufacturing-card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 650ms cubic-bezier(.2,.7,.2,1); }
 .manufacturing-card:hover img { transform: scale(1.04); }
-.manufacturing-card.is-active { border-color: var(--p-color-primary); }
+.manufacturing-card.is-active { border-color: var(--euresis-black); }
 .manufacturing-card__number, .manufacturing-card__copy, .manufacturing-card__arrow { position: relative; z-index: 1; }
 .manufacturing-card__number { position: absolute; top: 24px; left: 26px; color: rgb(255 255 255 / .8); font-size: 11px; letter-spacing: .15em; }
 .manufacturing-card__copy { display: grid; gap: 10px; }
 .manufacturing-card__copy strong { font-size: clamp(2.8rem, 5.4vw, 5.8rem); font-weight: 500; letter-spacing: -.07em; line-height: .9; }
 .manufacturing-card__copy small { color: rgb(255 255 255 / .8); font-size: 9px; letter-spacing: .16em; }
 .manufacturing-card__arrow { position: absolute; right: 28px; bottom: 30px; font-size: 22px; }
-.wheels-fitment { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1fr); gap: clamp(36px, 8vw, 120px); align-items: start; padding: var(--euresis-section-space) var(--euresis-gutter); background: var(--p-color-canvas); }
+.wheels-fitment { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1fr); gap: clamp(36px, 8vw, 120px); align-items: start; padding: var(--euresis-section-space) var(--euresis-gutter); background: var(--euresis-white); }
 .wheels-fitment__intro h2, .wheels-inquiry__intro h2, .wheels-engineering h2 { margin: 22px 0 0; font-size: clamp(3rem, 6.8vw, 6.6rem); font-weight: 500; letter-spacing: -.075em; line-height: .9; }
-.wheels-fitment__intro > p:not(.wheels-eyebrow), .wheels-inquiry__intro > p:not(.wheels-eyebrow) { max-width: 480px; margin: 24px 0 0; color: var(--p-color-contrast-high); font-size: 15px; line-height: 1.65; }
-.wheels-demo-note { display: block; margin-top: 24px; color: var(--p-color-contrast-medium); font-size: 9px; font-weight: 600; letter-spacing: .16em; }
+.wheels-fitment__intro > p:not(.wheels-eyebrow), .wheels-inquiry__intro > p:not(.wheels-eyebrow) { max-width: 480px; margin: 24px 0 0; color: var(--euresis-graphite); font-size: 15px; line-height: 1.65; }
+.wheels-demo-note { display: block; margin-top: 24px; color: var(--euresis-steel); font-size: 9px; font-weight: 600; letter-spacing: .16em; }
 .wheels-fitment__form { display: grid; gap: 22px; padding: 0; background: transparent; }
 .wheels-fitment__fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
-.wheels-fitment__result { padding: 18px; border-left: 3px solid var(--p-color-info); background: var(--p-color-surface); }
+.wheels-fitment__result { padding: 18px; border-left: 3px solid var(--cds-support-info); background: var(--euresis-surface-subtle); }
 .wheels-fitment__result p { margin: 8px 0; }
-.wheels-fitment__result span { color: var(--p-color-contrast-high); font-size: 12px; }
+.wheels-fitment__result span { color: var(--euresis-graphite); font-size: 12px; }
 .wheels-catalogue { padding: var(--euresis-section-space) var(--euresis-gutter); }
 .wheels-filters { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)) auto; align-items: end; gap: 14px; max-width: var(--euresis-content-width); margin: 0 auto 30px; }
-.wheels-catalogue__meta { display: flex; justify-content: space-between; max-width: var(--euresis-content-width); margin: 0 auto 18px; padding-top: 16px; border-top: 1px solid var(--p-color-contrast-low); color: var(--p-color-contrast-medium); font-size: 9px; font-weight: 600; letter-spacing: .15em; }
+.wheels-catalogue__meta { display: flex; justify-content: space-between; max-width: var(--euresis-content-width); margin: 0 auto 18px; padding-top: 16px; border-top: 1px solid var(--euresis-line); color: var(--euresis-steel); font-size: 9px; font-weight: 600; letter-spacing: .15em; }
 .wheels-product-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(18px, 2vw, 30px); max-width: var(--euresis-content-width); margin: 0 auto; }
 .wheel-product-card { min-width: 0; }
-.wheel-product-card__image { position: relative; display: block; overflow: hidden; aspect-ratio: 1 / 1; background: var(--p-color-surface); color: #fff; }
+.wheel-product-card__image { position: relative; display: block; overflow: hidden; aspect-ratio: 1 / 1; background: var(--euresis-surface-subtle); color: #fff; }
 .wheel-product-card__image img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform 650ms cubic-bezier(.2,.7,.2,1); }
 .wheel-product-card:hover .wheel-product-card__image img { transform: scale(1.04); }
 .wheel-product-card__index, .wheel-product-card__sample { position: absolute; top: 14px; padding: 7px 9px; background: rgb(0 0 0 / .68); color: #fff; font-size: 9px; letter-spacing: .12em; }
 .wheel-product-card__index { left: 14px; }
 .wheel-product-card__sample { right: 14px; }
 .wheel-product-card__body { padding: 18px 0 0; }
-.wheel-product-card__eyebrow { display: flex; justify-content: space-between; color: var(--p-color-contrast-medium); font-size: 9px; font-weight: 600; letter-spacing: .15em; }
+.wheel-product-card__eyebrow { display: flex; justify-content: space-between; color: var(--euresis-steel); font-size: 9px; font-weight: 600; letter-spacing: .15em; }
 .wheel-product-card h3 { margin: 12px 0 8px; font-size: clamp(1.6rem, 2.5vw, 2.3rem); font-weight: 500; letter-spacing: -.05em; }
 .wheel-product-card h3 a { color: inherit; text-decoration: none; }
-.wheel-product-card__body > p { min-height: 44px; margin: 0; color: var(--p-color-contrast-high); font-size: 13px; line-height: 1.6; }
-.wheel-product-card__specs { display: flex; flex-wrap: wrap; gap: 7px 12px; margin-top: 16px; color: var(--p-color-contrast-medium); font-size: 10px; }
-.wheel-product-card__link { display: flex; justify-content: space-between; margin-top: 18px; padding: 13px 0; border-top: 1px solid var(--p-color-contrast-low); color: var(--p-color-primary); font-size: 10px; font-weight: 600; letter-spacing: .14em; text-decoration: none; }
-.wheels-empty { display: grid; justify-items: center; gap: 12px; padding: 60px 20px; background: var(--p-color-surface); }
-.wheels-empty button { padding: 8px 12px; border: 1px solid var(--p-color-contrast-medium); background: transparent; cursor: pointer; }
-.wheels-engineering { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1fr); gap: clamp(40px, 8vw, 120px); align-items: end; padding: var(--euresis-section-space) var(--euresis-gutter); background: var(--p-color-canvas); }
-.wheels-engineering__copy > p { max-width: 600px; color: var(--p-color-contrast-high); font-size: clamp(1rem, 1.3vw, 1.2rem); line-height: 1.7; }
+.wheel-product-card__body > p { min-height: 44px; margin: 0; color: var(--euresis-graphite); font-size: 13px; line-height: 1.6; }
+.wheel-product-card__specs { display: flex; flex-wrap: wrap; gap: 7px 12px; margin-top: 16px; color: var(--euresis-steel); font-size: 10px; }
+.wheel-product-card__link { display: flex; justify-content: space-between; margin-top: 18px; padding: 13px 0; border-top: 1px solid var(--euresis-line); color: var(--euresis-black); font-size: 10px; font-weight: 600; letter-spacing: .14em; text-decoration: none; }
+.wheels-empty { display: grid; justify-items: center; gap: 12px; padding: 60px 20px; background: var(--euresis-surface-subtle); }
+.wheels-empty button { padding: 8px 12px; border: 1px solid var(--euresis-steel); background: transparent; cursor: pointer; }
+.wheels-engineering { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1fr); gap: clamp(40px, 8vw, 120px); align-items: end; padding: var(--euresis-section-space) var(--euresis-gutter); background: var(--euresis-white); }
+.wheels-engineering__copy > p { max-width: 600px; color: var(--euresis-graphite); font-size: clamp(1rem, 1.3vw, 1.2rem); line-height: 1.7; }
 .wheels-engineering__labels { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; }
-.wheels-engineering__labels span, .wheel-detail__tags span { padding: 9px 12px; border: 1px solid var(--p-color-contrast-medium); font-size: 9px; letter-spacing: .12em; }
-.wheels-inquiry { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1fr); gap: clamp(36px, 8vw, 120px); padding: var(--euresis-section-space) var(--euresis-gutter); background: var(--p-color-primary); color: var(--p-color-canvas); }
-.wheels-inquiry .wheels-eyebrow { color: var(--p-color-contrast-medium); }
+.wheels-engineering__labels span, .wheel-detail__tags span { padding: 9px 12px; border: 1px solid var(--euresis-steel); font-size: 9px; letter-spacing: .12em; }
+.wheels-inquiry { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1fr); gap: clamp(36px, 8vw, 120px); padding: var(--euresis-section-space) var(--euresis-gutter); background: var(--euresis-black); color: var(--euresis-white); }
+.wheels-inquiry .wheels-eyebrow { color: var(--euresis-steel); }
 .wheels-inquiry__intro h2, .wheels-inquiry__intro h2 * { color: #fff !important; }
 .wheels-inquiry__intro > p:not(.wheels-eyebrow) { color: rgb(255 255 255 / .72); }
-.wheels-inquiry__form { display: grid; align-content: start; gap: 20px; padding: clamp(24px, 3vw, 42px); background: var(--p-color-canvas); color: var(--p-color-primary); }
+.wheels-inquiry__form { display: grid; align-content: start; gap: 20px; padding: clamp(24px, 3vw, 42px); background: var(--euresis-white); color: var(--euresis-black); }
 .wheels-inquiry__fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
 .wheels-inquiry__fields > :last-child { grid-column: 1 / -1; }
-.wheels-inquiry__success { align-self: start; padding: 28px; background: var(--p-color-canvas); color: var(--p-color-primary); }
-.wheels-inquiry__success p { color: var(--p-color-contrast-high); line-height: 1.6; }
-.wheel-detail { min-height: 70vh; padding: 120px var(--euresis-gutter) 90px; background: var(--p-color-canvas); }
-.wheel-detail__breadcrumb { display: flex; flex-wrap: wrap; gap: 10px; max-width: var(--euresis-content-width); margin: 0 auto 28px; color: var(--p-color-contrast-medium); font-size: 10px; letter-spacing: .12em; }
+.wheels-inquiry__success { align-self: start; padding: 28px; background: var(--euresis-white); color: var(--euresis-black); }
+.wheels-inquiry__success p { color: var(--euresis-graphite); line-height: 1.6; }
+.wheel-detail { min-height: 70vh; padding: 120px var(--euresis-gutter) 90px; background: var(--euresis-white); }
+.wheel-detail__breadcrumb { display: flex; flex-wrap: wrap; gap: 10px; max-width: var(--euresis-content-width); margin: 0 auto 28px; color: var(--euresis-steel); font-size: 10px; letter-spacing: .12em; }
 .wheel-detail__breadcrumb a { color: inherit; }
 .wheel-detail__hero { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(320px, .8fr); gap: clamp(32px, 6vw, 88px); max-width: var(--euresis-content-width); margin: 0 auto; }
-.wheel-detail__image { position: relative; overflow: hidden; aspect-ratio: 1.1 / 1; background: var(--p-color-surface); }
+.wheel-detail__image { position: relative; overflow: hidden; aspect-ratio: 1.1 / 1; background: var(--euresis-surface-subtle); }
 .wheel-detail__image img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .wheel-detail__image > span { position: absolute; right: 14px; bottom: 14px; padding: 8px 10px; background: rgb(0 0 0 / .7); color: #fff; font-size: 9px; letter-spacing: .12em; }
 .wheel-detail__content { align-self: center; }
 .wheel-detail__content h1 { margin: 18px 0 0; font-size: clamp(3rem, 6vw, 6rem); letter-spacing: -.07em; }
 .wheel-detail__content h2 { margin: 4px 0 20px; font-size: clamp(2rem, 3vw, 3rem); font-weight: 400; }
-.wheel-detail__content > p:not(.wheels-eyebrow) { color: var(--p-color-contrast-high); line-height: 1.65; }
+.wheel-detail__content > p:not(.wheels-eyebrow) { color: var(--euresis-graphite); line-height: 1.65; }
 .wheel-detail__tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 24px 0; }
-.wheel-detail__content small { display: block; margin-top: 16px; color: var(--p-color-contrast-medium); line-height: 1.5; }
-.wheel-detail__specs { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1fr); gap: 30px 70px; max-width: var(--euresis-content-width); margin: 100px auto 0; padding-top: 40px; border-top: 1px solid var(--p-color-contrast-low); }
+.wheel-detail__content small { display: block; margin-top: 16px; color: var(--euresis-steel); line-height: 1.5; }
+.wheel-detail__specs { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1fr); gap: 30px 70px; max-width: var(--euresis-content-width); margin: 100px auto 0; padding-top: 40px; border-top: 1px solid var(--euresis-line); }
 .wheel-detail__specs h2 { margin-top: 16px; }
 .wheel-detail__specs dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 24px; margin: 0; }
-.wheel-detail__specs dl > div { display: flex; justify-content: space-between; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--p-color-contrast-low); }
-.wheel-detail__specs dt { color: var(--p-color-contrast-medium); font-size: 12px; }
+.wheel-detail__specs dl > div { display: flex; justify-content: space-between; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--euresis-line); }
+.wheel-detail__specs dt { color: var(--euresis-steel); font-size: 12px; }
 .wheel-detail__specs dd { margin: 0; font-size: 12px; text-align: right; }
 .wheel-detail__specs > p { grid-column: 2; }
-.wheel-detail__source { display: flex; justify-content: space-between; max-width: var(--euresis-content-width); margin: 60px auto 0; padding-top: 20px; border-top: 1px solid var(--p-color-contrast-low); font-size: 10px; letter-spacing: .1em; }
+.wheel-detail__source { display: flex; justify-content: space-between; max-width: var(--euresis-content-width); margin: 60px auto 0; padding-top: 20px; border-top: 1px solid var(--euresis-line); font-size: 10px; letter-spacing: .1em; }
 .wheel-detail__source a { color: inherit; }
 .wheel-detail--not-found { display: grid; align-content: center; justify-items: start; gap: 20px; min-height: 70vh; }
 @media (max-width: 900px) {
@@ -137,24 +137,24 @@
 .wheels-inquiry .wheels-inquiry__intro h2,
 .wheels-inquiry .wheels-inquiry__intro h2 * { color: #fff !important; }
 .wheels-inquiry .wheels-eyebrow { color: rgb(255 255 255 / .72); }
-.wheels-live-note { display: inline-block; margin-top: 20px; color: var(--p-color-contrast-high); font-size: 10px; font-weight: 600; letter-spacing: .16em; }
+.wheels-live-note { display: inline-block; margin-top: 20px; color: var(--euresis-graphite); font-size: 10px; font-weight: 600; letter-spacing: .16em; }
 .wheels-fitment__fields--live { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .make-option { display: inline-flex; align-items: center; gap: 12px; min-height: 34px; }
 .make-option__logo { display: inline-flex; width: 48px; height: 34px; flex: 0 0 48px; align-items: center; justify-content: center; overflow: hidden; }
 .make-option__logo img { display: block; width: 100%; height: 100%; object-fit: contain; }
-.wheels-fitment__api-error { margin: 0; padding: 14px 16px; border-left: 3px solid var(--p-color-warning); color: var(--p-color-contrast-high); background: var(--p-color-surface); font-size: 13px; line-height: 1.5; }
+.wheels-fitment__api-error { margin: 0; padding: 14px 16px; border-left: 3px solid var(--cds-support-warning); color: var(--euresis-graphite); background: var(--euresis-surface-subtle); font-size: 13px; line-height: 1.5; }
 .wheels-fitment__results { min-width: 0; margin-top: 8px; }
 .wheels-fitment__results-heading { display: flex; justify-content: space-between; gap: 16px; align-items: baseline; margin-bottom: 12px; }
-.wheels-fitment__results-heading span { color: var(--p-color-contrast-medium); font-size: 9px; letter-spacing: .12em; }
-.wheels-fitment__table-wrap { width: 100%; overflow-x: auto; border-top: 1px solid var(--p-color-contrast-low); }
+.wheels-fitment__results-heading span { color: var(--euresis-steel); font-size: 9px; letter-spacing: .12em; }
+.wheels-fitment__table-wrap { width: 100%; overflow-x: auto; border-top: 1px solid var(--euresis-line); }
 .wheels-fitment__table { width: 100%; min-width: 680px; border-collapse: collapse; text-align: left; }
-.wheels-fitment__table th { padding: 13px 10px; color: var(--p-color-contrast-medium); font-size: 9px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
-.wheels-fitment__table td { padding: 15px 10px; border-top: 1px solid var(--p-color-contrast-low); color: var(--p-color-contrast-high); font-size: 12px; }
-.fitment-type { display: inline-block; padding: 5px 7px; border: 1px solid var(--p-color-contrast-medium); font-size: 9px; font-weight: 600; letter-spacing: .08em; white-space: nowrap; }
-.fitment-type--oe { border-color: var(--p-color-success); }
-.fitment-use-button { padding: 8px 10px; border: 1px solid var(--p-color-primary); background: transparent; color: var(--p-color-primary); font-size: 10px; font-weight: 600; cursor: pointer; white-space: nowrap; }
-.fitment-use-button:hover, .fitment-use-button:focus-visible { background: var(--p-color-primary); color: var(--p-color-canvas); }
-.wheels-fitment__table-note, .wheels-selected-fitment { margin: 14px 0 0; color: var(--p-color-contrast-medium); font-size: 11px; line-height: 1.6; }
+.wheels-fitment__table th { padding: 13px 10px; color: var(--euresis-steel); font-size: 9px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
+.wheels-fitment__table td { padding: 15px 10px; border-top: 1px solid var(--euresis-line); color: var(--euresis-graphite); font-size: 12px; }
+.fitment-type { display: inline-block; padding: 5px 7px; border: 1px solid var(--euresis-steel); font-size: 9px; font-weight: 600; letter-spacing: .08em; white-space: nowrap; }
+.fitment-type--oe { border-color: var(--cds-support-success); }
+.fitment-use-button { padding: 8px 10px; border: 1px solid var(--euresis-black); background: transparent; color: var(--euresis-black); font-size: 10px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+.fitment-use-button:hover, .fitment-use-button:focus-visible { background: var(--euresis-black); color: var(--euresis-white); }
+.wheels-fitment__table-note, .wheels-selected-fitment { margin: 14px 0 0; color: var(--euresis-steel); font-size: 11px; line-height: 1.6; }
 .wheels-selected-fitment { max-width: var(--euresis-content-width); margin: 0 auto 18px; }
 .country-region-select { min-width: 0; }
 .country-flag { display: inline-flex; width: 22px; height: 22px; flex: 0 0 22px; align-items: center; justify-content: center; overflow: hidden; border-radius: 50%; font-size: 19px; line-height: 1; vertical-align: middle; }
@@ -181,23 +181,23 @@
 
 
 /* Dual product discovery paths */
-.wheels-discovery { padding: var(--euresis-section-space) var(--euresis-gutter); background: var(--p-color-primary); color: #fff; }
+.wheels-discovery { padding: var(--euresis-section-space) var(--euresis-gutter); background: var(--euresis-black); color: #fff; }
 .wheels-discovery .wheels-section-heading > p { color: rgb(255 255 255 / .78); }
 .wheels-discovery .wheels-eyebrow { color: rgb(255 255 255 / .62); }
 .wheels-discovery .wheels-section-heading h2 { color: #fff; }
 .wheels-discovery__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; max-width: var(--euresis-content-width); margin: 0 auto; }
 .wheels-discovery__card { display: grid; min-height: 260px; align-content: space-between; gap: 18px; padding: clamp(24px, 3vw, 42px); border: 1px solid rgb(255 255 255 / .32); color: #fff; text-decoration: none; transition: background .2s ease, color .2s ease; }
-.wheels-discovery__card:hover, .wheels-discovery__card:focus-visible { background: var(--p-color-canvas); color: var(--p-color-primary); }
+.wheels-discovery__card:hover, .wheels-discovery__card:focus-visible { background: var(--euresis-white); color: var(--euresis-black); }
 .wheels-discovery__card > span, .wheels-discovery__card > small { color: rgb(255 255 255 / .68); font-size: 10px; letter-spacing: .12em; }
 .wheels-discovery__card > strong { font-size: clamp(2rem, 4vw, 4rem); font-weight: 500; letter-spacing: -.065em; line-height: .98; }
 .wheels-discovery__card > b { font-size: 10px; letter-spacing: .13em; }
-.wheels-discovery__card:hover > span, .wheels-discovery__card:hover > small, .wheels-discovery__card:focus-visible > span, .wheels-discovery__card:focus-visible > small { color: var(--p-color-contrast-medium); }
-.wheels-fitment { background: var(--p-color-surface); }
-.wheels-engineering { background: var(--p-color-surface); }
+.wheels-discovery__card:hover > span, .wheels-discovery__card:hover > small, .wheels-discovery__card:focus-visible > span, .wheels-discovery__card:focus-visible > small { color: var(--euresis-steel); }
+.wheels-fitment { background: var(--euresis-surface-subtle); }
+.wheels-engineering { background: var(--euresis-surface-subtle); }
 @media (max-width: 600px) { .wheels-discovery { padding: var(--euresis-section-space-mobile) 20px; } .wheels-discovery__grid { grid-template-columns: 1fr; } .wheels-discovery__card { min-height: 220px; } }
 
 
-/* Explicit foreground/surface pairing for dark PDS sections. */
+/* Explicit foreground/surface pairing for dark sections. */
 .wheels-discovery,
 .wheels-inquiry { background: #111 !important; color: #fff !important; }
 .wheels-discovery .wheels-eyebrow,
@@ -217,17 +217,17 @@
 
 
 /* Full-page foreground/background contrast audit.
-   Every section owns an explicit PDS color scheme; component hosts inherit
+   Every section owns an explicit Euresis color scheme; Carbon component hosts inherit
    the matching foreground instead of relying on global defaults. */
-.wheels-page { background: var(--p-color-canvas); color: var(--p-color-primary); }
+.wheels-page { background: var(--euresis-white); color: var(--euresis-black); }
 
 .wheels-manufacturing.scheme-light,
 .wheels-fitment.scheme-light,
 .wheels-catalogue.scheme-light,
 .wheels-engineering.scheme-light {
   color-scheme: light;
-  color: var(--p-color-primary);
-  background: var(--p-color-canvas);
+  color: var(--euresis-black);
+  background: var(--euresis-white);
 }
 .wheels-manufacturing.scheme-light p-heading,
 .wheels-fitment.scheme-light p-heading,
@@ -237,22 +237,22 @@
 .wheels-fitment.scheme-light h2,
 .wheels-catalogue.scheme-light h2,
 .wheels-engineering.scheme-light h2 {
-  color: var(--p-color-primary) !important;
+  color: var(--euresis-black) !important;
 }
 .wheels-manufacturing.scheme-light p-text,
 .wheels-fitment.scheme-light p-text,
 .wheels-catalogue.scheme-light p-text,
 .wheels-engineering.scheme-light p-text {
-  color: var(--p-color-contrast-high) !important;
+  color: var(--euresis-graphite) !important;
 }
 .wheels-manufacturing.scheme-light .wheels-eyebrow,
 .wheels-fitment.scheme-light .wheels-eyebrow,
 .wheels-catalogue.scheme-light .wheels-eyebrow,
 .wheels-engineering.scheme-light .wheels-eyebrow {
-  color: var(--p-color-contrast-medium);
+  color: var(--euresis-steel);
 }
 
-/* Dark sections: all text-bearing PDS hosts and native text use the same
+/* Dark sections: all Carbon hosts and native text use the same
    light foreground. Keep the enquiry form itself explicitly light. */
 .wheels-discovery.scheme-dark,
 .wheels-inquiry.scheme-dark {
@@ -278,8 +278,8 @@
 }
 .wheels-inquiry.scheme-dark .wheels-inquiry__form.scheme-light {
   color-scheme: light;
-  color: var(--p-color-primary);
-  background: var(--p-color-canvas);
+  color: var(--euresis-black);
+  background: var(--euresis-white);
 }
 .wheels-inquiry.scheme-dark .wheels-inquiry__success {
   color: #111;
@@ -293,82 +293,82 @@
 .wheels-catalogue.scheme-light .wheel-product-card,
 .wheels-catalogue.scheme-light .wheel-product-card__body,
 .wheels-catalogue.scheme-light .wheels-filters {
-  color: var(--p-color-primary);
+  color: var(--euresis-black);
 }
 .wheels-catalogue.scheme-light .wheel-product-card__body > p {
-  color: var(--p-color-contrast-high);
+  color: var(--euresis-graphite);
 }
 .wheels-catalogue.scheme-light .wheel-product-card__eyebrow,
 .wheels-catalogue.scheme-light .wheel-product-card__specs,
 .wheels-catalogue.scheme-light .wheels-catalogue__meta {
-  color: var(--p-color-contrast-medium);
+  color: var(--euresis-steel);
 }
 .wheels-fitment.scheme-light .wheels-fitment__table th,
 .wheels-fitment.scheme-light .wheels-fitment__results-heading span,
 .wheels-fitment.scheme-light .wheels-fitment__table-note,
 .wheels-fitment.scheme-light .wheels-selected-fitment {
-  color: var(--p-color-contrast-medium);
+  color: var(--euresis-steel);
 }
 .wheels-fitment.scheme-light .wheels-fitment__table td,
 .wheels-fitment.scheme-light .wheels-fitment__results-heading strong {
-  color: var(--p-color-contrast-high);
+  color: var(--euresis-graphite);
 }
 .wheels-fitment.scheme-light .fitment-use-button {
-  color: var(--p-color-primary);
-  border-color: var(--p-color-primary);
+  color: var(--euresis-black);
+  border-color: var(--euresis-black);
 }
 .wheels-fitment.scheme-light .fitment-use-button:hover,
 .wheels-fitment.scheme-light .fitment-use-button:focus-visible {
-  color: var(--p-color-canvas);
-  background: var(--p-color-primary);
+  color: var(--euresis-white);
+  background: var(--euresis-black);
 }
 
 
-/* Full-page PDS v4 theme and mobile readability audit */
-.wheels-page { color: var(--p-color-primary); }
+/* Full-page Carbon theme and mobile readability audit */
+.wheels-page { color: var(--euresis-black); }
 .wheels-page .scheme-light { color-scheme: light; }
 .wheels-page .scheme-dark { color-scheme: dark; }
-.wheels-page .scheme-dark .wheels-eyebrow { color: var(--p-color-contrast-medium); }
+.wheels-page .scheme-dark .wheels-eyebrow { color: var(--euresis-steel); }
 .wheels-page .scheme-dark .wheels-section-heading > p,
 .wheels-page .scheme-dark .wheels-section-heading p:not(.wheels-eyebrow) {
-  color: var(--p-color-contrast-high);
+  color: var(--euresis-graphite);
 }
 .wheels-page .scheme-dark .wheels-section-heading h2,
 .wheels-page .scheme-dark .wheels-section-heading h2 *,
 .wheels-page .scheme-dark .wheels-inquiry__intro h2,
 .wheels-page .scheme-dark .wheels-inquiry__intro h2 * {
-  color: var(--p-color-contrast-high) !important;
+  color: var(--euresis-graphite) !important;
 }
-.wheels-discovery { background: var(--p-color-primary); color: var(--p-color-contrast-high); }
-.wheels-discovery .wheels-section-heading > p { color: var(--p-color-contrast-high); }
-.wheels-discovery .wheels-eyebrow { color: var(--p-color-contrast-medium); }
-.wheels-discovery__card { color: var(--p-color-contrast-high); border-color: var(--p-color-contrast-low); }
+.wheels-discovery { background: var(--euresis-black); color: var(--euresis-graphite); }
+.wheels-discovery .wheels-section-heading > p { color: var(--euresis-graphite); }
+.wheels-discovery .wheels-eyebrow { color: var(--euresis-steel); }
+.wheels-discovery__card { color: var(--euresis-graphite); border-color: var(--euresis-line); }
 .wheels-discovery__card > span:not(.wheels-discovery__icon),
-.wheels-discovery__card > small { color: var(--p-color-contrast-medium); }
-.wheels-discovery__card > b { color: var(--p-color-contrast-high); }
+.wheels-discovery__card > small { color: var(--euresis-steel); }
+.wheels-discovery__card > b { color: var(--euresis-graphite); }
 .wheels-discovery__card:hover,
-.wheels-discovery__card:focus-visible { background: var(--p-color-surface); color: var(--p-color-primary); }
+.wheels-discovery__card:focus-visible { background: var(--euresis-surface-subtle); color: var(--euresis-black); }
 .wheels-discovery__card:hover > span:not(.wheels-discovery__icon),
 .wheels-discovery__card:hover > small,
 .wheels-discovery__card:hover > b,
 .wheels-discovery__card:focus-visible > span:not(.wheels-discovery__icon),
 .wheels-discovery__card:focus-visible > small,
-.wheels-discovery__card:focus-visible > b { color: var(--p-color-primary); }
+.wheels-discovery__card:focus-visible > b { color: var(--euresis-black); }
 .wheels-discovery__icon { display: inline-flex; align-items: center; color: inherit; }
 .wheels-discovery__card { grid-template-rows: auto auto 1fr auto auto; }
 .wheels-discovery__card > strong { color: inherit; }
 .wheels-fitment .wheels-fitment__intro h2,
 .wheels-catalogue .wheels-section-heading h2,
 .wheels-manufacturing .wheels-section-heading h2,
-.wheels-engineering h2 { color: var(--p-color-primary); }
-.wheels-inquiry .wheels-eyebrow { color: var(--p-color-contrast-medium); }
-.wheels-inquiry__intro > p:not(.wheels-eyebrow) { color: var(--p-color-contrast-high); }
+.wheels-engineering h2 { color: var(--euresis-black); }
+.wheels-inquiry .wheels-eyebrow { color: var(--euresis-steel); }
+.wheels-inquiry__intro > p:not(.wheels-eyebrow) { color: var(--euresis-graphite); }
 .wheels-engineering__labels span { display: inline-flex; align-items: center; gap: 8px; }
 .wheels-engineering__labels p-icon { flex: 0 0 auto; }
 .wheels-hero__video-control { z-index: 3; }
 .wheels-page a:focus-visible,
-.wheels-page button:focus-visible { outline: 2px solid var(--p-color-primary); outline-offset: 4px; }
-.wheels-discovery a:focus-visible { outline-color: var(--p-color-contrast-high); }
+.wheels-page button:focus-visible { outline: 2px solid var(--euresis-black); outline-offset: 4px; }
+.wheels-discovery a:focus-visible { outline-color: var(--euresis-graphite); }
 @media (max-width: 600px) {
   .wheels-discovery { padding-top: clamp(44px, 12vw, 64px); padding-bottom: clamp(48px, 13vw, 72px); }
   .wheels-discovery .wheels-section-heading { gap: 16px; margin-bottom: 26px; }
@@ -377,7 +377,6 @@
   .wheels-discovery__grid { grid-template-columns: 1fr; gap: 14px; }
   .wheels-discovery__card { min-height: 230px; gap: 14px; padding: 22px; }
   .wheels-discovery__card > strong { font-size: clamp(1.9rem, 8.5vw, 2.65rem); line-height: 1.02; }
-  .wheels-discovery__icon p-icon { --p-icon-size: 28px; }
   .wheels-catalogue__meta { gap: 10px; flex-wrap: wrap; line-height: 1.5; }
   .wheels-filters { grid-template-columns: minmax(0, 1fr); }
   .wheels-filters > :last-child { grid-column: auto; }
@@ -453,7 +452,7 @@
   justify-content: flex-end;
   background: #fff;
   color: #111;
-  border: 1px solid var(--p-color-contrast-lower);
+  border: 1px solid var(--euresis-line);
 }
 .wheels-manufacturing__grid .manufacturing-card::after { display: none; }
 .wheels-manufacturing__grid .manufacturing-card img {
@@ -472,7 +471,7 @@
 .wheels-manufacturing__grid .manufacturing-card.is-active { border-color: #111; }
 .wheels-catalogue .wheel-product-card__image {
   background: #fff;
-  border: 1px solid var(--p-color-contrast-lower);
+  border: 1px solid var(--euresis-line);
 }
 .wheels-catalogue .wheel-product-card__image img {
   object-fit: contain;
@@ -512,7 +511,7 @@
 }
 .wheels-page .manufacturing-card:focus-visible,
 .wheels-page .wheel-product-card__image:focus-visible {
-  outline: 2px solid var(--p-color-primary);
+  outline: 2px solid var(--euresis-black);
   outline-offset: 4px;
 }
 .wheels-page .wheel-product-card__image {
@@ -533,20 +532,20 @@
   margin-top: auto;
 }
 .wheels-page .wheels-empty {
-  border: 1px solid var(--p-color-contrast-lower);
-  background: var(--p-color-surface);
+  border: 1px solid var(--euresis-line);
+  background: var(--euresis-surface-subtle);
 }
 .wheels-page .wheels-filters {
   padding-block: 22px;
-  border-block: 1px solid var(--p-color-contrast-lower);
+  border-block: 1px solid var(--euresis-line);
 }
 .wheels-page .wheels-catalogue__meta {
   border-top: 0;
 }
 .wheels-page .wheels-selected-fitment {
   padding: 14px 16px;
-  border-left: 2px solid var(--p-color-info);
-  background: var(--p-color-surface);
+  border-left: 2px solid var(--cds-support-info);
+  background: var(--euresis-surface-subtle);
 }
 @media (max-width: 600px) {
   .wheels-page .wheels-hero__title { max-width: 8ch; }
@@ -557,17 +556,17 @@
 
 /* Audit remediation: semantic links, focus visibility and responsive interaction styles. */
 .wheels-hero__primary-link,.wheels-hero__secondary-link{display:inline-flex;min-height:var(--euresis-control-min-height);align-items:center;justify-content:center;gap:12px;font-size:12px;font-weight:600;letter-spacing:.08em;text-decoration:none;text-transform:uppercase}
-.wheels-hero__primary-link{padding:0 22px;background:var(--p-color-canvas);color:var(--p-color-primary)}
-.wheels-hero__secondary-link{color:var(--p-color-contrast-high);text-decoration:underline;text-underline-offset:6px}
+.wheels-hero__primary-link{padding:0 22px;background:var(--euresis-white);color:var(--euresis-black)}
+.wheels-hero__secondary-link{color:var(--euresis-graphite);text-decoration:underline;text-underline-offset:6px}
 .wheels-page :is(a,button,input,select,textarea,p-select,p-button):focus-visible{outline:var(--euresis-focus-ring);outline-offset:3px}
 .wheels-fitment__table-wrap{overscroll-behavior-inline:contain}
-.wheels-fitment__table th{position:sticky;top:0;background:var(--p-color-canvas)}
+.wheels-fitment__table th{position:sticky;top:0;background:var(--euresis-white)}
 .wheels-fitment__api-error{overflow-wrap:anywhere}
 @media(max-width:600px){.wheels-hero__actions{align-items:flex-start;flex-direction:column}.wheels-hero__primary-link{min-height:48px}}
 @media(prefers-reduced-motion:reduce){.wheels-page *,.wheels-page *::before,.wheels-page *::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
 
-.wheel-detail__back-link,.wheel-detail__quote-link{display:inline-flex;min-height:44px;align-items:center;justify-content:center;padding:0 18px;border:1px solid var(--p-color-primary);color:var(--p-color-primary);font-size:12px;font-weight:600;letter-spacing:.08em;text-decoration:none;text-transform:uppercase}
-.wheel-detail__quote-link{background:var(--p-color-primary);color:var(--p-color-canvas)}
+.wheel-detail__back-link,.wheel-detail__quote-link{display:inline-flex;min-height:44px;align-items:center;justify-content:center;padding:0 18px;border:1px solid var(--euresis-black);color:var(--euresis-black);font-size:12px;font-weight:600;letter-spacing:.08em;text-decoration:none;text-transform:uppercase}
+.wheel-detail__quote-link{background:var(--euresis-black);color:var(--euresis-white)}
 
 
 /* Professional wheel inquiry builder and print-ready document */
@@ -670,7 +669,7 @@
 .wheel-inquiry-document section:has(table) { overflow-x:auto; }
 
 
-/* Porsche-inspired product detail redesign */
+/* Euresis product detail redesign */
 .wheel-detail-banner{position:relative;min-height:clamp(440px,58vw,720px);overflow:hidden;background:#161616;color:#fff}
 .wheel-detail-banner>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.58);transform:scale(1.01)}
 .wheel-detail-banner__shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.78),rgba(0,0,0,.16) 72%),linear-gradient(0deg,rgba(0,0,0,.32),transparent 40%)}

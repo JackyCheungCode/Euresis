@@ -1,8 +1,4 @@
-import {
-  PButton,
-  PHeading,
-  PText,
-} from "@porsche-design-system/components-react/ssr";
+import { EHeading, EText } from "@/src/components/ui/carbon-primitives";
 
 const collections = [
   {
@@ -43,19 +39,19 @@ export function CollectionSection() {
       <div className="collections-header">
         <div className="collections-heading-copy">
           <p className="eyebrow">THE EURESIS RANGE</p>
-          <PHeading
+          <EHeading
             id="collections-heading"
             className="collections-heading"
             tag="h2"
             size="2xl"
           >
             WHEEL COLLECTIONS
-          </PHeading>
+          </EHeading>
         </div>
-        <PText className="collections-intro" color="contrast-high" size="md">
+        <EText className="collections-intro" color="contrast-high" size="md">
           Explore two distinct manufacturing routes, each with its own
           construction language and design possibilities.
-        </PText>
+        </EText>
       </div>
 
       <div className="collections-grid">
@@ -93,9 +89,7 @@ export function CollectionSection() {
                   <li key={construction}>{construction}</li>
                 ))}
               </ul>
-              <PButton variant="secondary" type="button">
-                <a href="/wheels">Discuss your fitment</a>
-              </PButton>
+              <a className="cds--btn cds--btn--secondary collection-details__link" href="/wheels">Discuss your fitment <span aria-hidden="true">↗</span></a>
             </div>
           </article>
         ))}

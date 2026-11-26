@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, type FormEvent } from "react";
-import { PHeading, PText } from "@porsche-design-system/components-react/ssr";
+import { EHeading, EText } from "@/src/components/ui/carbon-primitives";
 import { wheelProducts } from "@/src/data/wheels";
 import { currentUser, request, submitWheelInquiry } from "@/src/lib/supabase/client";
 
@@ -151,7 +151,7 @@ export function WheelsProductDetail({ slug }: { slug: string }) {
   }, []);
 
   if (!product) {
-    return <main className="wheel-detail wheel-detail--not-found"><p className="wheels-eyebrow">EURESIS / PRODUCT CATALOGUE</p><PHeading tag="h1" size="2xl">MODEL NOT FOUND.</PHeading><a className="wheel-detail__back-link" href="/wheels">Back to wheels</a></main>;
+    return <main className="wheel-detail wheel-detail--not-found"><p className="wheels-eyebrow">EURESIS / PRODUCT CATALOGUE</p><EHeading tag="h1" size="2xl">MODEL NOT FOUND.</EHeading><a className="wheel-detail__back-link" href="/wheels">Back to wheels</a></main>;
   }
 
   const suffix = product.manufacturing === "FORGED" ? "F" : "C";

@@ -1,4 +1,4 @@
-/* EURESIS — Porsche Design System v4 aligned editorial layout */
+/* EURESIS — Carbon-aligned editorial layout */
 
 .hero {
   position: relative;
@@ -74,8 +74,8 @@
 
 .collections {
   padding: clamp(88px, 10vw, 156px) var(--euresis-gutter);
-  background: var(--p-color-canvas);
-  color: var(--p-color-primary);
+  background: var(--euresis-white);
+  color: var(--euresis-black);
 }
 .collections-header {
   display: grid;
@@ -97,7 +97,7 @@
 .collections-intro {
   max-width: 410px;
   margin: 0 0 5px;
-  color: var(--p-color-contrast-high);
+  color: var(--euresis-graphite);
   font-size: clamp(1rem, 1.3vw, 1.2rem);
   line-height: 1.6;
 }
@@ -187,7 +187,7 @@
 .collection-construction-label {
   grid-column: 1 / -1;
   margin: 0;
-  color: var(--p-color-contrast-medium);
+  color: var(--euresis-steel);
   font-size: 10px;
   font-weight: 600;
   letter-spacing: .16em;
@@ -202,15 +202,15 @@
 }
 .collection-constructions li {
   padding: 9px 12px;
-  border: 1px solid var(--p-color-contrast-low);
-  color: var(--p-color-primary);
+  border: 1px solid var(--euresis-line);
+  color: var(--euresis-black);
   font-size: 10px;
   letter-spacing: .09em;
 }
 .collections-note {
   max-width: 1440px;
   margin: 26px auto 0;
-  color: var(--p-color-contrast-medium);
+  color: var(--euresis-steel);
   font-size: 11px;
   line-height: 1.6;
 }
@@ -270,8 +270,8 @@
 
 .capabilities {
   padding: clamp(88px, 10vw, 156px) var(--euresis-gutter);
-  background: var(--p-color-canvas);
-  color: var(--p-color-primary);
+  background: var(--euresis-white);
+  color: var(--euresis-black);
 }
 .capabilities-header {
   display: grid;
@@ -293,7 +293,7 @@
 .capabilities-intro {
   max-width: 430px;
   margin: 0 0 5px;
-  color: var(--p-color-contrast-high);
+  color: var(--euresis-graphite);
   font-size: clamp(1rem, 1.3vw, 1.15rem);
   line-height: 1.6;
 }
@@ -309,7 +309,7 @@
   position: relative;
   overflow: hidden;
   aspect-ratio: 1.12 / 1;
-  background: var(--p-color-contrast-low);
+  background: var(--euresis-line);
 }
 .capability-image {
   display: block;
@@ -324,15 +324,15 @@
   top: 18px;
   left: 20px;
   padding: 7px 9px;
-  background: var(--p-color-canvas);
-  color: var(--p-color-primary);
+  background: var(--euresis-white);
+  color: var(--euresis-black);
   font-size: 10px;
   letter-spacing: .1em;
 }
 .capability-copy { padding: 22px 0 0; }
 .capability-category {
   margin: 0 0 11px;
-  color: var(--p-color-contrast-medium);
+  color: var(--euresis-steel);
   font-size: 10px;
   font-weight: 600;
   letter-spacing: .16em;
@@ -347,7 +347,7 @@
 .capability-description {
   max-width: 380px;
   margin: 12px 0 0;
-  color: var(--p-color-contrast-high);
+  color: var(--euresis-graphite);
   font-size: 14px;
   line-height: 1.6;
 }
@@ -437,8 +437,8 @@
 }
 
 
-/* EURESIS PDS refinement — semantic surfaces, consistent rhythm and product-first imagery. */
-.hero { min-height:min(860px, 92svh); background:var(--p-color-canvas); }
+/* EURESIS refinement — semantic surfaces, consistent rhythm and product-first imagery. */
+.hero { min-height:min(860px, 92svh); background:var(--euresis-white); }
 .hero::before { background:linear-gradient(90deg, rgb(0 0 0 / 58%) 0%, rgb(0 0 0 / 22%) 58%, transparent 100%), linear-gradient(0deg, rgb(0 0 0 / 58%), transparent 64%); }
 .hero-content { width:min(calc(100% - 2 * var(--euresis-gutter)), var(--euresis-content-width)); padding-block:clamp(150px, 22vh, 220px) clamp(88px, 11vh, 132px); }
 .hero-heading { max-width:900px; font-size:clamp(3.4rem, 8.6vw, 8.4rem); letter-spacing:-.065em; line-height:.91; }
@@ -457,16 +457,16 @@
 .collection-panel:hover .collection-image-wrap--product .collection-image { transform:scale(1.035); }
 .collection-image-wrap--product .collection-number { z-index:2; top:20px; left:22px; color:#606366; }
 .collection-image-wrap--product .collection-image-copy { display:none; }
-.collection-panel { border-bottom:1px solid var(--p-color-contrast-low); padding-bottom:20px; }
+.collection-panel { border-bottom:1px solid var(--euresis-line); padding-bottom:20px; }
 .collection-details { padding-top:18px; }
 .collection-details .p-button, .collection-details button { justify-self:end; }
-.principles { background:var(--p-color-surface); color:var(--p-color-primary); }
-.principles__lead, .principles__item p { color:var(--p-color-contrast-high); }
-.principles__list { border-color:var(--p-color-contrast-low); }
-.principles__item { border-color:var(--p-color-contrast-low); }
-.principles__number { color:var(--p-color-contrast-medium); }
-.fitment { background:var(--p-color-canvas); color:var(--p-color-primary); }
-.fitment .eyebrow { color:var(--p-color-contrast-medium); }
+.principles { background:var(--euresis-surface-subtle); color:var(--euresis-black); }
+.principles__lead, .principles__item p { color:var(--euresis-graphite); }
+.principles__list { border-color:var(--euresis-line); }
+.principles__item { border-color:var(--euresis-line); }
+.principles__number { color:var(--euresis-steel); }
+.fitment { background:var(--euresis-white); color:var(--euresis-black); }
+.fitment .eyebrow { color:var(--euresis-steel); }
 @media (max-width:900px) { .hero-content { padding-top:160px; } }
 @media (max-width:600px) {
   .hero { min-height:min(760px, 92svh); }

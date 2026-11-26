@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { Button, Checkbox, Select, SelectItem } from "@carbon/react";
 
 type ApiRow = Record<string, any>;
 type FitmentChoice = {
@@ -170,12 +171,12 @@ export function GlobalVehicleFitmentBar() {
         <div className="global-fitment__finder">
           <div className="global-fitment__label"><span className="global-fitment__mark" aria-hidden="true">◎</span><span>FIND YOUR FITMENT</span></div>
           <div className="global-fitment__fields">
-            <label><span>MARKET</span><select value={region} onChange={(event) => updateField("region", event.target.value)}>{regions.map((item) => <option key={item.value} value={item.value}>{item.label}</option>)}</select></label>
-            <label><span>MAKE</span><select value={make} onChange={(event) => updateField("make", event.target.value)} disabled={loadingMakes}><option value="">{loadingMakes ? "Loading…" : "Select make"}</option>{makeOptions.map((item) => <option key={item.value} value={item.value}>{item.label}</option>)}</select></label>
-            <label><span>MODEL</span><select value={model} onChange={(event) => updateField("model", event.target.value)} disabled={!make}><option value="">Select model</option>{toOptions(models, "model").map((item) => <option key={item.value} value={item.value}>{item.label}</option>)}</select></label>
-            <label><span>YEAR</span><select value={year} onChange={(event) => updateField("year", event.target.value)} disabled={!model}><option value="">Select year</option>{toOptions(years, "year").map((item) => <option key={item.value} value={item.value}>{item.label}</option>)}</select></label>
-            <label><span>TRIM</span><select value={trim} onChange={(event) => updateField("trim", event.target.value)} disabled={!year}><option value="">Select trim</option>{toOptions(trims, "modification").map((item) => <option key={item.value} value={item.value}>{item.label}</option>)}</select></label>
-            <button className="global-fitment__search" type="button" disabled={!make || !model || !year || !trim || loading} onClick={searchFitment}>{loading ? "SEARCHING…" : "SEARCH"} <span aria-hidden="true">↗</span></button>
+            <Select id="vehicle-market" labelText="MARKET" value={region} onChange={(event) => updateField("region", event.currentTarget.value)}>{regions.map((item) => <SelectItem key={item.value} value={item.value} text={item.label} />)}</Select>
+            <Select id="vehicle-make" labelText="MAKE" value={make} disabled={loadingMakes} onChange={(event) => updateField("make", event.currentTarget.value)}><SelectItem value="" text={loadingMakes ? "Loading…" : "Select make"} />{makeOptions.map((item) => <SelectItem key={item.value} value={item.value} text={item.label} />)}</Select>
+            <Select id="vehicle-model" labelText="MODEL" value={model} disabled={!make} onChange={(event) => updateField("model", event.currentTarget.value)}><SelectItem value="" text="Select model" />{toOptions(models, "model").map((item) => <SelectItem key={item.value} value={item.value} text={item.label} />)}</Select>
+            <Select id="vehicle-year" labelText="YEAR" value={year} disabled={!model} onChange={(event) => updateField("year", event.currentTarget.value)}><SelectItem value="" text="Select year" />{toOptions(years, "year").map((item) => <SelectItem key={item.value} value={item.value} text={item.label} />)}</Select>
+            <Select id="vehicle-trim" labelText="TRIM" value={trim} disabled={!year} onChange={(event) => updateField("trim", event.currentTarget.value)}><SelectItem value="" text="Select trim" />{toOptions(trims, "modification").map((item) => <SelectItem key={item.value} value={item.value} text={item.label} />)}</Select>
+            <Button className="global-fitment__search" kind="primary" size="sm" type="button" disabled={!make || !model || !year || !trim || loading} onClick={searchFitment}>{loading ? "SEARCHING…" : "SEARCH"} <span aria-hidden="true">↗</span></Button>
           </div>
         </div>
 
@@ -184,26 +185,26 @@ export function GlobalVehicleFitmentBar() {
             {saved.length > 0 ? saved.map((item) => (
               <span className="global-fitment__chip" key={item.id} title={`${item.vehicle} · Front ${item.front} · Rear ${item.rear} · PCD ${item.pcd}`}>
                 <span>{item.vehicle}</span><small>{item.source} · {item.front}</small>
-                <button type="button" aria-label={`Remove ${item.vehicle} wheel specification`} onClick={() => setSaved((current) => current.filter((entry) => entry.id !== item.id))}>×</button>
+                <Button kind="ghost" size="sm" type="button" aria-label={`Remove ${item.vehicle} wheel specification`} onClick={() => setSaved((current) => current.filter((entry) => entry.id !== item.id))}>×</Button>
               </span>
             )) : null}
           </div>
-          {saved.length > 0 && <button className="global-fitment__edit" type="button" onClick={() => setPanelOpen((open) => !open)}>{panelOpen ? "CLOSE" : "EDIT VEHICLES"}</button>}
+          {saved.length > 0 && <Button className="global-fitment__edit" kind="ghost" size="sm" type="button" onClick={() => setPanelOpen((open) => !open)}>{panelOpen ? "CLOSE" : "EDIT VEHICLES"}</Button>}
           {error && <span className="global-fitment__error" role="status">{error}</span>}
         </div>}
 
         {panelOpen && <div className="global-fitment__results">
-          <div className="global-fitment__results-head"><div><strong>SELECT WHEEL SPECIFICATIONS</strong><span>{results.length} results · Select one or more</span></div><button type="button" onClick={() => setPanelOpen(false)} aria-label="Close results">×</button></div>
+          <div className="global-fitment__results-head"><div><strong>SELECT WHEEL SPECIFICATIONS</strong><span>{results.length} results · Select one or more</span></div><Button kind="ghost" size="sm" type="button" onClick={() => setPanelOpen(false)} aria-label="Close results">×</Button></div>
           {results.length > 0 ? <div className="global-fitment__result-list">
-            {results.map((item) => <label className="global-fitment__result" key={item.id}>
-              <input type="checkbox" checked={pending.includes(item.id)} onChange={(event) => setPending((current) => event.target.checked ? [...current, item.id] : current.filter((id) => id !== item.id))} />
+            {results.map((item) => <div className="global-fitment__result" key={item.id}>
+              <Checkbox id={`fitment-${item.id}`} labelText={`Select ${item.vehicle} wheel specification`} checked={pending.includes(item.id)} onChange={(checked) => setPending((current) => checked ? [...current, item.id] : current.filter((id) => id !== item.id))} />
               <span className="global-fitment__result-vehicle"><strong>{item.vehicle}</strong><small>{item.source === "OE" ? "ORIGINAL EQUIPMENT" : "OPTIONAL SPECIFICATION"}</small></span>
               <span><small>FRONT</small><strong>{item.front}</strong></span>
               <span><small>REAR</small><strong>{item.rear}</strong></span>
               <span><small>PCD</small><strong>{item.pcd}</strong></span>
-            </label>)}
+            </div>)}
           </div> : <p className="global-fitment__empty">Choose a vehicle above and search to load wheel specifications.</p>}
-          {results.length > 0 && <div className="global-fitment__results-foot"><span>{pending.length} selected</span><button type="button" disabled={!pending.length} onClick={addSelected}>ADD SELECTED TO BAR <span aria-hidden="true">↗</span></button></div>}
+          {results.length > 0 && <div className="global-fitment__results-foot"><span>{pending.length} selected</span><Button kind="primary" size="sm" type="button" disabled={!pending.length} onClick={addSelected}>ADD SELECTED TO BAR <span aria-hidden="true">↗</span></Button></div>}
         </div>}
       </div>
     </section>

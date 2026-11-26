@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { PButton, PHeading } from "@porsche-design-system/components-react/ssr";
+import { EButton, EHeading } from "@/src/components/ui/carbon-primitives";
 import { homepageContent } from "@/src/data/homepage";
 
 const HERO_VIDEO = "https://videos.pexels.com/video-files/20244146/20244146-uhd_4096_2160_30fps.mp4";
@@ -31,9 +31,9 @@ export function HeroSection() {
       </video>
       <div className="hero-content">
         <span className="hero-kicker">{hero.eyebrow}</span>
-        <PHeading id="hero-heading" className="hero-heading" tag="h1" size="3xl">
+        <EHeading id="hero-heading" className="hero-heading" tag="h1" size="3xl">
           Precision in<br />every rotation.
-        </PHeading>
+        </EHeading>
         <p className="hero-description">{hero.description}</p>
         <div className="hero-actions">
           <a className="hero-primary-link" href="/wheels">Explore wheels <span aria-hidden="true">↗</span></a>
@@ -41,9 +41,9 @@ export function HeroSection() {
         </div>
       </div>
       <span className="hero-index" aria-hidden="true">01 / EURESIS PERFORMANCE WHEELS</span>
-      <PButton className="hero-video-control" type="button" variant="secondary" compact hideLabel icon={isPaused ? "play" : "pause"} aria={{ "aria-label": isPaused ? "Play background video" : "Pause background video" }} onClick={toggleVideo}>
+      <EButton className="hero-video-control" type="button" variant="secondary" compact hideLabel icon={isPaused ? "play" : "pause"} aria={{ "aria-label": isPaused ? "Play background video" : "Pause background video" }} onClick={toggleVideo}>
         {isPaused ? "Play background video" : "Pause background video"}
-      </PButton>
+      </EButton>
     </section>
   );
 }
