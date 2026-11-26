@@ -78,14 +78,10 @@ export function WheelsPage() {
   useEffect(() => {
     const onFitmentSelected = (event: Event) => {
       const detail = (event as CustomEvent).detail ?? {};
-      setDiameter(detail.diameter || "ALL");
-      setFitmentWidth(detail.width || "");
-      setFitmentOffset(detail.offset || "");
-      setFitmentPcd(detail.pcd || "");
-      setVehicleSummary([detail.year, detail.make, detail.model, detail.trim].filter(Boolean).join(" "));
+      setVehicleSummary(String(detail.vehicle ?? ""));
     };
-    window.addEventListener("euresis:fitment-selected", onFitmentSelected);
-    return () => window.removeEventListener("euresis:fitment-selected", onFitmentSelected);
+    window.addEventListener("euresis:vehicle-reference-selected", onFitmentSelected);
+    return () => window.removeEventListener("euresis:vehicle-reference-selected", onFitmentSelected);
   }, []);
 
   const submitDemoInquiry = (event: React.FormEvent<HTMLFormElement>) => {
@@ -104,8 +100,8 @@ export function WheelsPage() {
           </PHeading>
           <p className="wheels-hero__lead">Two manufacturing disciplines. Six design collections. One uncompromising point of view.</p>
           <div className="wheels-hero__actions">
-            <PButton type="button"><a href="#catalogue">Explore the wheels</a></PButton>
-            <PButton type="button" variant="secondary"><a href="#vehicle-fitment">Find your vehicle</a></PButton>
+            <a className="wheels-hero__primary-link" href="#catalogue">Explore the wheels <span aria-hidden="true">↗</span></a>
+            <a className="wheels-hero__secondary-link" href="#vehicle-fitment">Find your vehicle</a>
           </div>
         </div>
         <span className="wheels-hero__index">EURESIS / PERFORMANCE WHEELS</span>
@@ -184,7 +180,7 @@ export function WheelsPage() {
           <PButton type="button" variant="secondary" onClick={resetFilters}>Reset filters</PButton>
         </div>
         <div className="wheels-catalogue__meta"><span>{products.length.toString().padStart(2, "0")} SAMPLE MODELS</span><span>NO PRICING · NO CHECKOUT</span></div>
-        {vehicleSummary && <p className="wheels-selected-fitment">Vehicle reference: <strong>{vehicleSummary}</strong> — its selected fitment values have been transferred to the editable specification filters. Sample products do not carry verified technical dimensions yet.</p>}
+        {vehicleSummary && <p className="wheels-selected-fitment">Vehicle reference: <strong>{vehicleSummary}</strong> Vehicle specifications are shown for reference only and have not been used to assert product compatibility. Catalogue sample models do not yet contain verified fitment data.</p>}
         {products.length > 0 ? <div className="wheels-product-grid">
           {products.map((product, index) => (
             <article className="wheel-product-card" key={product.slug}>

@@ -27,7 +27,6 @@ export function LiveFitment() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [queried, setQueried] = useState(false);
-  const [selected, setSelected] = useState<string[]>([]);
   const liveRegion = useRef<HTMLDivElement>(null);
 
   async function load(resource: string, params: Record<string, string> = {}) {
@@ -99,11 +98,14 @@ export function LiveFitment() {
     const width = front.rim_width ?? front.rim?.width ?? front.width;
     const offset = front.rim_offset ?? front.rim?.offset ?? front.offset;
     const pcd = front.bolt_pattern ?? front.pcd ?? front.bolt_pattern_full ?? row.bolt_pattern ?? row.pcd ?? row._vehicle?.technical?.bolt_pattern ?? row.technical?.bolt_pattern ?? "";
-    const detail = { diameter: rim ? String(rim) : "ALL", width: width ? String(width) : "", offset: offset ? String(offset) : "", pcd, rearDiameter: rear.rim_diameter ?? "", source: row._type, make, model, year, trim };
-    window.dispatchEvent(new CustomEvent("euresis:fitment-selected", { detail }));
-    setSelected((current) => [...current, row._id]);
+    const detail = {
+      vehicle: [year, make, model, trim].filter(Boolean).join(" "),
+      source: row._type,
+      front: { diameter: rim ? String(rim) : "", width: width ? String(width) : "", offset: offset ? String(offset) : "", pcd: String(pcd ?? "") },
+      rear: { diameter: String(rear.rim_diameter ?? rear.rim?.diameter ?? ""), width: String(rear.rim_width ?? rear.rim?.width ?? ""), offset: String(rear.rim_offset ?? rear.rim?.offset ?? "") },
+    };
+    window.dispatchEvent(new CustomEvent("euresis:vehicle-reference-selected", { detail }));
     document.getElementById("catalogue")?.scrollIntoView({ behavior: "smooth", block: "start" });
-    window.setTimeout(() => document.querySelector<HTMLInputElement>('[name="catalogue-diameter"]')?.focus(), 450);
   }
 
   return (
@@ -111,7 +113,7 @@ export function LiveFitment() {
       <div className="wheels-fitment__intro">
         <p className="wheels-eyebrow">03 / VEHICLE FITMENT</p>
         <PHeading id="fitment-title" tag="h2" size="2xl">START WITH<br />YOUR VEHICLE.</PHeading>
-        <p>Choose your vehicle to retrieve original and optional wheel specifications. You can then transfer any result into the specification filters and continue refining your search. Vehicle selection is optional when you already know your wheel parameters.</p>
+        <p>Choose a vehicle to view its original and optional wheel specifications. These are vehicle reference data only; they do not establish compatibility with any Euresis wheel. Confirm product dimensions independently before purchase.</p>
       </div>
       <div className="wheels-fitment__form">
         <div className="wheels-fitment__fields wheels-fitment__fields--live">
@@ -138,7 +140,7 @@ export function LiveFitment() {
         <PButton type="button" disabled={!make || !model || !year || !trim || loading} onClick={search}>{loading ? "Searching..." : "Search wheel fitment"}</PButton>
         {error && <p className="wheels-fitment__api-error" role="alert">{error}</p>}
         {queried && rows.length > 0 && <div className="wheels-fitment__results" ref={liveRegion} aria-live="polite">
-          <div className="wheels-fitment__results-heading"><strong>{rows.length} 组适配参数</strong><span>原厂规格 / 可选规格</span></div>
+          <div className="wheels-fitment__results-heading"><strong>{rows.length} 组车辆参考规格</strong><span>原厂规格 / 可选规格</span></div>
           <div className="wheels-fitment__table-wrap"><table className="wheels-fitment__table">
             <thead><tr><th>类型</th><th>位置</th><th>轮毂尺寸</th><th>ET 值</th><th>PCD</th><th>轮胎尺寸</th><th>操作</th></tr></thead>
             <tbody>{rows.map((row) => {
@@ -163,12 +165,12 @@ export function LiveFitment() {
                   <td>{offset == null ? "—" : `ET${format(offset)}`}</td>
                   <td>{format(pcd)}</td>
                   <td>{format(tyre)}</td>
-                  <td><button type="button" className="fitment-use-button" onClick={() => choose(row)}>使用这组参数</button></td>
+                  <td><button type="button" className="fitment-use-button" onClick={() => choose(row)}>查看车辆参考</button></td>
                 </tr>;
               });
             })}</tbody>
           </table></div>
-          <p className="wheels-fitment__table-note">选择参数后可带入目录筛选。实际适配仍需依据 Euresis 产品经过确认的技术规格进行核验。</p>
+          <p className="wheels-fitment__table-note">这些数据描述所选车辆的轮毂规格，不会自动筛选或认证 Euresis 产品。车辆与轮毂的实际适配须逐款核验。</p>
         </div>}
       </div>
     </section>
