@@ -131,7 +131,7 @@ export function AccountPage() {
 
   if (!ready) return <main className="account-page"><div className="account-loading">Loading your account…</div></main>;
 
-  if (!user || !data) return (
+  if (resetMode || !user || !data) return (
     <main className="account-auth">
       <div className="account-auth__visual"><div className="account-auth__visual-copy"><span className="account-kicker">EURESIS / CUSTOMER PORTAL</span><h1>Your ownership.<br />In one place.</h1><p>Manage your vehicles, enquiries and orders with a secure Euresis account.</p></div><span className="account-auth__visual-index">PRECISION PERFORMANCE / 01—08</span></div>
       <section className="account-auth__panel"><a className="account-auth__back" href="/">← Back to Euresis</a><div className="account-auth__form-wrap">
@@ -141,7 +141,7 @@ export function AccountPage() {
         {!resetMode && <div className="account-auth__switch"><button className={authMode === "login" ? "is-active" : ""} onClick={() => { setAuthMode("login"); setAuthError(""); }}>Sign in</button><button className={authMode === "register" ? "is-active" : ""} onClick={() => { setAuthMode("register"); setAuthError(""); }}>Create account</button></div>}
         <form className="account-form" onSubmit={handleAuth}>
           {authMode === "register" && <Field label="Full name" value={authName} onChange={setAuthName} required placeholder="Your full name" />}
-          {!resetMode && <Field label="Password" type="password" value={authPassword} onChange={setAuthPassword} required placeholder="At least 8 characters" />}
+          {!resetMode && authMode !== "reset" && <Field label="Password" type="password" value={authPassword} onChange={setAuthPassword} required placeholder="At least 8 characters" />}
           {resetMode && <Field label="New password" type="password" value={newPassword} onChange={setNewPassword} required placeholder="At least 8 characters" />}
           {authMode !== "reset" && <Field label="Email address" type="email" value={authEmail} onChange={setAuthEmail} required placeholder="name@example.com" />}
           {authMode === "reset" && <Field label="Email address" type="email" value={authEmail} onChange={setAuthEmail} required placeholder="name@example.com" />}
