@@ -30,7 +30,7 @@
 .wheels-section-heading--light h2 { color: #fff; }
 .wheels-section-heading--light { margin-bottom: clamp(30px, 3.5vw, 48px); }
 .wheels-section-heading__statement { align-self: end; max-width: 460px; padding-bottom: 4px; }
-.wheels-section-heading__statement h3 { margin: 0 0 14px; color: #fff; font-size: clamp(1.05rem, 1.5vw, 1.35rem); font-weight: 600; letter-spacing: .035em; line-height: 1.25; }
+.wheels-section-heading__statement h3 { margin: 0 0 14px; color: #fff; font-size: clamp(3rem, 7vw, 7rem); font-weight: 500; letter-spacing: -.075em; line-height: .89; }
 .wheels-section-heading__statement p { margin: 0; color: rgb(255 255 255 / .82); font-size: clamp(1rem, 1.2vw, 1.1rem); line-height: 1.65; }
 .wheels-collection-list { max-width: 1440px; margin: 0 auto; border-top: 1px solid rgb(255 255 255 / .24); }
 .wheels-collection-item { display: grid; width: 100%; grid-template-columns: 48px minmax(150px, .8fr) minmax(170px, .8fr) minmax(220px, 1fr) 24px; align-items: center; gap: 18px; padding: 24px 0; border: 0; border-bottom: 1px solid rgb(255 255 255 / .24); background: transparent; color: #fff; text-align: left; cursor: pointer; transition: padding .2s ease, background .2s ease; }
@@ -40,7 +40,7 @@
 .wheels-collection-item__subtitle { color: rgb(255 255 255 / .72); font-size: 9px; letter-spacing: .15em; }
 .wheels-collection-item__description { color: rgb(255 255 255 / .64); font-size: 12px; line-height: 1.5; }
 .wheels-collection-item__arrow { font-size: 20px; }
-.wheels-fitment { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1fr); gap: clamp(36px, 8vw, 120px); align-items: start; padding: clamp(82px, 9vw, 144px) var(--euresis-gutter); background: var(--p-color-contrast-low); }
+.wheels-fitment { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1fr); gap: clamp(36px, 8vw, 120px); align-items: start; padding: clamp(82px, 9vw, 144px) var(--euresis-gutter); background: var(--p-color-canvas); }
 .wheels-fitment__intro h2, .wheels-inquiry__intro h2, .wheels-engineering h2 { margin: 22px 0 0; font-size: clamp(3rem, 6.8vw, 6.6rem); font-weight: 500; letter-spacing: -.075em; line-height: .9; }
 .wheels-fitment__intro > p:not(.wheels-eyebrow), .wheels-inquiry__intro > p:not(.wheels-eyebrow) { max-width: 480px; margin: 24px 0 0; color: var(--p-color-contrast-high); font-size: 15px; line-height: 1.65; }
 .wheels-demo-note { display: block; margin-top: 24px; color: var(--p-color-contrast-medium); font-size: 9px; font-weight: 600; letter-spacing: .16em; }
@@ -123,7 +123,7 @@
   .wheels-manufacturing, .wheels-collections, .wheels-catalogue { padding: 74px 20px; }
   .wheels-section-heading { margin-bottom: 32px; }
   .wheels-section-heading__statement { padding-bottom: 0; }
-  .wheels-section-heading__statement h3 { margin-bottom: 10px; }
+  .wheels-section-heading__statement h3 { margin-bottom: 10px; font-size: clamp(2.8rem, 13vw, 4.1rem); }
   .wheels-section-heading h2 { margin-top: 17px; font-size: clamp(2.8rem, 13vw, 4.1rem); }
   .wheels-manufacturing__grid { grid-template-columns: 1fr; gap: 14px; }
   .manufacturing-card { aspect-ratio: 1.15 / 1; }
