@@ -96,7 +96,7 @@ export function WheelsPage() {
   return (
     <main className="wheels-page">
       <section className="wheels-hero scheme-dark" aria-labelledby="wheels-title">
-        <video ref={heroVideoRef} className="wheels-hero__video" autoPlay muted loop playsInline preload="metadata" aria-hidden="true" tabIndex={-1} poster="https://images.pexels.com/videos/40930926/40930926.jpeg?auto=compress&cs=tinysrgb&w=2200"><source src="https://videos.pexels.com/video-files/40930926/40930926-hd_1920_1080_30fps.mp4" type="video/mp4" /></video>
+        <video ref={heroVideoRef} className="wheels-hero__video" autoPlay muted loop playsInline preload="metadata" aria-hidden="true" tabIndex={-1} poster="https://images.pexels.com/videos/28180175/free-video-28180175.jpg?auto=compress&cs=tinysrgb&w=2200"><source src="https://videos.pexels.com/video-files/40930926/40930926-hd_1920_1080_30fps.mp4" type="video/mp4" /></video>
         <div className="wheels-hero__content">
           <p className="wheels-eyebrow">EURESIS / PERFORMANCE WHEELS</p>
           <PHeading id="wheels-title" tag="h1" size="3xl" color="contrast-high" className="wheels-hero__title">
