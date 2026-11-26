@@ -2,14 +2,15 @@ import { PLink } from "@porsche-design-system/components-react/ssr";
 
 export function FitmentCallout() {
   return (
-    <section className="fitment scheme-only-dark" id="fitment">
-      <div>
-        <p className="eyebrow">FITMENT FIRST</p>
-        <h2>The right wheel.<br />The right fit.</h2>
+    <section className="fitment scheme-dark" id="fitment" aria-labelledby="fitment-heading">
+      <div className="fitment__heading">
+        <p className="eyebrow">VEHICLE COMPATIBILITY</p>
+        <h2 id="fitment-heading">Made to fit.<br />Chosen with precision.</h2>
       </div>
       <div className="fitment-copy">
-        <p>Wheel fitment is specific. We are building a guided selection experience around verified vehicle and wheel specifications.</p>
-        <PLink href="#collections" icon="arrow-up-right">Explore wheels</PLink>
+        <p>Wheel fitment is specific to the vehicle and its configuration. Start with your vehicle and explore the dimensions and specifications that matter.</p>
+        <PLink href="#collections" icon="arrow-right">Explore the collections</PLink>
+        <span className="fitment__note">FITMENT GUIDANCE · SPECIFICATION · ENQUIRIES</span>
       </div>
     </section>
   );
