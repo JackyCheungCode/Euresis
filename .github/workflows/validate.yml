@@ -41,7 +41,7 @@ jobs:
         run: |
           test -s .cloudflare/output/v1/workers/default/bundle/index.js
           test -s .cloudflare/output/v1/workers/default/bundle/ssr/index.js
-          grep -R -q "NEW DIGITAL EXPERIENCE IN DEVELOPMENT" .cloudflare/output/v1/workers/default/bundle
+          grep -R -q "FORGED" .cloudflare/output/v1/workers/default/bundle
 
       - name: Upload build output for inspection
         if: always()
