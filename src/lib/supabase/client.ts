@@ -14,11 +14,11 @@ function saveSession(session: AuthSession | null) {
   if (session) localStorage.setItem(SESSION_KEY, JSON.stringify(session));
   else localStorage.removeItem(SESSION_KEY);
 }
-async function authRequest(path: string, body: unknown) {
+async function authRequest(path: string, body: unknown): Promise<Record<string, any>> {
   const response = await fetch(`${SUPABASE_URL}/auth/v1/${path}`, {
     method: "POST", headers: { apikey: SUPABASE_KEY, "Content-Type": "application/json" }, body: JSON.stringify(body),
   });
-  const data = await response.json().catch(() => ({}));
+  const data = await response.json().catch(() => ({})) as Record<string, any>;
   if (!response.ok) throw new Error(data.msg || data.message || data.error_description || data.error || "Authentication request failed.");
   return data;
 }
@@ -89,7 +89,7 @@ export async function request<T>(table: string, options: { method?: string; quer
     session = await refreshSession(session);
     response = await run(session.access_token);
   }
-  const payload = await response.json().catch(() => null);
+  const payload = await response.json().catch(() => null) as Record<string, any> | null;
   if (!response.ok) throw new Error(payload?.message || payload?.hint || payload?.details || "Could not save your information.");
   return payload as T;
 }
