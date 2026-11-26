@@ -11,4 +11,8 @@
   --euresis-section-space: var(--p-spacing-fluid-2xl);
   --euresis-section-space-mobile: var(--p-spacing-fluid-xl);
   --euresis-surface-subtle: var(--p-color-surface);
+  --euresis-section-gap: var(--p-spacing-fluid-2xl);
+  --euresis-card-gap: var(--p-spacing-fluid-md);
+  --euresis-radius: 0;
+  --euresis-text-measure: 68ch;
 }
