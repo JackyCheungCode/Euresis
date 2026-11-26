@@ -16,6 +16,8 @@ import { LiveFitment } from "./live-fitment";
 import { CountryRegionSelect } from "./country-region-select";
 
 type SelectUpdateEvent = CustomEvent<{ value?: string | number | null }>;
+type InputUpdateEvent = CustomEvent<Event>;
+const inputValue = (event: InputUpdateEvent) => String((event.detail?.target as HTMLInputElement | null)?.value ?? "");
 
 const all = "ALL";
 
@@ -145,10 +147,10 @@ export function WheelsPage() {
             <PSelectOption value="ALL">All diameters</PSelectOption>
             {["17","18","19","20","21","22"].map((value) => <PSelectOption key={value} value={value}>{value} inch</PSelectOption>)}
           </PSelect>
-          <PInputText label="Width (J)" name="filter-width" value={fitmentWidth} onChange={(event: SelectUpdateEvent) => setFitmentWidth(String(event.detail.value ?? ""))} placeholder="e.g. 8.5" />
-          <PInputText label="Offset (ET)" name="filter-offset" value={fitmentOffset} onChange={(event: SelectUpdateEvent) => setFitmentOffset(String(event.detail.value ?? ""))} placeholder="e.g. 35" />
-          <PInputText label="Bolt pattern (PCD)" name="filter-pcd" value={fitmentPcd} onChange={(event: SelectUpdateEvent) => setFitmentPcd(String(event.detail.value ?? ""))} placeholder="e.g. 5×112" />
-          <PInputText label="Center bore (CB)" name="filter-center-bore" value={fitmentCenterBore} onChange={(event: SelectUpdateEvent) => setFitmentCenterBore(String(event.detail.value ?? ""))} placeholder="e.g. 66.6" />
+          <PInputText label="Width (J)" name="filter-width" value={fitmentWidth} onChange={(event: InputUpdateEvent) => setFitmentWidth(inputValue(event))} placeholder="e.g. 8.5" />
+          <PInputText label="Offset (ET)" name="filter-offset" value={fitmentOffset} onChange={(event: InputUpdateEvent) => setFitmentOffset(inputValue(event))} placeholder="e.g. 35" />
+          <PInputText label="Bolt pattern (PCD)" name="filter-pcd" value={fitmentPcd} onChange={(event: InputUpdateEvent) => setFitmentPcd(inputValue(event))} placeholder="e.g. 5×112" />
+          <PInputText label="Center bore (CB)" name="filter-center-bore" value={fitmentCenterBore} onChange={(event: InputUpdateEvent) => setFitmentCenterBore(inputValue(event))} placeholder="e.g. 66.6" />
         </div>
         <p className="wheels-specification-note">All dimensions are catalogue filters. A product appears only when its corresponding verified specification is present; the current sample range has no verified width, offset, PCD or center-bore records, so those filters may return no matches.</p>
         <div className="wheels-collection-list">
@@ -194,10 +196,10 @@ export function WheelsPage() {
             <PSelectOption value="3">3+ finishes</PSelectOption>
             <PSelectOption value="4">4+ finishes</PSelectOption>
           </PSelect>
-          <PInputText label="Width (J)" name="catalogue-width" value={fitmentWidth} onChange={(event: SelectUpdateEvent) => setFitmentWidth(String(event.detail.value ?? ""))} />
-          <PInputText label="Offset (ET)" name="catalogue-offset" value={fitmentOffset} onChange={(event: SelectUpdateEvent) => setFitmentOffset(String(event.detail.value ?? ""))} />
-          <PInputText label="Bolt pattern (PCD)" name="catalogue-pcd" value={fitmentPcd} onChange={(event: SelectUpdateEvent) => setFitmentPcd(String(event.detail.value ?? ""))} />
-          <PInputText label="Center bore (CB)" name="catalogue-center-bore" value={fitmentCenterBore} onChange={(event: SelectUpdateEvent) => setFitmentCenterBore(String(event.detail.value ?? ""))} />
+          <PInputText label="Width (J)" name="catalogue-width" value={fitmentWidth} onChange={(event: InputUpdateEvent) => setFitmentWidth(inputValue(event))} />
+          <PInputText label="Offset (ET)" name="catalogue-offset" value={fitmentOffset} onChange={(event: InputUpdateEvent) => setFitmentOffset(inputValue(event))} />
+          <PInputText label="Bolt pattern (PCD)" name="catalogue-pcd" value={fitmentPcd} onChange={(event: InputUpdateEvent) => setFitmentPcd(inputValue(event))} />
+          <PInputText label="Center bore (CB)" name="catalogue-center-bore" value={fitmentCenterBore} onChange={(event: InputUpdateEvent) => setFitmentCenterBore(inputValue(event))} />
           <PButton type="button" variant="secondary" onClick={resetFilters}>Reset filters</PButton>
         </div>
         <div className="wheels-catalogue__meta"><span>{products.length.toString().padStart(2, "0")} SAMPLE MODELS</span><span>NO PRICING · NO CHECKOUT</span></div>
