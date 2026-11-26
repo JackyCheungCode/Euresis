@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   PButton,
   PHeading,
@@ -11,7 +11,9 @@ import {
   PTextarea,
   PText,
 } from "@porsche-design-system/components-react/ssr";
-import { demoVehicles, wheelCollections, wheelProducts } from "@/src/data/wheels";
+import { wheelCollections, wheelProducts } from "@/src/data/wheels";
+import { LiveFitment } from "./live-fitment";
+import { CountryRegionSelect } from "./country-region-select";
 
 type SelectUpdateEvent = CustomEvent<{ value?: string | number | null }>;
 
@@ -22,11 +24,11 @@ export function WheelsPage() {
   const [collection, setCollection] = useState("ALL");
   const [diameter, setDiameter] = useState("ALL");
   const [finish, setFinish] = useState("ALL");
-  const [make, setMake] = useState("");
-  const [model, setModel] = useState("");
-  const [year, setYear] = useState("");
-  const [trim, setTrim] = useState("");
-  const [fitmentRequested, setFitmentRequested] = useState(false);
+  const [fitmentWidth, setFitmentWidth] = useState("");
+  const [fitmentOffset, setFitmentOffset] = useState("");
+  const [fitmentPcd, setFitmentPcd] = useState("");
+  const [vehicleSummary, setVehicleSummary] = useState("");
+  const [country, setCountry] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
   const products = useMemo(() => wheelProducts.filter((product) => {
@@ -36,10 +38,6 @@ export function WheelsPage() {
       && (finish === all || product.finishCount >= Number(finish));
   }), [manufacturing, collection, diameter, finish]);
 
-  const makeOptions = Object.keys(demoVehicles).filter((key) => key !== "Make");
-  const modelOptions = make ? (demoVehicles as any)[make]?.Model ?? [] : [];
-  const yearOptions = model ? (demoVehicles as any)[make]?.[model]?.Year ?? [] : [];
-  const trimOptions = year ? (demoVehicles as any)[make]?.[model]?.[year] ?? [] : [];
 
   const resetFilters = () => {
     setManufacturing("ALL");
@@ -47,6 +45,19 @@ export function WheelsPage() {
     setDiameter("ALL");
     setFinish("ALL");
   };
+
+  useEffect(() => {
+    const onFitmentSelected = (event: Event) => {
+      const detail = (event as CustomEvent).detail ?? {};
+      setDiameter(detail.diameter || "ALL");
+      setFitmentWidth(detail.width || "");
+      setFitmentOffset(detail.offset || "");
+      setFitmentPcd(detail.pcd || "");
+      setVehicleSummary([detail.year, detail.make, detail.model, detail.trim].filter(Boolean).join(" "));
+    };
+    window.addEventListener("euresis:fitment-selected", onFitmentSelected);
+    return () => window.removeEventListener("euresis:fitment-selected", onFitmentSelected);
+  }, []);
 
   const submitDemoInquiry = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -102,7 +113,7 @@ export function WheelsPage() {
             <PHeading id="collections-title" tag="h2" size="2xl">SIX DISTINCT<br />DESIGN DIRECTIONS.</PHeading>
           </div>
           <div className="wheels-section-heading__statement">
-            <h3>ONE DESIGN PHILOSOPHY.</h3>
+            
             <p>A shared Euresis design philosophy, expressed through six individual motorsport-inspired collections.</p>
           </div>
         </div>
@@ -119,36 +130,7 @@ export function WheelsPage() {
         </div>
       </section>
 
-      <section className="wheels-fitment" id="vehicle-fitment" aria-labelledby="fitment-title">
-        <div className="wheels-fitment__intro">
-          <p className="wheels-eyebrow">03 / VEHICLE FIRST</p>
-          <PHeading id="fitment-title" tag="h2" size="2xl">START WITH<br />YOUR VEHICLE.</PHeading>
-          <p>Choose your vehicle to begin a fitment enquiry. This demonstration selector uses sample vehicle entries only; it does not verify wheel compatibility.</p>
-          <span className="wheels-demo-note">DEMO DATA / NOT VERIFIED FITMENT</span>
-        </div>
-        <div className="wheels-fitment__form">
-          <div className="wheels-fitment__fields">
-            <PSelect label="Make" name="vehicle-make" value={make} onChange={(event: SelectUpdateEvent) => { setMake(String(event.detail.value ?? "")); setModel(""); setYear(""); setTrim(""); setFitmentRequested(false); }}>
-              <PSelectOption value="">Select make</PSelectOption>
-              {makeOptions.map((value) => <PSelectOption key={value} value={value}>{value}</PSelectOption>)}
-            </PSelect>
-            <PSelect label="Model" name="vehicle-model" value={model} disabled={!make} onChange={(event: SelectUpdateEvent) => { setModel(String(event.detail.value ?? "")); setYear(""); setTrim(""); setFitmentRequested(false); }}>
-              <PSelectOption value="">Select model</PSelectOption>
-              {modelOptions.map((value: string) => <PSelectOption key={value} value={value}>{value}</PSelectOption>)}
-            </PSelect>
-            <PSelect label="Year" name="vehicle-year" value={year} disabled={!model} onChange={(event: SelectUpdateEvent) => { setYear(String(event.detail.value ?? "")); setTrim(""); setFitmentRequested(false); }}>
-              <PSelectOption value="">Select year</PSelectOption>
-              {yearOptions.map((value: string) => <PSelectOption key={value} value={value}>{value}</PSelectOption>)}
-            </PSelect>
-            <PSelect label="Trim" name="vehicle-trim" value={trim} disabled={!year} onChange={(event: SelectUpdateEvent) => { setTrim(String(event.detail.value ?? "")); setFitmentRequested(false); }}>
-              <PSelectOption value="">Select trim</PSelectOption>
-              {trimOptions.map((value: string) => <PSelectOption key={value} value={value}>{value}</PSelectOption>)}
-            </PSelect>
-          </div>
-          <PButton type="button" disabled={!make || !model || !year || !trim} onClick={() => setFitmentRequested(true)}>Continue with this vehicle</PButton>
-          {fitmentRequested && <div className="wheels-fitment__result" role="status"><strong>Vehicle details captured for enquiry</strong><p>{year} {make} {model} {trim}</p><span>Requires Confirmation — no verified compatibility data is connected to this demo catalogue.</span></div>}
-        </div>
-      </section>
+      <LiveFitment />
 
       <section className="wheels-catalogue" id="catalogue" aria-labelledby="catalogue-title">
         <div className="wheels-section-heading">
@@ -170,6 +152,7 @@ export function WheelsPage() {
           </PSelect>
           <PSelect label="Diameter" name="filter-diameter" value={diameter} onChange={(event: SelectUpdateEvent) => setDiameter(String(event.detail.value ?? ""))}>
             <PSelectOption value="ALL">All diameters</PSelectOption>
+            {diameter !== "ALL" && !["17","18","19","20","21","22"].includes(diameter) && <PSelectOption value={diameter}>{diameter} inch · API selection</PSelectOption>}
             {["17","18","19","20","21","22"].map((value) => <PSelectOption key={value} value={value}>{value} inch</PSelectOption>)}
           </PSelect>
           <PSelect label="Finish options" name="filter-finish" value={finish} onChange={(event: SelectUpdateEvent) => setFinish(String(event.detail.value ?? ""))}>
@@ -177,9 +160,13 @@ export function WheelsPage() {
             <PSelectOption value="3">3+ finishes</PSelectOption>
             <PSelectOption value="4">4+ finishes</PSelectOption>
           </PSelect>
-          <PButton type="button" variant="secondary" onClick={resetFilters}>Reset filters</PButton>
+          <PInputText label="Rim width (J)" name="filter-width" value={fitmentWidth} disabled />
+          <PInputText label="Offset (ET)" name="filter-offset" value={fitmentOffset} disabled />
+          <PInputText label="Bolt pattern (PCD)" name="filter-pcd" value={fitmentPcd} disabled />
+          <PButton type="button" variant="secondary" onClick={() => { resetFilters(); setFitmentWidth(""); setFitmentOffset(""); setFitmentPcd(""); setVehicleSummary(""); }}>Reset filters</PButton>
         </div>
         <div className="wheels-catalogue__meta"><span>{products.length.toString().padStart(2, "0")} SAMPLE MODELS</span><span>NO PRICING · NO CHECKOUT</span></div>
+        {vehicleSummary && <p className="wheels-selected-fitment">API fitment selection: <strong>{vehicleSummary}</strong> — selected dimensions are shown above; sample products do not carry certified technical dimensions yet.</p>}
         {products.length > 0 ? <div className="wheels-product-grid">
           {products.map((product, index) => (
             <article className="wheel-product-card" key={product.slug}>
@@ -223,8 +210,8 @@ export function WheelsPage() {
             <div className="wheels-inquiry__fields">
               <PInputText label="Name" name="name" required />
               <PInputEmail label="Email" name="email" required />
-              <PInputText label="Country / Region" name="region" required />
-              <PInputText label="Vehicle" name="vehicle" value={[year, make, model, trim].filter(Boolean).join(" ")} placeholder="Make / Model / Year / Trim" />
+              <CountryRegionSelect value={country} onChange={setCountry} />
+              <PInputText label="Vehicle" name="vehicle" value={vehicleSummary} placeholder="Make / Model / Year / Trim" />
               <PTextarea label="Wheel model and requirements" name="message" required />
             </div>
             <PButton type="submit">Submit demo enquiry</PButton>
