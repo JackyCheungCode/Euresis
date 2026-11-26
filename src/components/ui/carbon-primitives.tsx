@@ -98,4 +98,4 @@ export function PSegmentedControlItem({ value, children }: any) {
   return <ToggleGroupItem id={String(value)} value={value} text={flattenText(children)} />;
 }
 
-export function PDivider() { return <hr className="cds--popover-caret" />; }
+export function PDivider() { return <hr className="euresis-carbon-divider" />; }
