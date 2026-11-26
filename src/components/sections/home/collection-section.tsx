@@ -1,4 +1,4 @@
-import { PHeading, PText } from "@/src/components/ui/carbon-primitives";
+import { EHeading, EText } from "@/src/components/ui/carbon-primitives";
 
 const collections = [
   {
@@ -39,19 +39,19 @@ export function CollectionSection() {
       <div className="collections-header">
         <div className="collections-heading-copy">
           <p className="eyebrow">THE EURESIS RANGE</p>
-          <PHeading
+          <EHeading
             id="collections-heading"
             className="collections-heading"
             tag="h2"
             size="2xl"
           >
             WHEEL COLLECTIONS
-          </PHeading>
+          </EHeading>
         </div>
-        <PText className="collections-intro" color="contrast-high" size="md">
+        <EText className="collections-intro" color="contrast-high" size="md">
           Explore two distinct manufacturing routes, each with its own
           construction language and design possibilities.
-        </PText>
+        </EText>
       </div>
 
       <div className="collections-grid">
