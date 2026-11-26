@@ -1,0 +1,2 @@
+export const metadata={title:"Engineering — Euresis"};
+export default function EngineeringPage(){return <main className="simple-page" id="main"><span className="eyebrow">EURESIS / ENGINEERING</span><h1>Precision is<br /><em>engineered.</em></h1><p>Material, structure, weight and geometry. The engineering story will be presented here with clear technical information and transparent product specifications.</p><a className="button-outlined" href="/wheels">Explore the collection <span>↗</span></a></main>}

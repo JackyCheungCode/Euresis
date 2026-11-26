@@ -1,0 +1,2 @@
+export const metadata={title:"Contact — Euresis"};
+export default function ContactPage(){return <main className="simple-page" id="main"><span className="eyebrow">EURESIS / CONTACT</span><h1>Start a<br /><em>conversation.</em></h1><p>Tell us about your vehicle, wheel requirements and intended use. Our enquiry experience is being rebuilt; contact details and submission workflow will be connected in the next implementation phase.</p><a className="button-filled" href="/wheels">Explore wheels <span>↗</span></a></main>}

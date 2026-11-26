@@ -1,0 +1,2 @@
+export const metadata={title:"About — Euresis"};
+export default function AboutPage(){return <main className="simple-page" id="main"><span className="eyebrow">EURESIS / ABOUT</span><h1>Built around<br /><em>the drive.</em></h1><p>Euresis is an independent performance wheel brand. Our digital experience is being rebuilt around considered design, engineering clarity and vehicle-first product discovery.</p><a className="button-outlined" href="/contact">Get in touch <span>↗</span></a></main>}

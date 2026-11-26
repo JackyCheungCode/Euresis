@@ -1,0 +1,2 @@
+export const metadata={title:"Vehicle fitment — Euresis"};
+export default function FitmentPage(){return <main className="simple-page" id="main"><span className="eyebrow">EURESIS / VEHICLE FITMENT</span><h1>Find your<br /><em>perfect fit.</em></h1><p>Vehicle selection and fitment guidance are being rebuilt on the new design foundation. Reference specifications will be clearly distinguished from verified Euresis product fitment.</p><a className="button-filled" href="/contact">Ask our fitment team <span>↗</span></a></main>}
