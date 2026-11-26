@@ -487,3 +487,69 @@
   .wheels-manufacturing__grid .manufacturing-card { aspect-ratio: 1 / 1; }
   .wheels-manufacturing__grid .manufacturing-card img { height: 78%; inset-block-end: 22%; }
 }
+
+/* Editorial quality pass: consistent alignment, quiet borders and controlled motion. */
+.wheels-page .wheels-section-heading,
+.wheels-page .wheels-manufacturing__grid,
+.wheels-page .wheels-product-grid,
+.wheels-page .wheels-filters,
+.wheels-page .wheels-catalogue__meta {
+  width: min(100%, var(--euresis-content-width));
+}
+.wheels-page .wheels-section-heading h2 {
+  text-wrap: balance;
+}
+.wheels-page .wheels-hero__content {
+  max-width: var(--euresis-content-width);
+}
+.wheels-page .wheels-hero__title {
+  max-width: 10ch;
+  text-wrap: balance;
+}
+.wheels-page .manufacturing-card,
+.wheels-page .wheel-product-card__image {
+  border-radius: 0;
+}
+.wheels-page .manufacturing-card:focus-visible,
+.wheels-page .wheel-product-card__image:focus-visible {
+  outline: 2px solid var(--p-color-primary);
+  outline-offset: 4px;
+}
+.wheels-page .wheel-product-card__image {
+  isolation: isolate;
+}
+.wheels-page .wheel-product-card__image img {
+  transition: transform 500ms cubic-bezier(.2,.7,.2,1);
+}
+.wheels-page .wheel-product-card:hover .wheel-product-card__image img,
+.wheels-page .wheel-product-card__image:focus-visible img {
+  transform: scale(1.025);
+}
+.wheels-page .wheel-product-card__body {
+  display: flex;
+  flex-direction: column;
+}
+.wheels-page .wheel-product-card__link {
+  margin-top: auto;
+}
+.wheels-page .wheels-empty {
+  border: 1px solid var(--p-color-contrast-lower);
+  background: var(--p-color-surface);
+}
+.wheels-page .wheels-filters {
+  padding-block: 22px;
+  border-block: 1px solid var(--p-color-contrast-lower);
+}
+.wheels-page .wheels-catalogue__meta {
+  border-top: 0;
+}
+.wheels-page .wheels-selected-fitment {
+  padding: 14px 16px;
+  border-left: 2px solid var(--p-color-info);
+  background: var(--p-color-surface);
+}
+@media (max-width: 600px) {
+  .wheels-page .wheels-hero__title { max-width: 8ch; }
+  .wheels-page .wheels-filters { padding-block: 16px; }
+  .wheels-page .wheel-product-card__image { aspect-ratio: 1 / 1; }
+}
