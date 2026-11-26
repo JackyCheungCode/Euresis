@@ -9,7 +9,7 @@ export function FitmentCallout() {
       </div>
       <div className="fitment-copy">
         <p>Wheel fitment is specific to the vehicle and its configuration. Start with your vehicle and explore the dimensions and specifications that matter.</p>
-        <PLink href="#collections" icon="arrow-right">Explore the collections</PLink>
+        <PLink href="/wheels#vehicle-fitment" icon="arrow-right">Find your vehicle</PLink>
         <span className="fitment__note">FITMENT GUIDANCE · SPECIFICATION · ENQUIRIES</span>
       </div>
     </section>
