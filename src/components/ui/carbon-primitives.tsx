@@ -11,6 +11,7 @@ import {
   Select,
   SelectItem,
   TextArea,
+  // Divider is represented with the Carbon horizontal rule pattern.
   TextInput,
   ToggleGroup,
   ToggleGroupItem,
@@ -48,11 +49,11 @@ export function PButtonPure({ children, icon = "arrow-right", hideLabel, aria, .
   const Icon = icons[icon] ?? ArrowRight;
   return <IconButton {...props} kind="ghost" size="lg" label={aria?.["aria-label"] ?? flattenText(children) ?? "Action"}>{<Icon size={20} />}</IconButton>;
 }
-export function PHeading({ children, tag = "h2", className, id, ...props }: any) {
+export function PHeading({ children, tag = "h2", className, id, size, color, ...props }: any) {
   const Tag = tag;
   return <Tag id={id} className={["cds--type-heading-05", className].filter(Boolean).join(" ")} {...props}>{children}</Tag>;
 }
-export function PText({ children, className, ...props }: any) {
+export function PText({ children, className, size, color, ...props }: any) {
   return <p className={["cds--type-body-01", className].filter(Boolean).join(" ")} {...props}>{children}</p>;
 }
 export function PSelect({ label, name, value, onChange, children, disabled, ...props }: any) {
@@ -96,3 +97,5 @@ export function PSegmentedControl({ label, name, value, children, onChange, ...p
 export function PSegmentedControlItem({ value, children }: any) {
   return <ToggleGroupItem id={String(value)} value={value} label={flattenText(children)} />;
 }
+
+export function PDivider() { return <hr className="cds--popover-caret" />; }
