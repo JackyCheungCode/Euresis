@@ -1,4 +1,4 @@
-import { PLinkPure } from "@porsche-design-system/components-react/ssr";
+import { PLinkPure } from "@/src/components/ui/carbon-primitives";
 
 const footerGroups = [
   {
