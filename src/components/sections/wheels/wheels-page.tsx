@@ -138,8 +138,8 @@ export function WheelsPage() {
 
       <section className="wheels-discovery scheme-dark" id="discovery" aria-labelledby="discovery-title">
         <div className="wheels-section-heading">
-          <div><p className="wheels-eyebrow">02 / PRODUCT DISCOVERY</p><PHeading id="discovery-title" tag="h2" size="2xl" color="contrast-high">TWO WAYS TO<br />FIND YOUR WHEELS.</PHeading></div>
-          <PText color="contrast-high">Start with your vehicle and refine the fitment, or start with wheel specifications directly. Both paths lead to the same catalogue.</PText>
+          <div><p className="wheels-eyebrow">02 / PRODUCT DISCOVERY</p><PHeading id="discovery-title" tag="h2" size="2xl" color="inherit">TWO WAYS TO<br />FIND YOUR WHEELS.</PHeading></div>
+          <PText color="inherit">Start with your vehicle and refine the fitment, or start with wheel specifications directly. Both paths lead to the same catalogue.</PText>
         </div>
         <div className="wheels-discovery__grid">
           <a className="wheels-discovery__card" href="#vehicle-fitment"><span className="wheels-discovery__icon"><PIcon name="car" size="xl" color="inherit" /></span><span>01 / VEHICLE FIRST</span><strong>Find wheels for<br />your vehicle.</strong><small>Make · Model · Year · Modification</small><b>START WITH VEHICLE ↗</b></a>
@@ -219,7 +219,7 @@ export function WheelsPage() {
       <section className="wheels-inquiry scheme-dark" id="inquiry" aria-labelledby="inquiry-title">
         <div className="wheels-inquiry__intro">
           <p className="wheels-eyebrow">06 / GLOBAL ENQUIRY</p>
-          <PHeading id="inquiry-title" tag="h2" size="2xl" color="contrast-high">LET'S FIND<br />YOUR FIT.</PHeading>
+          <PHeading id="inquiry-title" tag="h2" size="2xl" color="inherit">LET'S FIND<br />YOUR FIT.</PHeading>
           <p>Tell us which wheel and vehicle you are considering. The current demo form validates the enquiry layout locally; it does not transmit or store personal information.</p>
         </div>
         {submitted ? <div className="wheels-inquiry__success" role="status"><strong>Demo enquiry captured in this session.</strong><p>No message was sent. Connect an enquiry endpoint before accepting real customer requests.</p><PButton type="button" variant="secondary" onClick={() => setSubmitted(false)}>Create another demo enquiry</PButton></div> :

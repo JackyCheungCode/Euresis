@@ -394,3 +394,54 @@
 @media (prefers-reduced-motion: reduce) {
   .wheels-page *, .wheels-page *::before, .wheels-page *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
+
+
+/* Hotfix: force readable foregrounds inside dark discovery and enquiry sections. */
+.wheels-discovery.scheme-dark,
+.wheels-inquiry.scheme-dark {
+  --wheels-dark-foreground: #fff;
+  --wheels-dark-muted: rgb(255 255 255 / .78);
+  color: var(--wheels-dark-foreground) !important;
+}
+.wheels-discovery.scheme-dark #discovery-title,
+.wheels-discovery.scheme-dark #discovery-title *,
+.wheels-inquiry.scheme-dark #inquiry-title,
+.wheels-inquiry.scheme-dark #inquiry-title * {
+  color: var(--wheels-dark-foreground) !important;
+}
+.wheels-discovery.scheme-dark p-heading,
+.wheels-inquiry.scheme-dark p-heading {
+  color: var(--wheels-dark-foreground) !important;
+}
+.wheels-discovery.scheme-dark p-text,
+.wheels-discovery.scheme-dark .wheels-section-heading > p,
+.wheels-inquiry.scheme-dark .wheels-inquiry__intro > p:not(.wheels-eyebrow) {
+  color: var(--wheels-dark-muted) !important;
+}
+.wheels-discovery.scheme-dark .wheels-discovery__card,
+.wheels-discovery.scheme-dark .wheels-discovery__card:link,
+.wheels-discovery.scheme-dark .wheels-discovery__card:visited {
+  color: var(--wheels-dark-foreground) !important;
+}
+.wheels-discovery.scheme-dark .wheels-discovery__card > strong,
+.wheels-discovery.scheme-dark .wheels-discovery__card > b {
+  color: var(--wheels-dark-foreground) !important;
+}
+.wheels-discovery.scheme-dark .wheels-discovery__card > span:not(.wheels-discovery__icon),
+.wheels-discovery.scheme-dark .wheels-discovery__card > small {
+  color: var(--wheels-dark-muted) !important;
+}
+.wheels-discovery.scheme-dark .wheels-discovery__card .wheels-discovery__icon {
+  color: var(--wheels-dark-foreground) !important;
+}
+.wheels-discovery.scheme-dark .wheels-discovery__card:hover,
+.wheels-discovery.scheme-dark .wheels-discovery__card:focus-visible {
+  color: #111 !important;
+  background: #fff !important;
+}
+.wheels-discovery.scheme-dark .wheels-discovery__card:hover > strong,
+.wheels-discovery.scheme-dark .wheels-discovery__card:hover > b,
+.wheels-discovery.scheme-dark .wheels-discovery__card:focus-visible > strong,
+.wheels-discovery.scheme-dark .wheels-discovery__card:focus-visible > b {
+  color: #111 !important;
+}
