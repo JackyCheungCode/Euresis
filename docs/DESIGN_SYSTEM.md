@@ -131,3 +131,16 @@ These require product/brand input before final visual lock:
 ## 13. Code ownership and component structure
 
 Follow [ARCHITECTURE.md](ARCHITECTURE.md) for the required application structure and [API_AI.md](API_AI.md) for API and AI integration boundaries. Header, Footer, navigation, reusable controls, page sections, domain logic and styles must remain separate modules. Route files compose these modules; they do not become containers for unrelated implementation details.
+
+
+## 14. PDS v4.10.1 implementation audit — November 2026
+
+The Wheels page retains its approved editorial surface rhythm. This audit does not require making every section the same color.
+
+- Use `colorCanvas` for the page canvas and `colorSurface` for subtle section or component surfaces. Do not use foreground contrast tokens such as `colorContrastLow` as a section background.
+- Use `.scheme-dark` and `.scheme-light` as explicit theme scopes for image-led dark sections and light form surfaces. PDS color tokens resolve through the active `color-scheme`.
+- Use PDS fluid spacing tokens for major section rhythm; keep Euresis aliases semantic and mapped directly to PDS tokens.
+- Keep a single shared content-width alias for editorial sections and catalogue grids.
+- Custom display typography is permitted for Euresis brand expression, but must be deliberate, documented, responsive and checked at 200% text zoom. PDS component typography and form controls must not be overridden internally.
+- The approved Wheels sequence remains: Hero, Manufacturing, Product Discovery, Vehicle Fitment, Unified Catalogue, Engineering, Global Enquiry.
+- A source-code audit is not visual QA. Desktop/mobile browser screenshots, keyboard focus, contrast and 200% text zoom must be checked before calling the page visually accepted.
