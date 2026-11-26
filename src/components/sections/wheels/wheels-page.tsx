@@ -101,7 +101,10 @@ export function WheelsPage() {
             <p className="wheels-eyebrow">02 / COLLECTIONS</p>
             <PHeading id="collections-title" tag="h2" size="2xl">SIX DISTINCT<br />DESIGN DIRECTIONS.</PHeading>
           </div>
-          <PText color="contrast-high">A shared Euresis design philosophy, expressed through six individual motorsport-inspired collections.</PText>
+          <div className="wheels-section-heading__statement">
+            <h3>ONE DESIGN PHILOSOPHY.</h3>
+            <p>A shared Euresis design philosophy, expressed through six individual motorsport-inspired collections.</p>
+          </div>
         </div>
         <div className="wheels-collection-list">
           {wheelCollections.map((item, index) => (
