@@ -4,7 +4,8 @@ import { useRef, useState } from "react";
 import { PButton, PHeading } from "@porsche-design-system/components-react/ssr";
 import { homepageContent } from "@/src/data/homepage";
 
-const HERO_VIDEO = "https://videos.pexels.com/video-files/10825393/10825393-hd_1920_1080_24fps.mp4";
+const HERO_VIDEO = "https://videos.pexels.com/video-files/20244146/20244146-uhd_4096_2160_30fps.mp4";
+const HERO_POSTER = "https://images.pexels.com/videos/19927386/pexels-photo-19927386.jpeg?auto=compress&dpr=1&h=1200&w=2000";
 
 export function HeroSection() {
   const { hero } = homepageContent;
@@ -25,7 +26,7 @@ export function HeroSection() {
 
   return (
     <section className="hero scheme-dark" aria-labelledby="hero-heading">
-      <video ref={videoRef} className="hero-video" autoPlay muted loop playsInline preload="metadata" aria-hidden="true" tabIndex={-1}>
+      <video ref={videoRef} className="hero-video" autoPlay muted loop playsInline preload="metadata" poster={HERO_POSTER} aria-hidden="true" tabIndex={-1}>
         <source src={HERO_VIDEO} type="video/mp4" />
       </video>
       <div className="hero-content">
@@ -35,7 +36,8 @@ export function HeroSection() {
         </PHeading>
         <p className="hero-description">{hero.description}</p>
         <div className="hero-actions">
-          <PButton variant="secondary" type="button"><a href="#collections">Explore the range</a></PButton>
+          <a className="hero-primary-link" href="/wheels">Explore wheels <span aria-hidden="true">↗</span></a>
+          <a className="hero-secondary-link" href="/wheels#vehicle-fitment">Find your fitment</a>
         </div>
       </div>
       <span className="hero-index" aria-hidden="true">01 / EURESIS PERFORMANCE WHEELS</span>
