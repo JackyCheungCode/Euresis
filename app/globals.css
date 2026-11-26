@@ -1,27 +1,4 @@
 @import "tailwindcss";
-
-:root {
-  color-scheme: light;
-  font-family: Arial, Helvetica, sans-serif;
-  background: #f4f4f1;
-  color: #111;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-}
-
-* { box-sizing: border-box; }
-html, body { min-height: 100%; margin: 0; }
-body { min-width: 320px; }
-.reset-shell {
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  padding: clamp(28px, 8vw, 120px);
-  background: #f4f4f1;
-}
-.reset-mark { font-size: clamp(3.5rem, 12vw, 10rem); font-weight: 700; letter-spacing: -.09em; line-height: .9; }
-.reset-shell p { margin: 28px 0 0; font-size: 12px; letter-spacing: .18em; }
-.reset-status { margin-top: 64px; color: #777; font-size: 9px; letter-spacing: .16em; }
+@import "@volvo-cars/css/tokens.css";
+@import "@volvo-cars/css/styles_all-media.css";
+@import "../src/styles/euresis.css";
