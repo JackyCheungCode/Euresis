@@ -76,7 +76,7 @@
 .wheels-engineering__labels span, .wheel-detail__tags span { padding: 9px 12px; border: 1px solid var(--p-color-contrast-medium); font-size: 9px; letter-spacing: .12em; }
 .wheels-inquiry { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1fr); gap: clamp(36px, 8vw, 120px); padding: clamp(82px, 9vw, 144px) var(--euresis-gutter); background: var(--p-color-primary); color: var(--p-color-canvas); }
 .wheels-inquiry .wheels-eyebrow { color: var(--p-color-contrast-medium); }
-.wheels-inquiry__intro h2 { color: #fff; }
+.wheels-inquiry__intro h2, .wheels-inquiry__intro h2 * { color: #fff !important; }
 .wheels-inquiry__intro > p:not(.wheels-eyebrow) { color: rgb(255 255 255 / .72); }
 .wheels-inquiry__form { display: grid; align-content: start; gap: 20px; padding: clamp(24px, 3vw, 42px); background: var(--p-color-canvas); color: var(--p-color-primary); }
 .wheels-inquiry__fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
