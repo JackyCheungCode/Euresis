@@ -1,14 +1,10 @@
 "use client";
 
 import { useRef, useState } from "react";
-import {
-  PButton,
-  PHeading,
-} from "@porsche-design-system/components-react/ssr";
+import { PButton, PHeading } from "@porsche-design-system/components-react/ssr";
 import { homepageContent } from "@/src/data/homepage";
 
-const HERO_VIDEO =
-  "https://videos.pexels.com/video-files/10825393/10825393-hd_1920_1080_24fps.mp4";
+const HERO_VIDEO = "https://videos.pexels.com/video-files/10825393/10825393-hd_1920_1080_24fps.mp4";
 
 export function HeroSection() {
   const { hero } = homepageContent;
@@ -29,45 +25,21 @@ export function HeroSection() {
 
   return (
     <section className="hero scheme-dark" aria-labelledby="hero-heading">
-      <video
-        ref={videoRef}
-        className="hero-video"
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="metadata"
-        aria-hidden="true"
-        tabIndex={-1}
-      >
+      <video ref={videoRef} className="hero-video" autoPlay muted loop playsInline preload="metadata" aria-hidden="true" tabIndex={-1}>
         <source src={HERO_VIDEO} type="video/mp4" />
       </video>
-
       <div className="hero-content">
+        <span className="hero-kicker">{hero.eyebrow}</span>
         <PHeading id="hero-heading" className="hero-heading" tag="h1" size="3xl">
-          <span className="hero-heading__eyebrow">EURESIS</span>
-          Precision in
-          <br />
-          every rotation.
+          Precision in<br />every rotation.
         </PHeading>
         <p className="hero-description">{hero.description}</p>
         <div className="hero-actions">
-          <PButton variant="secondary" type="button">
-            <a href="#collections">Explore collections</a>
-          </PButton>
+          <PButton variant="secondary" type="button"><a href="#collections">Explore the range</a></PButton>
         </div>
       </div>
-
-      <PButton
-        className="hero-video-control"
-        type="button"
-        variant="secondary"
-        compact
-        hideLabel
-        icon={isPaused ? "play" : "pause"}
-        aria={{ "aria-label": isPaused ? "Play background video" : "Pause background video" }}
-        onClick={toggleVideo}
-      >
+      <span className="hero-index" aria-hidden="true">01 / EURESIS PERFORMANCE WHEELS</span>
+      <PButton className="hero-video-control" type="button" variant="secondary" compact hideLabel icon={isPaused ? "play" : "pause"} aria={{ "aria-label": isPaused ? "Play background video" : "Pause background video" }} onClick={toggleVideo}>
         {isPaused ? "Play background video" : "Pause background video"}
       </PButton>
     </section>
