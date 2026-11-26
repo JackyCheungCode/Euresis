@@ -274,3 +274,26 @@
   .site-footer__brand p { justify-self: start; }
   .site-footer__brand > span { grid-column: auto; }
 }
+
+
+/* Global header icon contrast: keep navigation controls white on every route. */
+.site-header .site-header__start,
+.site-header .site-header__end {
+  color: #fff;
+}
+.site-header .site-header__control,
+.site-header .site-header__control:hover,
+.site-header .site-header__control:focus-visible {
+  color: #fff !important;
+  --p-color-primary: #fff;
+  --p-color-contrast-high: #fff;
+}
+.site-header .site-header__control svg,
+.site-header .site-header__control [part~="icon"] {
+  color: #fff !important;
+  fill: currentColor;
+}
+.site-header .site-header__control:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 4px;
+}
