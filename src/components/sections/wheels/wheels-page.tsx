@@ -95,7 +95,7 @@ export function WheelsPage() {
   return (
     <main className="wheels-page">
       <section className="wheels-hero scheme-dark" aria-labelledby="wheels-title">
-        <video ref={heroVideoRef} className="wheels-hero__video" autoPlay muted loop playsInline preload="metadata" aria-hidden="true" tabIndex={-1} poster="https://images.pexels.com/photos/41081788/pexels-photo-41081788.jpeg?auto=compress&cs=tinysrgb&w=2200"><source src="https://videos.pexels.com/video-files/33374865/14209289_3840_2160_24fps.mp4" type="video/mp4" /></video>
+        <video ref={heroVideoRef} className="wheels-hero__video" autoPlay muted loop playsInline preload="metadata" aria-hidden="true" tabIndex={-1} poster="https://images.pexels.com/videos/28180175/free-video-28180175.jpg?auto=compress&cs=tinysrgb&w=2200"><source src="https://videos.pexels.com/video-files/28180175/28180175-hd_1920_1080_30fps.mp4" type="video/mp4" /></video>
         <div className="wheels-hero__content">
           <p className="wheels-eyebrow">EURESIS / PERFORMANCE WHEELS</p>
           <PHeading id="wheels-title" tag="h1" size="3xl" className="wheels-hero__title">
@@ -111,7 +111,7 @@ export function WheelsPage() {
         <PButton className="wheels-hero__video-control" type="button" variant="secondary" compact hideLabel icon={heroVideoPaused ? "play" : "pause"} aria={{ "aria-label": heroVideoPaused ? "Play background video" : "Pause background video" }} onClick={toggleHeroVideo}>{heroVideoPaused ? "Play background video" : "Pause background video"}</PButton>
       </section>
 
-      <section className="wheels-manufacturing" aria-labelledby="manufacturing-title">
+      <section className="wheels-manufacturing scheme-light" aria-labelledby="manufacturing-title">
         <div className="wheels-section-heading">
           <div>
             <p className="wheels-eyebrow">01 / MANUFACTURING</p>
@@ -148,7 +148,7 @@ export function WheelsPage() {
 
       <LiveFitment />
 
-      <section className="wheels-catalogue" id="catalogue" aria-labelledby="catalogue-title">
+      <section className="wheels-catalogue scheme-light" id="catalogue" aria-labelledby="catalogue-title">
         <div className="wheels-section-heading">
           <div>
             <p className="wheels-eyebrow">04 / UNIFIED CATALOGUE</p>
@@ -204,7 +204,7 @@ export function WheelsPage() {
         </div> : <div className="wheels-empty"><strong>No sample models match these filters.</strong><button type="button" onClick={resetFilters}>Clear filters</button></div>}
       </section>
 
-      <section className="wheels-engineering" aria-labelledby="engineering-title">
+      <section className="wheels-engineering scheme-light" aria-labelledby="engineering-title">
         <div>
           <p className="wheels-eyebrow">05 / ENGINEERING</p>
           <PHeading id="engineering-title" tag="h2" size="2xl">FORM FOLLOWS<br />FUNCTION.</PHeading>
