@@ -23,7 +23,7 @@
     "react-dom": "^19.3.1",
     "react-server-dom-webpack": "^19.3.1",
     "vinext": "^1.4.6",
-    "@carbon/react": "^1.121.0"
+    "@volvo-cars/css": "3.3.0"
   },
   "devDependencies": {
     "@cloudflare/vite-plugin": "^2.0.0-rc.5",
