@@ -37,7 +37,7 @@ export async function getSession(): Promise<AuthSession | null> {
 }
 export async function signUp(email: string, password: string, fullName: string) {
   const data = await authRequest("signup", { email, password, data: { full_name: fullName }, gotrue_meta_security: {} });
-  if (data.access_token && data.refresh_token) saveSession({ ...data, expires_at: Math.floor(Date.now() / 1000) + (data.expires_in || 3600) });
+  if (data.access_token && data.refresh_token) saveSession({ ...data, expires_at: Math.floor(Date.now() / 1000) + (data.expires_in || 3600) } as AuthSession);
   return data;
 }
 export async function signIn(email: string, password: string) {
