@@ -53,3 +53,9 @@ grant select,insert,update,delete on public.customer_addresses to authenticated;
 grant select,insert,update on public.customer_preferences to authenticated;
 grant select,insert on public.customer_enquiries,public.customer_after_sales_cases to authenticated;
 grant select on public.customer_orders,public.customer_order_items,public.customer_order_events to authenticated;
+
+-- Customer submissions cannot set their own internal workflow status.
+revoke insert on public.customer_enquiries from authenticated;
+grant insert (user_id, subject, message) on public.customer_enquiries to authenticated;
+revoke insert on public.customer_after_sales_cases from authenticated;
+grant insert (user_id, subject, description) on public.customer_after_sales_cases to authenticated;
