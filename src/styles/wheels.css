@@ -565,3 +565,6 @@
 .wheels-fitment__api-error{overflow-wrap:anywhere}
 @media(max-width:600px){.wheels-hero__actions{align-items:flex-start;flex-direction:column}.wheels-hero__primary-link{min-height:48px}}
 @media(prefers-reduced-motion:reduce){.wheels-page *,.wheels-page *::before,.wheels-page *::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
+
+.wheel-detail__back-link,.wheel-detail__quote-link{display:inline-flex;min-height:44px;align-items:center;justify-content:center;padding:0 18px;border:1px solid var(--p-color-primary);color:var(--p-color-primary);font-size:12px;font-weight:600;letter-spacing:.08em;text-decoration:none;text-transform:uppercase}
+.wheel-detail__quote-link{background:var(--p-color-primary);color:var(--p-color-canvas)}
