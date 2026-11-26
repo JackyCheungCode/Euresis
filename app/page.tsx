@@ -45,7 +45,7 @@ export default function HomePage() {
     <main id="main">
       <section className="hero">
         <div className="hero-copy">
-          <span className="eyebrow">ENGINEERED PERFORMANCE · EST. 2024</span>
+          <span className="eyebrow">PRECISION PERFORMANCE · EURESIS</span>
           <h1>FORGED<br /><em>WITH INTENT.</em></h1>
           <p className="hero-description">Precision-engineered wheels. Considered down to the last millimetre.</p>
           <div className="hero-actions">
