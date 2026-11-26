@@ -2,7 +2,9 @@
 .wheels-page { color: var(--p-color-primary); background: var(--p-color-canvas); }
 .wheels-eyebrow { margin: 0; color: var(--p-color-contrast-medium); font-size: 10px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; }
 .wheels-hero { position: relative; display: flex; min-height: min(780px, 88svh); align-items: flex-end; overflow: hidden; background: var(--p-color-primary); color: var(--p-color-canvas); }
-.wheels-hero__image { position: absolute; inset: 0; background-image: linear-gradient(90deg, rgb(0 0 0 / .72), rgb(0 0 0 / .12) 78%), linear-gradient(0deg, rgb(0 0 0 / .5), transparent 62%), url("https://images.pexels.com/photos/41081788/pexels-photo-41081788.jpeg?auto=compress&cs=tinysrgb&w=2200"); background-size: cover; background-position: center 48%; transform: scale(1.01); }
+.wheels-hero__video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 54%; transform: scale(1.01); }
+.wheels-hero::after { position: absolute; inset: 0; z-index: 0; pointer-events: none; content: ""; background: linear-gradient(90deg, rgb(0 0 0 / .68), rgb(0 0 0 / .12) 78%), linear-gradient(0deg, rgb(0 0 0 / .52), transparent 64%); }
+.wheels-hero__video-control { position: absolute; right: var(--euresis-gutter); bottom: 26px; z-index: 2; }
 .wheels-hero__content { position: relative; z-index: 1; width: min(100% - 2 * var(--euresis-gutter), 1440px); margin: 0 auto; padding: clamp(150px, 22vh, 220px) 0 clamp(76px, 10vh, 126px); }
 .wheels-hero .wheels-eyebrow { color: rgb(255 255 255 / .72); }
 .wheels-hero__title { margin: 26px 0 0; color: #fff; font-size: clamp(4rem, 10vw, 9.6rem); letter-spacing: -.075em; line-height: .86; }
@@ -193,3 +195,22 @@
 .wheels-fitment { background: var(--p-color-surface); }
 .wheels-engineering { background: var(--p-color-surface); }
 @media (max-width: 600px) { .wheels-discovery { padding: var(--euresis-section-space-mobile) 20px; } .wheels-discovery__grid { grid-template-columns: 1fr; } .wheels-discovery__card { min-height: 220px; } }
+
+
+/* Explicit foreground/surface pairing for dark PDS sections. */
+.wheels-discovery,
+.wheels-inquiry { background: #111 !important; color: #fff !important; }
+.wheels-discovery .wheels-eyebrow,
+.wheels-inquiry .wheels-eyebrow { color: rgb(255 255 255 / .72) !important; }
+.wheels-discovery p-heading,
+.wheels-inquiry p-heading,
+.wheels-discovery #discovery-title,
+.wheels-inquiry #inquiry-title,
+.wheels-discovery #discovery-title *,
+.wheels-inquiry #inquiry-title * { color: #fff !important; }
+.wheels-discovery p-text,
+.wheels-inquiry__intro > p:not(.wheels-eyebrow) { color: rgb(255 255 255 / .78) !important; }
+.wheels-inquiry__success { background: #fff; color: #111; }
+@media (max-width: 600px) {
+  .wheels-hero__video-control { right: 20px; bottom: 16px; }
+}
