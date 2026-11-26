@@ -6,7 +6,7 @@ export type Address = { id: string; label: string; recipient: string; phone: str
 export type Preferences = { user_id: string; language: string; currency: string; units: string; contact_method: string; product_updates: boolean };
 export type Enquiry = { id: string; reference: string; subject: string; message: string; status: string; created_at: string };
 export type ServiceCase = { id: string; reference: string; subject: string; description: string; status: string; created_at: string };
-export type WheelInquiry = { id: string; reference: string; product_name: string; product_code: string; vehicle: Record<string, string>; wheel_configurations: Record<string, string>[]; fitment_status: string; requirements: string; status: string; created_at: string };
+export type WheelInquiry = { id: string; reference: string; product_name: string; product_code: string; vehicle: Record<string, string>; wheel_configurations: Record<string, string>[]; fitment_status: string; requirements: string; admin_reply: string; status: string; created_at: string };
 export type Order = { id: string; order_number: string; status: string; carrier: string; tracking_number: string; estimated_dispatch_at: string | null; created_at: string; customer_order_items: { product_name: string; specification: string; quantity: number }[]; customer_order_events: { status: string; description: string; occurred_at: string }[] };
 
 const one = <T,>(rows: T[] | null, fallback: T): T => rows?.[0] ?? fallback;
