@@ -86,9 +86,9 @@ export function LiveFitment() {
       });
       setRows(results);
       setQueried(true);
-      if (!results.length) setError("The API returned no wheel records for this vehicle and market. Try another year, trim or region.");
+      if (!results.length) setError("No wheel specifications were found for this vehicle and market. Try another year, trim or region.");
     } catch (reason) {
-      setError(reason instanceof Error ? reason.message : "Wheel fitment query failed.");
+      setError(reason instanceof Error ? reason.message : "Unable to retrieve wheel specifications. Please try again.");
     } finally { setLoading(false); }
   }
 
@@ -111,8 +111,7 @@ export function LiveFitment() {
       <div className="wheels-fitment__intro">
         <p className="wheels-eyebrow">03 / VEHICLE FIRST</p>
         <PHeading id="fitment-title" tag="h2" size="2xl">START WITH<br />YOUR VEHICLE.</PHeading>
-        <p>Search live vehicle specifications from the Wheel-Size Fitment API. Results are returned for the selected market and vehicle modification.</p>
-        <span className="wheels-live-note">LIVE DATA / WHEEL-SIZE API V2</span>
+        <p>Find wheel specifications for your vehicle and selected market.</p>
       </div>
       <div className="wheels-fitment__form">
         <div className="wheels-fitment__fields wheels-fitment__fields--live">
@@ -139,18 +138,37 @@ export function LiveFitment() {
         <PButton type="button" disabled={!make || !model || !year || !trim || loading} onClick={search}>{loading ? "Searching..." : "Search wheel fitment"}</PButton>
         {error && <p className="wheels-fitment__api-error" role="alert">{error}</p>}
         {queried && rows.length > 0 && <div className="wheels-fitment__results" ref={liveRegion} aria-live="polite">
-          <div className="wheels-fitment__results-heading"><strong>{rows.length} API wheel records</strong><span>OE / MANUFACTURER-OPTIONAL</span></div>
+          <div className="wheels-fitment__results-heading"><strong>{rows.length} 组适配参数</strong><span>原厂规格 / 可选规格</span></div>
           <div className="wheels-fitment__table-wrap"><table className="wheels-fitment__table">
-            <thead><tr><th>Type</th><th>Position</th><th>Rim size</th><th>Offset</th><th>Tyre</th><th>Action</th></tr></thead>
+            <thead><tr><th>类型</th><th>位置</th><th>轮毂尺寸</th><th>ET 值</th><th>PCD</th><th>轮胎尺寸</th><th>操作</th></tr></thead>
             <tbody>{rows.map((row) => {
               const front = row.front ?? row;
-              const rim = front.rim_full ?? front.rim ?? [front.rim_width, "J x", front.rim_diameter].filter(Boolean).join("");
-              const offset = front.rim_offset ?? front.offset;
-              const tyre = front.tire_full ?? front.tire ?? "—";
-              return <tr key={row._id}><td><span className={`fitment-type fitment-type--${row._type.toLowerCase()}`}>{row._type === "OE" ? "ORIGINAL" : "OPTIONAL"}</span></td><td>Front{row.rear ? " / Rear" : ""}</td><td>{String(rim ?? "—")}</td><td>{offset == null ? "—" : `ET${offset}`}</td><td>{String(tyre)}</td><td><button type="button" className="fitment-use-button" onClick={() => choose(row)}>Use this size ↗</button></td></tr>;
+              const rear = row.rear;
+              const vehicleTechnical = row._vehicle?.technical ?? {};
+              const get = (wheel: ApiRow, ...keys: string[]) => keys.map((key) => wheel?.[key]).find((value) => value !== undefined && value !== null && value !== "");
+              const format = (value: any): string => value == null || value === "" ? "—" : typeof value === "object" ? String(value.value ?? value.name ?? value.label ?? JSON.stringify(value)) : String(value);
+              const positionRows = [
+                { label: "Front", wheel: front },
+                ...(rear ? [{ label: "Rear", wheel: rear }] : []),
+              ];
+              return positionRows.map(({ label, wheel }) => {
+                const rim = get(wheel, "rim_full", "rim") ?? [get(wheel, "rim_width", "width"), "J ×", get(wheel, "rim_diameter", "diameter")].filter(Boolean).join(" ");
+                const offset = get(wheel, "rim_offset", "offset");
+                const pcd = get(wheel, "bolt_pattern", "pcd", "bolt_pattern_full") ?? get(row, "bolt_pattern", "pcd", "bolt_pattern_full") ?? get(vehicleTechnical, "bolt_pattern", "pcd", "bolt_pattern_full");
+                const tyre = get(wheel, "tire_full", "tire", "tyre_full", "tyre");
+                return <tr key={`${row._id}-${label}`}>
+                  <td><span className={`fitment-type fitment-type--${row._type.toLowerCase()}`}>{row._type === "OE" ? "原厂" : "可选"}</span></td>
+                  <td>{label}</td>
+                  <td>{format(rim)}</td>
+                  <td>{offset == null ? "—" : `ET${format(offset)}`}</td>
+                  <td>{format(pcd)}</td>
+                  <td>{format(tyre)}</td>
+                  <td><button type="button" className="fitment-use-button" onClick={() => choose(row)}>使用这组参数</button></td>
+                </tr>;
+              });
             })}</tbody>
           </table></div>
-          <p className="wheels-fitment__table-note">Selecting a row transfers its available wheel dimensions to the catalogue filters. Compatibility still requires confirmation against the Euresis product's certified specifications.</p>
+          <p className="wheels-fitment__table-note">选择参数后可带入目录筛选。实际适配仍需依据 Euresis 产品经过确认的技术规格进行核验。</p>
         </div>}
       </div>
     </section>
