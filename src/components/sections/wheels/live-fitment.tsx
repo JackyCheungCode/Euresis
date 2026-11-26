@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { PButton, PHeading, PSelect, PSelectOption } from "@porsche-design-system/components-react/ssr";
 
 type SelectUpdateEvent = CustomEvent<{ value?: string | number | null }>;
