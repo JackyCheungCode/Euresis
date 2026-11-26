@@ -136,7 +136,7 @@ export function LiveFitment() {
             {options(trims, "modification").map((item) => <PSelectOption key={item.value} value={item.value}>{item.label}</PSelectOption>)}
           </PSelect>
         </div>
-        <PButton type="button" disabled={!make || !model || !year || !trim || loading} loading={loading} onClick={search}>Search wheel fitment</PButton>
+        <PButton type="button" disabled={!make || !model || !year || !trim || loading} onClick={search}>{loading ? "Searching..." : "Search wheel fitment"}</PButton>
         {error && <p className="wheels-fitment__api-error" role="alert">{error}</p>}
         {queried && rows.length > 0 && <div className="wheels-fitment__results" ref={liveRegion} aria-live="polite">
           <div className="wheels-fitment__results-heading"><strong>{rows.length} API wheel records</strong><span>OE / MANUFACTURER-OPTIONAL</span></div>
