@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { PButton, PHeading, PSelect, PSelectOption } from "@/src/components/ui/carbon-primitives";
+import { EButton, EHeading, ESelect, ESelectItem } from "@/src/components/ui/carbon-primitives";
 
 type SelectUpdateEvent = CustomEvent<{ value?: string | number | null }>;
 type ApiRow = Record<string, any>;
@@ -112,32 +112,32 @@ export function LiveFitment() {
     <section className="wheels-fitment scheme-light" id="vehicle-fitment" aria-labelledby="fitment-title">
       <div className="wheels-fitment__intro">
         <p className="wheels-eyebrow">03 / VEHICLE FITMENT</p>
-        <PHeading id="fitment-title" tag="h2" size="2xl">START WITH<br />YOUR VEHICLE.</PHeading>
+        <EHeading id="fitment-title" tag="h2" size="2xl">START WITH<br />YOUR VEHICLE.</EHeading>
         <p>Choose a vehicle to view its original and optional wheel specifications. These are vehicle reference data only; they do not establish compatibility with any Euresis wheel. Confirm product dimensions independently before purchase.</p>
       </div>
       <div className="wheels-fitment__form">
         <div className="wheels-fitment__fields wheels-fitment__fields--live">
-          <PSelect label="Vehicle market" name="vehicle-region" value={region} onChange={(event: SelectUpdateEvent) => setRegion(String(event.detail.value ?? "jdm"))}>
-            {regions.map(([value, label]) => <PSelectOption key={value} value={value}>{label}</PSelectOption>)}
-          </PSelect>
-          <PSelect label="Make" name="vehicle-make" value={make} onChange={(event: SelectUpdateEvent) => setMake(String(event.detail.value ?? ""))}>
-            <PSelectOption value="">Select make</PSelectOption>
-            {makeOptions.map((item) => <PSelectOption key={item.slug} value={item.slug}><span className="make-option"><span className="make-option__logo">{item.logo ? <img src={item.logo} alt="" loading="lazy" /> : null}</span><span>{item.name}</span></span></PSelectOption>)}
-          </PSelect>
-          <PSelect label="Model" name="vehicle-model" value={model} disabled={!make} onChange={(event: SelectUpdateEvent) => setModel(String(event.detail.value ?? ""))}>
-            <PSelectOption value="">Select model</PSelectOption>
-            {options(models, "model").map((item) => <PSelectOption key={item.value} value={item.value}>{item.label}</PSelectOption>)}
-          </PSelect>
-          <PSelect label="Year" name="vehicle-year" value={year} disabled={!model} onChange={(event: SelectUpdateEvent) => setYear(String(event.detail.value ?? ""))}>
-            <PSelectOption value="">Select year</PSelectOption>
-            {options(years, "year").map((item) => <PSelectOption key={item.value} value={item.value}>{item.label}</PSelectOption>)}
-          </PSelect>
-          <PSelect label="Trim / Modification" name="vehicle-trim" value={trim} disabled={!year} onChange={(event: SelectUpdateEvent) => setTrim(String(event.detail.value ?? ""))}>
-            <PSelectOption value="">Select trim</PSelectOption>
-            {options(trims, "modification").map((item) => <PSelectOption key={item.value} value={item.value}>{item.label}</PSelectOption>)}
-          </PSelect>
+          <ESelect label="Vehicle market" name="vehicle-region" value={region} onChange={(event: SelectUpdateEvent) => setRegion(String(event.detail.value ?? "jdm"))}>
+            {regions.map(([value, label]) => <ESelectItem key={value} value={value}>{label}</ESelectItem>)}
+          </ESelect>
+          <ESelect label="Make" name="vehicle-make" value={make} onChange={(event: SelectUpdateEvent) => setMake(String(event.detail.value ?? ""))}>
+            <ESelectItem value="">Select make</ESelectItem>
+            {makeOptions.map((item) => <ESelectItem key={item.slug} value={item.slug}><span className="make-option"><span className="make-option__logo">{item.logo ? <img src={item.logo} alt="" loading="lazy" /> : null}</span><span>{item.name}</span></span></ESelectItem>)}
+          </ESelect>
+          <ESelect label="Model" name="vehicle-model" value={model} disabled={!make} onChange={(event: SelectUpdateEvent) => setModel(String(event.detail.value ?? ""))}>
+            <ESelectItem value="">Select model</ESelectItem>
+            {options(models, "model").map((item) => <ESelectItem key={item.value} value={item.value}>{item.label}</ESelectItem>)}
+          </ESelect>
+          <ESelect label="Year" name="vehicle-year" value={year} disabled={!model} onChange={(event: SelectUpdateEvent) => setYear(String(event.detail.value ?? ""))}>
+            <ESelectItem value="">Select year</ESelectItem>
+            {options(years, "year").map((item) => <ESelectItem key={item.value} value={item.value}>{item.label}</ESelectItem>)}
+          </ESelect>
+          <ESelect label="Trim / Modification" name="vehicle-trim" value={trim} disabled={!year} onChange={(event: SelectUpdateEvent) => setTrim(String(event.detail.value ?? ""))}>
+            <ESelectItem value="">Select trim</ESelectItem>
+            {options(trims, "modification").map((item) => <ESelectItem key={item.value} value={item.value}>{item.label}</ESelectItem>)}
+          </ESelect>
         </div>
-        <PButton type="button" disabled={!make || !model || !year || !trim || loading} onClick={search}>{loading ? "Searching..." : "Search wheel fitment"}</PButton>
+        <EButton type="button" disabled={!make || !model || !year || !trim || loading} onClick={search}>{loading ? "Searching..." : "Search wheel fitment"}</EButton>
         {error && <p className="wheels-fitment__api-error" role="alert">{error}</p>}
         {queried && rows.length > 0 && <div className="wheels-fitment__results" ref={liveRegion} aria-live="polite">
           <div className="wheels-fitment__results-heading"><strong>{rows.length} 组车辆参考规格</strong><span>原厂规格 / 可选规格</span></div>
