@@ -202,3 +202,12 @@
 .site-header__account-link:hover { opacity:.65; }
 .site-header__account-link:focus-visible { outline:2px solid currentColor; outline-offset:3px; }
 .account-address-actions { display:flex; flex-wrap:wrap; gap:18px; margin-top:12px; }
+
+.account-entry-form textarea,.account-entry-form input { width:100%; min-height:46px; padding:12px; border:1px solid var(--p-color-contrast-low); border-radius:0; background:transparent; color:var(--p-color-primary); font:inherit; font-size:13px; }
+.account-entry-form textarea { min-height:120px; resize:vertical; }
+.account-entry-form textarea:focus,.account-entry-form input:focus { outline:1px solid var(--p-color-primary); outline-offset:-1px; }
+.account-field-hint { color:var(--p-color-contrast-medium); font-size:9px; }
+.account-button:disabled,.account-text-link:disabled { opacity:.45; cursor:not-allowed; }
+.account-table article p { margin:8px 0 0; color:var(--p-color-contrast-medium); font-size:11px; line-height:1.6; }
+.account-activity-list { margin-top:18px; padding-top:12px; border-top:1px solid var(--p-color-contrast-low); }
+.account-activity-list p { color:var(--p-color-contrast-medium); font-size:10px; line-height:1.7; }
