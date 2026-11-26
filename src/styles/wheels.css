@@ -192,3 +192,16 @@
   .wheels-fitment__fields--live { grid-template-columns: 1fr; }
   .wheels-fitment__results-heading { align-items: flex-start; flex-direction: column; gap: 5px; }
 }
+
+
+/* Wheels page heading contrast */
+.wheels-hero .wheels-hero__title,
+.wheels-hero .wheels-hero__title *,
+.wheels-collections #collections-title,
+.wheels-collections #collections-title *,
+.wheels-engineering #engineering-title,
+.wheels-engineering #engineering-title *,
+.wheels-inquiry #inquiry-title,
+.wheels-inquiry #inquiry-title * {
+  color: #fff !important;
+}
