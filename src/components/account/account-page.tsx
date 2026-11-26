@@ -68,12 +68,13 @@ export function AccountPage() {
     let active = true;
     (async () => {
       try {
-        const fromEmail = acceptAuthRedirect();
+        const recoveryLink = window.location.hash.includes("type=recovery");
+        acceptAuthRedirect();
         const session = await getSession();
         const customer = session ? await currentUser() : null;
         if (!active) return;
         setUser(customer);
-        setResetMode(fromEmail && window.location.hash.includes("type=recovery"));
+        setResetMode(recoveryLink);
         if (customer) {
           setAuthEmail(customer.email);
           await refresh(customer.id);
