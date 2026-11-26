@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, type FormEvent } from "react";
-import { PHeading, PText } from "@porsche-design-system/components-react/ssr";
+import { PHeading, PText } from "@/src/components/ui/carbon-primitives";
 import { wheelProducts } from "@/src/data/wheels";
 import { currentUser, request, submitWheelInquiry } from "@/src/lib/supabase/client";
 
