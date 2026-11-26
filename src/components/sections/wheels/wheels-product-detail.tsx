@@ -226,7 +226,6 @@ export function WheelsProductDetail({ slug }: { slug: string }) {
       });
       if (!wheels.length) setFitmentError("No wheel reference data was returned for this vehicle. Try another trim or market.");
       setFitmentRows(compareFitment(wheels));
-      const selectedVehicle = [fitmentMake, fitmentModel, fitmentYear, fitmentTrim].filter(Boolean).join(" ");
       setVehicle((current) => ({
         ...current,
         make: fitmentMake, model: fitmentModel, year: fitmentYear,
@@ -415,7 +414,85 @@ export function WheelsProductDetail({ slug }: { slug: string }) {
         </section>}
 
         {activeTab === "inquiry" && <div className="wheel-inquiry-tab">
-          {inquiry}
+          <section className="wheel-inquiry-builder" id="wheel-inquiry">
+                  <div className="wheel-inquiry-builder__intro">
+                    <p className="wheels-eyebrow">PRODUCT CONFIGURATION / INQUIRY</p>
+                    <h2>SPECIFY YOUR<br />REQUIREMENTS.</h2>
+                    <p>Select a published product specification, add your vehicle details and prepare a professional, price-free inquiry document.</p>
+                    <span className="wheel-inquiry-builder__note">NO PRICING · NO PAYMENT DETAILS · SUBJECT TO TECHNICAL VERIFICATION</span>
+                  </div>
+          
+                  <form className="wheel-inquiry-form" onSubmit={createPreview}>
+                    <div className="wheel-inquiry-form__section">
+                      <div className="wheel-inquiry-form__heading"><span>01 / PRODUCT SPECIFICATION</span><strong>Select an available specification.</strong></div>
+                      {productVariants.length > 0 ? (
+                        <>
+                          <label className="wheel-inquiry-field">
+                            <span>Product variant / specification</span>
+                            <select value={selectedVariantId} onChange={(event) => setSelectedVariantId(event.target.value)} required>
+                              <option value="">Select a published specification</option>
+                              {productVariants.filter((variant) => variant.available !== false).map((variant) => (
+                                <option key={variant.id} value={variant.id}>
+                                  {(variant.label || formatVariant(variant) || variant.id) + " · " + variant.id}
+                                </option>
+                              ))}
+                            </select>
+                          </label>
+                          {selectedVariant && (
+                            <div className="wheel-inquiry-variant-summary">
+                              <span>SELECTED PRODUCT SPECIFICATION</span>
+                              <strong>{selectedVariant.label || formatVariant(selectedVariant) || selectedVariant.id}</strong>
+                              <p>{formatVariant(selectedVariant) || "Additional technical details are not published."}</p>
+                              <small>Variant ID: {selectedVariant.id}</small>
+                            </div>
+                          )}
+                          <div className="wheel-inquiry-fields wheel-inquiry-fields--variant">
+                            <TextField label="Quantity" type="number" value={quantity} onChange={setQuantity} placeholder="4" />
+                            <div className="wheel-inquiry-field wheel-inquiry-field--action">
+                              <button type="button" className="wheel-inquiry-secondary" onClick={addConfiguration} disabled={!selectedVariant}>ADD SELECTED SPECIFICATION +</button>
+                            </div>
+                          </div>
+                        </>
+                      ) : (
+                        <div className="wheel-inquiry-no-variants" role="status">
+                          <strong>Production specifications are not published yet.</strong>
+                          <p>This is a demonstration model. We have not received verified size, PCD, offset or centre-bore combinations for this product, so no selectable variants are shown. You can still submit a product enquiry and ask our team to confirm the available specifications.</p>
+                        </div>
+                      )}
+                      <p className="wheel-inquiry-help">Only specifications explicitly published for this product can be selected. The diameter concept shown above is a design range, not a list of confirmed variants.</p>
+                      {configurations.length > 0 && <div className="wheel-inquiry-config-list">
+                        <strong>ADDED PRODUCT SPECIFICATIONS ({configurations.length})</strong>
+                        {configurations.map((item, index) => (
+                          <article key={item.variantId + "-" + index}>
+                            <div><b>{item.variantLabel}</b><span>{formatConfiguration(item)}</span><small>Variant {item.variantId} · Qty {item.quantity}</small></div>
+                            <button type="button" aria-label={"Remove specification " + (index + 1)} onClick={() => setConfigurations((current) => current.filter((_, itemIndex) => itemIndex !== index))}>REMOVE</button>
+                          </article>
+                        ))}
+                      </div>}
+                    </div>
+          
+                    <div className="wheel-inquiry-form__section">
+                      <div className="wheel-inquiry-form__heading"><span>02 / CUSTOMER DETAILS</span><strong>How can we contact you?</strong></div>
+                      <div className="wheel-inquiry-fields">
+                        <TextField label="Contact name" value={customer.name} onChange={(value) => updateCustomer("name", value)} placeholder="Your name" />
+                        <TextField label="Company" value={customer.company} onChange={(value) => updateCustomer("company", value)} placeholder="Optional" />
+                        <TextField label="Email address" type="email" value={customer.email} onChange={(value) => updateCustomer("email", value)} placeholder="name@example.com" />
+                        <TextField label="Phone / WhatsApp" value={customer.phone} onChange={(value) => updateCustomer("phone", value)} placeholder="Country code + number" />
+                        <TextField label="Country / region" value={customer.country} onChange={(value) => updateCustomer("country", value)} placeholder="Optional" />
+                      </div>
+                      <p className="wheel-inquiry-help">At least one contact method (email or phone) is required. If you are signed in, saved customer details are prefilled where available.</p>
+                    </div>
+          
+                    <div className="wheel-inquiry-form__section">
+                      <div className="wheel-inquiry-form__heading"><span>03 / REQUIREMENTS</span><strong>Additional information</strong></div>
+                      <label className="wheel-inquiry-field"><span>Requirements / notes</span><textarea rows={4} value={requirements} onChange={(event) => setRequirements(event.target.value)} placeholder="Custom finish, intended use, destination, packaging or other requirements" /></label>
+                    </div>
+          
+                    {error && <p className="wheel-inquiry-error" role="alert">{error}</p>}
+                    {submitted && <p className="wheel-inquiry-success" role="status">Inquiry {reference} has been submitted and saved.</p>}
+                    <button className="wheel-inquiry-primary" type="submit">PREVIEW INQUIRY DOCUMENT ↗</button>
+                  </form>
+                </section>
         </div>}
 
         {activeTab === "ordering" && <section className="wheel-tab-ordering">
@@ -452,6 +529,40 @@ export function WheelsProductDetail({ slug }: { slug: string }) {
         </section>
       </div>}
 
-      {preview}
+      {previewOpen && <section className="wheel-inquiry-preview" id="wheel-inquiry-preview">
+              <div className="wheel-inquiry-preview__toolbar">
+                <div><p className="wheels-eyebrow">DOCUMENT PREVIEW</p><h2>Review your inquiry sheet.</h2><p>Export the document as PDF or submit it securely to Euresis.</p></div>
+                <div className="wheel-inquiry-preview__actions">
+                  <button type="button" className="wheel-inquiry-secondary" onClick={() => window.print()}>EXPORT PDF / PRINT</button>
+                  <button type="button" className="wheel-inquiry-primary" onClick={submitInquiry} disabled={busy || submitted}>{submitted ? "INQUIRY SUBMITTED" : busy ? "SUBMITTING…" : "SUBMIT INQUIRY"}</button>
+                </div>
+              </div>
+              <article className="wheel-inquiry-document">
+                <header className="wheel-inquiry-document__header">
+                  <div><strong className="wheel-inquiry-document__brand">EURESIS</strong><span>AUTOMOTIVE WHEEL SPECIALIST</span></div>
+                  <div><b>WHEEL SPECIFICATION</b><b>& INQUIRY SHEET</b><small>NON-COMMERCIAL · NO PRICING</small></div>
+                </header>
+                <div className="wheel-inquiry-document__meta"><span>INQUIRY REFERENCE <b>{reference}</b></span><span>ISSUED <b>{new Intl.DateTimeFormat("en-GB", { day: "2-digit", month: "short", year: "numeric" }).format(new Date())}</b></span></div>
+                <section><h3>01 / CUSTOMER INFORMATION</h3><div className="wheel-inquiry-document__grid">
+                  <div><small>CONTACT NAME</small><b>{customer.name || "Not provided"}</b></div>
+                  <div><small>COMPANY</small><b>{customer.company || "Not provided"}</b></div>
+                  <div><small>EMAIL</small><b>{customer.email || "Not provided"}</b></div>
+                  <div><small>PHONE / WHATSAPP</small><b>{customer.phone || "Not provided"}</b></div>
+                  <div><small>COUNTRY / REGION</small><b>{customer.country || "Not provided"}</b></div>
+                </div></section>
+                <section><h3>02 / VEHICLE INFORMATION</h3><div className="wheel-inquiry-document__grid">
+                  {([["MAKE", vehicle.make], ["MODEL", vehicle.model], ["GENERATION / CHASSIS", vehicle.generation], ["MODEL YEAR", vehicle.year], ["TRIM / VERSION", vehicle.trim], ["CURRENT WHEEL SPEC", vehicle.originalWheel], ["BRAKE / CLEARANCE NOTES", vehicle.brakeNotes]] as [string, string][]).map(([label, value]) => <div key={label}><small>{label}</small><b>{value || "Not provided"}</b></div>)}
+                </div><p className="wheel-inquiry-document__status">FITMENT STATUS: {hasVehicleData(vehicle) ? "PENDING VERIFICATION" : "UNVERIFIED — VEHICLE DETAILS NOT PROVIDED"}</p></section>
+                <section><h3>03 / PRODUCT INFORMATION</h3><div className="wheel-inquiry-document__product"><img src={product.image} alt={product.imageAlt}/><div><small>PRODUCT / MODEL</small><b>{product.collection}-{suffix} {product.model}</b><span>Product code: {product.code}</span><span>Manufacturing: {product.manufacturing}</span><span>Design: {product.design}</span></div></div></section>
+                <section><h3>04 / WHEEL CONFIGURATIONS</h3>{configurations.length ? <table><thead><tr><th>VARIANT ID</th><th>SPECIFICATION</th><th>DIAMETER</th><th>WIDTH</th><th>PCD</th><th>ET</th><th>CB</th><th>FINISH</th><th>QTY</th></tr></thead><tbody>{configurations.map((item, index) => <tr key={index}><td>{item.variantId}</td><td>{item.variantLabel}</td><td>{item.diameter || "—"}</td><td>{item.width || "—"}</td><td>{item.pcd || "—"}</td><td>{item.offset || "—"}</td><td>{item.centerBore || "—"}</td><td>{item.finish || "—"}</td><td>{item.quantity || "—"}</td></tr>)}</tbody></table> : <p>No exact wheel configuration specified. Please confirm the required specification with Euresis.</p>}
+                  {configurations.some((item) => item.boltSpec || item.loadRating) && <div className="wheel-inquiry-document__extra">{configurations.map((item, index) => <p key={index}>Configuration {index + 1}: Bolt specification — {item.boltSpec || "Not provided"} · Load rating — {item.loadRating || "Not provided"} kg</p>)}</div>}
+                </section>
+                <section><h3>05 / CUSTOMER REQUIREMENTS</h3><p className="wheel-inquiry-document__notes">{requirements || "No additional requirements provided."}</p></section>
+                <footer className="wheel-inquiry-document__footer"><b>EURESIS / WHEEL SPECIFICATION & INQUIRY DOCUMENT</b><p>This document records customer-provided requirements only. It is not a quotation, commercial invoice, order confirmation or fitment certification. All specifications and vehicle compatibility are subject to technical review and written confirmation by Euresis.</p><span>NO PRICING · NO PAYMENT TERMS · NO COMMERCIAL VALUE</span></footer>
+              </article>
+              {error && <p className="wheel-inquiry-error" role="alert">{error}</p>}
+              {submitted && <p className="wheel-inquiry-success" role="status">Thank you. Your inquiry reference is {reference}. You can print or save this document as PDF for your records.</p>}
+            </section>}
     </main>
-  );}
+  );
+}
