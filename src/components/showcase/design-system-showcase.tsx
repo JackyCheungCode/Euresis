@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import {
-  Button,
-  ButtonPure,
+  PButton as Button,
+  PButtonPure as ButtonPure,
   PCheckbox,
   PDivider,
   PInputEmail,
@@ -31,8 +31,8 @@ const sections = [
 ];
 
 const colorTokens = [
-  { name: "Canvas", token: "--p-color-canvas", role: "Main page background" },
-  { name: "Surface", token: "--p-color-surface", role: "Cards and grouped content" },
+  { name: "Canvas", token: "--cds-background", role: "Main page background" },
+  { name: "Surface", token: "--cds-layer", role: "Cards and grouped content" },
   { name: "Primary", token: "--p-color-primary", role: "Primary text and emphasis" },
   { name: "Contrast higher", token: "--p-color-contrast-higher", role: "Strong secondary text" },
   { name: "Contrast high", token: "--p-color-contrast-high", role: "Body copy" },
