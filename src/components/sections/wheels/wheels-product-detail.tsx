@@ -113,7 +113,7 @@ export function WheelsProductDetail({ slug }: { slug: string }) {
     setVehicle((current) => ({ ...current, [key]: value }));
   const updateCustomer = (key: keyof typeof customer, value: string) =>
     setCustomer((current) => ({ ...current, [key]: value }));
-  const productVariants = product.variants ?? [];
+  const productVariants = (product.variants ?? []).filter((variant) => variant.available !== false);
   const selectedVariant = productVariants.find((variant) => variant.id === selectedVariantId);
   const formatVariant = (variant: typeof productVariants[number]) => [
     variant.diameterInches ? variant.diameterInches + " in" : "",
@@ -123,6 +123,7 @@ export function WheelsProductDetail({ slug }: { slug: string }) {
     variant.centerBoreMm !== undefined ? "CB " + variant.centerBoreMm + " mm" : "",
     variant.finish || "",
   ].filter(Boolean).join(" · ");
+  const formatConfiguration = (item: WheelConfiguration) => [item.diameter ? item.diameter + " in" : "", item.width ? item.width + "J" : "", item.pcd, item.offset, item.centerBore ? "CB " + item.centerBore + " mm" : "", item.finish].filter(Boolean).join(" · ") || "Technical details pending";
 
   const addConfiguration = () => {
     if (!selectedVariant) {
