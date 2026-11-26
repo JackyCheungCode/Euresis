@@ -34,3 +34,35 @@
   color: var(--euresis-graphite);
   font-size: 0.625rem;
 }
+
+
+/* Carbon v11 components tuned to Euresis' monochrome performance identity. */
+:root {
+  --cds-focus: #161616;
+  --cds-interactive: #161616;
+}
+.cds--btn--primary {
+  border-color: #161616;
+  background: #161616;
+  color: #fff;
+}
+.cds--btn--primary:hover,
+.cds--btn--primary:focus {
+  border-color: #333;
+  background: #333;
+}
+.cds--btn--secondary {
+  border-color: #161616;
+  background: transparent;
+  color: #161616;
+}
+.cds--btn--secondary:hover {
+  background: #e8e8e6;
+  color: #161616;
+}
+.cds--btn--tertiary,
+.cds--btn--ghost,
+.cds--link { color: #161616; }
+.cds--link:hover { color: #555; }
+.cds--checkbox:checked + .cds--checkbox-label::before { background: #161616; border-color: #161616; }
+.cds--radio-button:checked + .cds--radio-button__label .cds--radio-button__appearance::before { background: #161616; }
