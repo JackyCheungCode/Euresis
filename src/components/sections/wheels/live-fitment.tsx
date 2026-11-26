@@ -98,12 +98,12 @@ export function LiveFitment() {
     const rim = front.rim_diameter ?? front.rim?.diameter ?? front.diameter;
     const width = front.rim_width ?? front.rim?.width ?? front.width;
     const offset = front.rim_offset ?? front.rim?.offset ?? front.offset;
-    const pcd = row._vehicle?.technical?.bolt_pattern ?? row.technical?.bolt_pattern ?? "";
+    const pcd = front.bolt_pattern ?? front.pcd ?? front.bolt_pattern_full ?? row.bolt_pattern ?? row.pcd ?? row._vehicle?.technical?.bolt_pattern ?? row.technical?.bolt_pattern ?? "";
     const detail = { diameter: rim ? String(rim) : "ALL", width: width ? String(width) : "", offset: offset ? String(offset) : "", pcd, rearDiameter: rear.rim_diameter ?? "", source: row._type, make, model, year, trim };
     window.dispatchEvent(new CustomEvent("euresis:fitment-selected", { detail }));
     setSelected((current) => [...current, row._id]);
     document.getElementById("catalogue")?.scrollIntoView({ behavior: "smooth", block: "start" });
-    window.setTimeout(() => document.querySelector<HTMLInputElement>('[name="filter-diameter"]')?.focus(), 450);
+    window.setTimeout(() => document.querySelector<HTMLInputElement>('[name="catalogue-diameter"]')?.focus(), 450);
   }
 
   return (
