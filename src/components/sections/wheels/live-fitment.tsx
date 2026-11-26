@@ -109,9 +109,9 @@ export function LiveFitment() {
   return (
     <section className="wheels-fitment" id="vehicle-fitment" aria-labelledby="fitment-title">
       <div className="wheels-fitment__intro">
-        <p className="wheels-eyebrow">03 / VEHICLE FIRST</p>
+        <p className="wheels-eyebrow">03 / VEHICLE FITMENT</p>
         <PHeading id="fitment-title" tag="h2" size="2xl">START WITH<br />YOUR VEHICLE.</PHeading>
-        <p>Find wheel specifications for your vehicle and selected market.</p>
+        <p>Choose your vehicle to retrieve original and optional wheel specifications. You can then transfer any result into the specification filters and continue refining your search. Vehicle selection is optional when you already know your wheel parameters.</p>
       </div>
       <div className="wheels-fitment__form">
         <div className="wheels-fitment__fields wheels-fitment__fields--live">
