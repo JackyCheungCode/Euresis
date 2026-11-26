@@ -1,4 +1,4 @@
-import { PLink } from "@porsche-design-system/components-react/ssr";
+import { PLink } from "@/src/components/ui/carbon-primitives";
 
 export function FitmentCallout() {
   return (
