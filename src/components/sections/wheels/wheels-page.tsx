@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
-  Button,
+  PButton as Button,
   PHeading,
   PIcon,
   PInputEmail,
@@ -17,8 +17,8 @@ import { LiveFitment } from "./live-fitment";
 import { CountryRegionSelect } from "./country-region-select";
 
 type SelectUpdateEvent = CustomEvent<{ value?: string | number | null }>;
-type InputUpdateEvent = CustomEvent<Event>;
-const inputValue = (event: InputUpdateEvent) => String((event.detail?.target as HTMLInputElement | null)?.value ?? "");
+type InputUpdateEvent = CustomEvent<{ value?: string }>;
+const inputValue = (event: InputUpdateEvent) => String(event.detail?.value ?? "");
 
 const all = "ALL";
 
