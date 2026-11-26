@@ -13,7 +13,7 @@ import {
 } from "@porsche-design-system/components-react/ssr";
 import { demoVehicles, wheelCollections, wheelProducts } from "@/src/data/wheels";
 
-type SelectUpdateEvent = CustomEvent<{ value: string }>;
+type SelectUpdateEvent = CustomEvent<{ value?: string | number | null }>;
 
 const all = "ALL";
 
@@ -125,19 +125,19 @@ export function WheelsPage() {
         </div>
         <div className="wheels-fitment__form">
           <div className="wheels-fitment__fields">
-            <PSelect label="Make" name="vehicle-make" value={make} onChange={(event: SelectUpdateEvent) => { setMake(event.detail.value); setModel(""); setYear(""); setTrim(""); setFitmentRequested(false); }}>
+            <PSelect label="Make" name="vehicle-make" value={make} onChange={(event: SelectUpdateEvent) => { setMake(String(event.detail.value ?? "")); setModel(""); setYear(""); setTrim(""); setFitmentRequested(false); }}>
               <PSelectOption value="">Select make</PSelectOption>
               {makeOptions.map((value) => <PSelectOption key={value} value={value}>{value}</PSelectOption>)}
             </PSelect>
-            <PSelect label="Model" name="vehicle-model" value={model} disabled={!make} onChange={(event: SelectUpdateEvent) => { setModel(event.detail.value); setYear(""); setTrim(""); setFitmentRequested(false); }}>
+            <PSelect label="Model" name="vehicle-model" value={model} disabled={!make} onChange={(event: SelectUpdateEvent) => { setModel(String(event.detail.value ?? "")); setYear(""); setTrim(""); setFitmentRequested(false); }}>
               <PSelectOption value="">Select model</PSelectOption>
               {modelOptions.map((value: string) => <PSelectOption key={value} value={value}>{value}</PSelectOption>)}
             </PSelect>
-            <PSelect label="Year" name="vehicle-year" value={year} disabled={!model} onChange={(event: SelectUpdateEvent) => { setYear(event.detail.value); setTrim(""); setFitmentRequested(false); }}>
+            <PSelect label="Year" name="vehicle-year" value={year} disabled={!model} onChange={(event: SelectUpdateEvent) => { setYear(String(event.detail.value ?? "")); setTrim(""); setFitmentRequested(false); }}>
               <PSelectOption value="">Select year</PSelectOption>
               {yearOptions.map((value: string) => <PSelectOption key={value} value={value}>{value}</PSelectOption>)}
             </PSelect>
-            <PSelect label="Trim" name="vehicle-trim" value={trim} disabled={!year} onChange={(event: SelectUpdateEvent) => { setTrim(event.detail.value); setFitmentRequested(false); }}>
+            <PSelect label="Trim" name="vehicle-trim" value={trim} disabled={!year} onChange={(event: SelectUpdateEvent) => { setTrim(String(event.detail.value ?? "")); setFitmentRequested(false); }}>
               <PSelectOption value="">Select trim</PSelectOption>
               {trimOptions.map((value: string) => <PSelectOption key={value} value={value}>{value}</PSelectOption>)}
             </PSelect>
@@ -161,20 +161,20 @@ export function WheelsPage() {
             <PSelectOption value="FORGED">Forged</PSelectOption>
             <PSelectOption value="CAST">Cast</PSelectOption>
           </PSelect>
-          <PSelect label="Collection" name="filter-collection" value={collection} onChange={(event: SelectUpdateEvent) => setCollection(event.detail.value)}>
+          <PSelect label="Collection" name="filter-collection" value={collection} onChange={(event: SelectUpdateEvent) => setCollection(String(event.detail.value ?? ""))}>
             <PSelectOption value="ALL">All collections</PSelectOption>
             {wheelCollections.map((item) => <PSelectOption key={item.id} value={item.id}>{item.id}</PSelectOption>)}
           </PSelect>
-          <PSelect label="Diameter" name="filter-diameter" value={diameter} onChange={(event: SelectUpdateEvent) => setDiameter(event.detail.value)}>
+          <PSelect label="Diameter" name="filter-diameter" value={diameter} onChange={(event: SelectUpdateEvent) => setDiameter(String(event.detail.value ?? ""))}>
             <PSelectOption value="ALL">All diameters</PSelectOption>
             {["17","18","19","20","21","22"].map((value) => <PSelectOption key={value} value={value}>{value} inch</PSelectOption>)}
           </PSelect>
-          <PSelect label="Finish options" name="filter-finish" value={finish} onChange={(event: SelectUpdateEvent) => setFinish(event.detail.value)}>
+          <PSelect label="Finish options" name="filter-finish" value={finish} onChange={(event: SelectUpdateEvent) => setFinish(String(event.detail.value ?? ""))}>
             <PSelectOption value="ALL">Any finish count</PSelectOption>
             <PSelectOption value="3">3+ finishes</PSelectOption>
             <PSelectOption value="4">4+ finishes</PSelectOption>
           </PSelect>
-          <PButton type="button" variant="tertiary" onClick={resetFilters}>Reset filters</PButton>
+          <PButton type="button" variant="secondary" onClick={resetFilters}>Reset filters</PButton>
         </div>
         <div className="wheels-catalogue__meta"><span>{products.length.toString().padStart(2, "0")} SAMPLE MODELS</span><span>NO PRICING · NO CHECKOUT</span></div>
         {products.length > 0 ? <div className="wheels-product-grid">
