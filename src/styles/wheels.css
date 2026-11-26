@@ -25,7 +25,7 @@
 .manufacturing-card__copy strong { font-size: clamp(2.8rem, 5.4vw, 5.8rem); font-weight: 500; letter-spacing: -.07em; line-height: .9; }
 .manufacturing-card__copy small { color: rgb(255 255 255 / .8); font-size: 9px; letter-spacing: .16em; }
 .manufacturing-card__arrow { position: absolute; right: 28px; bottom: 30px; font-size: 22px; }
-.wheels-collection-item:hover, .wheels-fitment { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1fr); gap: clamp(36px, 8vw, 120px); align-items: start; padding: clamp(82px, 9vw, 144px) var(--euresis-gutter); background: var(--p-color-canvas); }
+.wheels-fitment { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1fr); gap: clamp(36px, 8vw, 120px); align-items: start; padding: clamp(82px, 9vw, 144px) var(--euresis-gutter); background: var(--p-color-canvas); }
 .wheels-fitment__intro h2, .wheels-inquiry__intro h2, .wheels-engineering h2 { margin: 22px 0 0; font-size: clamp(3rem, 6.8vw, 6.6rem); font-weight: 500; letter-spacing: -.075em; line-height: .9; }
 .wheels-fitment__intro > p:not(.wheels-eyebrow), .wheels-inquiry__intro > p:not(.wheels-eyebrow) { max-width: 480px; margin: 24px 0 0; color: var(--p-color-contrast-high); font-size: 15px; line-height: 1.65; }
 .wheels-demo-note { display: block; margin-top: 24px; color: var(--p-color-contrast-medium); font-size: 9px; font-weight: 600; letter-spacing: .16em; }
@@ -170,8 +170,6 @@
 /* Wheels page heading contrast */
 .wheels-hero .wheels-hero__title,
 .wheels-hero .wheels-hero__title *,
-.wheels-collections #collections-title,
-.wheels-collections #collections-title *,
 .wheels-engineering #engineering-title,
 .wheels-engineering #engineering-title *,
 .wheels-inquiry #inquiry-title,
@@ -194,5 +192,4 @@
 .wheels-discovery__card:hover > span, .wheels-discovery__card:hover > small, .wheels-discovery__card:focus-visible > span, .wheels-discovery__card:focus-visible > small { color: var(--p-color-contrast-medium); }
 .wheels-fitment { background: var(--p-color-contrast-low); }
 .wheels-engineering { background: var(--p-color-contrast-low); }
-@media (max-width: 900px) { .wheels-specification-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 600px) { .wheels-discovery { padding: 74px 20px; } .wheels-discovery__grid { grid-template-columns: 1fr; } .wheels-discovery__card { min-height: 220px; } }
