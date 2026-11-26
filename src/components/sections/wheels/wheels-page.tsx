@@ -96,7 +96,7 @@ export function WheelsPage() {
   return (
     <main className="wheels-page">
       <section className="wheels-hero scheme-dark" aria-labelledby="wheels-title">
-        <video ref={heroVideoRef} className="wheels-hero__video" autoPlay muted loop playsInline preload="metadata" aria-hidden="true" tabIndex={-1} poster="https://images.pexels.com/videos/28180175/free-video-28180175.jpg?auto=compress&cs=tinysrgb&w=2200"><source src="https://videos.pexels.com/video-files/28180175/28180175-hd_1920_1080_30fps.mp4" type="video/mp4" /></video>
+        <video ref={heroVideoRef} className="wheels-hero__video" autoPlay muted loop playsInline preload="metadata" aria-hidden="true" tabIndex={-1} poster="https://images.pexels.com/videos/28180175/free-video-28180175.jpg?auto=compress&cs=tinysrgb&w=2200"><source src="https://videos.pexels.com/video-files/40930926/40930926-hd_1920_1080_30fps.mp4" type="video/mp4" /></video>
         <div className="wheels-hero__content">
           <p className="wheels-eyebrow">EURESIS / PERFORMANCE WHEELS</p>
           <PHeading id="wheels-title" tag="h1" size="3xl" color="contrast-high" className="wheels-hero__title">
@@ -122,13 +122,13 @@ export function WheelsPage() {
         </div>
         <div className="wheels-manufacturing__grid">
           <button className={`manufacturing-card ${manufacturing === "FORGED" ? "is-active" : ""}`} type="button" onClick={() => { setManufacturing(manufacturing === "FORGED" ? "ALL" : "FORGED"); document.getElementById("discovery")?.scrollIntoView({ behavior: "smooth" }); }}>
-            <img src="https://images.pexels.com/photos/41081788/pexels-photo-41081788.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="Reference image of a detailed alloy wheel" loading="lazy" />
+            <img src="https://cdn.pixabay.com/photo/2014/01/30/01/55/wheel-rim-254714_1280.jpg" alt="Reference image of a detailed alloy wheel" loading="lazy" />
             <span className="manufacturing-card__number">01 / F</span>
             <span className="manufacturing-card__copy"><strong>FORGED</strong><small>PRECISION · STRENGTH · LIGHTWEIGHT</small></span>
             <span className="manufacturing-card__arrow">↗</span>
           </button>
           <button className={`manufacturing-card ${manufacturing === "CAST" ? "is-active" : ""}`} type="button" onClick={() => { setManufacturing(manufacturing === "CAST" ? "ALL" : "CAST"); document.getElementById("discovery")?.scrollIntoView({ behavior: "smooth" }); }}>
-            <img src="https://images.pexels.com/photos/32070739/pexels-photo-32070739.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="Reference image of a polished alloy wheel" loading="lazy" />
+            <img src="https://cdn.pixabay.com/photo/2020/01/31/07/13/tire-4807271_1280.jpg" alt="Reference image of a polished alloy wheel" loading="lazy" />
             <span className="manufacturing-card__number">02 / C</span>
             <span className="manufacturing-card__copy"><strong>CAST</strong><small>DESIGN · VERSATILITY · PERFORMANCE</small></span>
             <span className="manufacturing-card__arrow">↗</span>
