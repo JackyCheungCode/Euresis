@@ -8,7 +8,7 @@ Euresis product discovery has a shared product taxonomy and two independent entr
 
 1. **Manufacturing type:** FORGED or CAST; shared by both paths.
 2. **Discovery path:** Vehicle First or Specification First.
-3. **Collection:** APEX, GT, SPRINT, ENDURANCE, RALLY or HERITAGE; applies to Specification First only.
+3. **Collection:** APEX, GT, SPRINT, ENDURANCE, RALLY or HERITAGE; selected in the unified catalogue for either path.
 4. **Product model:** an individual design name such as VECTOR, MONZA or STRIKE.
 
 Manufacturing type is a product classification, not a collection. Collection names express design positioning and may exist under either manufacturing type when an actual product is developed for that combination.
@@ -95,7 +95,7 @@ Prices and inventory are omitted from the initial enquiry-led catalogue.
 
 The first demonstration catalogue contains eight sample concepts. All are labelled SAMPLE / DEMO. Product imagery is reference photography and does not represent actual Euresis production models.
 
-Reference images are served from Pexels and each product record links to its source page and photographer credit. Before any commercial production release, verify current image licence terms and replace reference imagery with Euresis-owned, commissioned or otherwise properly licensed product photography.
+Reference-image source and licence metadata are retained in product records for internal asset governance. Source-credit copy is not displayed in the customer-facing catalogue. Before any commercial production release, verify current image licence terms and replace reference imagery with Euresis-owned, commissioned or otherwise properly licensed product photography.
 
 Do not describe sample dimensions as confirmed manufacturing specifications. Diameter ranges and finish counts in this demo are editorial placeholders only.
 
@@ -115,9 +115,9 @@ The current sample catalogue must never display VERIFIED fitment.
 Manufacturing type is the shared top-level condition for both discovery paths. After choosing FORGED or CAST, visitors can use either path independently:
 
 - **Vehicle First:** select market, make, model, year and modification; retrieve OE and optional fitment; transfer a chosen fitment into editable wheel-parameter filters; continue refining by diameter, width, PCD and offset. Collection is not required.
-- **Specification First:** select a collection and wheel parameters directly. Vehicle make/model/year/modification is never required.
+- **Specification First:** navigate directly to the unified catalogue and use its shared manufacturing, collection, diameter, width, PCD, offset and center-bore filters. Vehicle make/model/year/modification is never required.
 
-Both paths converge on the same Euresis Wheels Catalogue and product detail pages. Moving between paths must not force a reset of the shared manufacturing condition or require completing the other path.
+Both paths converge on the same Euresis Wheels Catalogue and product detail pages. The Specification First card links directly to the catalogue; there is no separate specification-finder section. The catalogue is the single location for all product filters. Moving between paths must not force a reset of the shared manufacturing condition or require completing the other path.
 
 A vehicle-derived specification is a search criterion, not proof that a sample Euresis product fits the vehicle. Only product-level, validated technical records may support a VERIFIED fitment claim. Missing sample specifications must remain unknown rather than being inferred.
 

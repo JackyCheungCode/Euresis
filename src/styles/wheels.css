@@ -25,21 +25,6 @@
 .manufacturing-card__copy strong { font-size: clamp(2.8rem, 5.4vw, 5.8rem); font-weight: 500; letter-spacing: -.07em; line-height: .9; }
 .manufacturing-card__copy small { color: rgb(255 255 255 / .8); font-size: 9px; letter-spacing: .16em; }
 .manufacturing-card__arrow { position: absolute; right: 28px; bottom: 30px; font-size: 22px; }
-.wheels-collections { padding: clamp(82px, 9vw, 144px) var(--euresis-gutter); background: var(--p-color-primary); color: var(--p-color-canvas); }
-.wheels-section-heading--light .wheels-eyebrow { color: rgb(255 255 255 / .62); }
-.wheels-section-heading--light h2 { color: #fff; }
-.wheels-section-heading--light { margin-bottom: clamp(30px, 3.5vw, 48px); }
-.wheels-section-heading__statement { align-self: end; max-width: 460px; padding-bottom: 4px; }
-.wheels-section-heading__statement h3 { margin: 0 0 14px; color: #fff; font-size: clamp(3rem, 7vw, 7rem); font-weight: 500; letter-spacing: -.075em; line-height: .89; }
-.wheels-section-heading__statement p { margin: 0; color: rgb(255 255 255 / .82); font-size: clamp(1rem, 1.2vw, 1.1rem); line-height: 1.65; }
-.wheels-collection-list { max-width: 1440px; margin: 0 auto; border-top: 1px solid rgb(255 255 255 / .24); }
-.wheels-collection-item { display: grid; width: 100%; grid-template-columns: 48px minmax(150px, .8fr) minmax(170px, .8fr) minmax(220px, 1fr) 24px; align-items: center; gap: 18px; padding: 24px 0; border: 0; border-bottom: 1px solid rgb(255 255 255 / .24); background: transparent; color: #fff; text-align: left; cursor: pointer; transition: padding .2s ease, background .2s ease; }
-.wheels-collection-item:hover, .wheels-collection-item.is-active { padding-inline: 14px; background: rgb(255 255 255 / .06); }
-.wheels-collection-item__index { color: rgb(255 255 255 / .52); font-size: 11px; }
-.wheels-collection-item__name { font-size: clamp(1.5rem, 3.4vw, 3rem); letter-spacing: -.055em; }
-.wheels-collection-item__subtitle { color: rgb(255 255 255 / .72); font-size: 9px; letter-spacing: .15em; }
-.wheels-collection-item__description { color: rgb(255 255 255 / .64); font-size: 12px; line-height: 1.5; }
-.wheels-collection-item__arrow { font-size: 20px; }
 .wheels-fitment { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1fr); gap: clamp(36px, 8vw, 120px); align-items: start; padding: clamp(82px, 9vw, 144px) var(--euresis-gutter); background: var(--p-color-canvas); }
 .wheels-fitment__intro h2, .wheels-inquiry__intro h2, .wheels-engineering h2 { margin: 22px 0 0; font-size: clamp(3rem, 6.8vw, 6.6rem); font-weight: 500; letter-spacing: -.075em; line-height: .9; }
 .wheels-fitment__intro > p:not(.wheels-eyebrow), .wheels-inquiry__intro > p:not(.wheels-eyebrow) { max-width: 480px; margin: 24px 0 0; color: var(--p-color-contrast-high); font-size: 15px; line-height: 1.65; }
@@ -69,7 +54,6 @@
 .wheel-product-card__link { display: flex; justify-content: space-between; margin-top: 18px; padding: 13px 0; border-top: 1px solid var(--p-color-contrast-low); color: var(--p-color-primary); font-size: 10px; font-weight: 600; letter-spacing: .14em; text-decoration: none; }
 .wheels-empty { display: grid; justify-items: center; gap: 12px; padding: 60px 20px; background: var(--p-color-contrast-low); }
 .wheels-empty button { padding: 8px 12px; border: 1px solid var(--p-color-contrast-medium); background: transparent; cursor: pointer; }
-.wheels-image-credit { max-width: 1440px; margin: 24px auto 0; color: var(--p-color-contrast-medium); font-size: 10px; line-height: 1.6; }
 .wheels-engineering { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1fr); gap: clamp(40px, 8vw, 120px); align-items: end; padding: clamp(82px, 9vw, 144px) var(--euresis-gutter); background: var(--p-color-canvas); }
 .wheels-engineering__copy > p { max-width: 600px; color: var(--p-color-contrast-high); font-size: clamp(1rem, 1.3vw, 1.2rem); line-height: 1.7; }
 .wheels-engineering__labels { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; }
@@ -111,27 +95,20 @@
   .wheels-fitment, .wheels-engineering, .wheels-inquiry { grid-template-columns: 1fr; }
   .wheels-product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .wheels-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .wheels-collection-item { grid-template-columns: 34px minmax(120px, .8fr) minmax(150px, 1fr) 20px; }
-  .wheels-collection-item__description { display: none; }
-}
+    }
 @media (max-width: 600px) {
   .wheels-hero { min-height: min(720px, 86svh); }
   .wheels-hero__content { width: calc(100% - 40px); padding: 150px 0 104px; }
   .wheels-hero__title { font-size: clamp(3.7rem, 16vw, 5.4rem); }
   .wheels-hero__lead { max-width: 340px; margin-top: 20px; font-size: 15px; }
   .wheels-hero__index { right: 20px; bottom: 24px; font-size: 8px; }
-  .wheels-manufacturing, .wheels-collections, .wheels-catalogue { padding: 74px 20px; }
+  .wheels-manufacturing, .wheels-discovery, .wheels-catalogue { padding: 74px 20px; }
   .wheels-section-heading { margin-bottom: 32px; }
-  .wheels-section-heading__statement { padding-bottom: 0; }
-  .wheels-section-heading__statement h3 { margin-bottom: 10px; font-size: clamp(2.8rem, 13vw, 4.1rem); }
-  .wheels-section-heading h2 { margin-top: 17px; font-size: clamp(2.8rem, 13vw, 4.1rem); }
+      .wheels-section-heading h2 { margin-top: 17px; font-size: clamp(2.8rem, 13vw, 4.1rem); }
   .wheels-manufacturing__grid { grid-template-columns: 1fr; gap: 14px; }
   .manufacturing-card { aspect-ratio: 1.15 / 1; }
   .manufacturing-card__copy strong { font-size: 3.7rem; }
-  .wheels-collection-item { grid-template-columns: 28px minmax(0, 1fr) 20px; gap: 10px; padding: 20px 0; }
-  .wheels-collection-item__subtitle { grid-column: 2; grid-row: 2; }
-  .wheels-collection-item__arrow { grid-column: 3; grid-row: 1 / 3; }
-  .wheels-fitment, .wheels-engineering, .wheels-inquiry { padding: 74px 20px; }
+        .wheels-fitment, .wheels-engineering, .wheels-inquiry { padding: 74px 20px; }
   .wheels-fitment__intro h2, .wheels-inquiry__intro h2, .wheels-engineering h2 { font-size: clamp(2.8rem, 13vw, 4.1rem); }
   .wheels-fitment__fields, .wheels-inquiry__fields { grid-template-columns: 1fr; }
   .wheels-inquiry__fields > :last-child { grid-column: auto; }
@@ -155,13 +132,9 @@
 
 
 /* Live fitment and contrast corrections */
-.wheels-collections .wheels-section-heading--light h2,
-.wheels-collections .wheels-section-heading--light h2 *,
 .wheels-inquiry .wheels-inquiry__intro h2,
 .wheels-inquiry .wheels-inquiry__intro h2 * { color: #fff !important; }
 .wheels-inquiry .wheels-eyebrow { color: rgb(255 255 255 / .72); }
-.wheels-section-heading__statement { padding-bottom: 0; }
-.wheels-section-heading__statement p { color: rgb(255 255 255 / .84); }
 .wheels-live-note { display: inline-block; margin-top: 20px; color: var(--p-color-contrast-high); font-size: 10px; font-weight: 600; letter-spacing: .16em; }
 .wheels-fitment__fields--live { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .make-option { display: inline-flex; align-items: center; gap: 12px; min-height: 34px; }
@@ -197,8 +170,6 @@
 /* Wheels page heading contrast */
 .wheels-hero .wheels-hero__title,
 .wheels-hero .wheels-hero__title *,
-.wheels-collections #collections-title,
-.wheels-collections #collections-title *,
 .wheels-engineering #engineering-title,
 .wheels-engineering #engineering-title *,
 .wheels-inquiry #inquiry-title,
@@ -208,14 +179,17 @@
 
 
 /* Dual product discovery paths */
-.wheels-discovery { padding: clamp(72px, 8vw, 120px) var(--euresis-gutter); background: var(--p-color-canvas); }
+.wheels-discovery { padding: clamp(82px, 9vw, 144px) var(--euresis-gutter); background: var(--p-color-primary); color: #fff; }
+.wheels-discovery .wheels-section-heading > p { color: rgb(255 255 255 / .78); }
+.wheels-discovery .wheels-eyebrow { color: rgb(255 255 255 / .62); }
+.wheels-discovery .wheels-section-heading h2 { color: #fff; }
 .wheels-discovery__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; max-width: 1440px; margin: 0 auto; }
-.wheels-discovery__card { display: grid; min-height: 260px; align-content: space-between; gap: 18px; padding: clamp(24px, 3vw, 42px); border: 1px solid var(--p-color-contrast-low); color: var(--p-color-primary); text-decoration: none; transition: background .2s ease, color .2s ease; }
-.wheels-discovery__card:hover, .wheels-discovery__card:focus-visible { background: var(--p-color-primary); color: var(--p-color-canvas); }
-.wheels-discovery__card > span, .wheels-discovery__card > small { color: var(--p-color-contrast-medium); font-size: 10px; letter-spacing: .12em; }
+.wheels-discovery__card { display: grid; min-height: 260px; align-content: space-between; gap: 18px; padding: clamp(24px, 3vw, 42px); border: 1px solid rgb(255 255 255 / .32); color: #fff; text-decoration: none; transition: background .2s ease, color .2s ease; }
+.wheels-discovery__card:hover, .wheels-discovery__card:focus-visible { background: var(--p-color-canvas); color: var(--p-color-primary); }
+.wheels-discovery__card > span, .wheels-discovery__card > small { color: rgb(255 255 255 / .68); font-size: 10px; letter-spacing: .12em; }
 .wheels-discovery__card > strong { font-size: clamp(2rem, 4vw, 4rem); font-weight: 500; letter-spacing: -.065em; line-height: .98; }
 .wheels-discovery__card > b { font-size: 10px; letter-spacing: .13em; }
-.wheels-specification-fields { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; max-width: 1440px; margin: 0 auto 18px; align-items: end; }
-.wheels-specification-note { max-width: 1440px; margin: 0 auto 28px; color: rgb(255 255 255 / .68); font-size: 11px; line-height: 1.6; }
-@media (max-width: 900px) { .wheels-specification-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 600px) { .wheels-discovery { padding: 74px 20px; } .wheels-discovery__grid { grid-template-columns: 1fr; } .wheels-discovery__card { min-height: 220px; } .wheels-specification-fields { grid-template-columns: 1fr; } }
+.wheels-discovery__card:hover > span, .wheels-discovery__card:hover > small, .wheels-discovery__card:focus-visible > span, .wheels-discovery__card:focus-visible > small { color: var(--p-color-contrast-medium); }
+.wheels-fitment { background: var(--p-color-contrast-low); }
+.wheels-engineering { background: var(--p-color-contrast-low); }
+@media (max-width: 600px) { .wheels-discovery { padding: 74px 20px; } .wheels-discovery__grid { grid-template-columns: 1fr; } .wheels-discovery__card { min-height: 220px; } }
