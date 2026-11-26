@@ -78,7 +78,7 @@ export function AccountPage() {
         setUser(customer);
         setResetMode(recoveryLink);
         if (customer) {
-          setAuthEmail(customer.email);
+          setAuthEmail(customer.email ?? "");
           await refresh(customer.id);
         }
       } catch (error) {
