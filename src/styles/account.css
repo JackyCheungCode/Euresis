@@ -211,3 +211,6 @@
 .account-table article p { margin:8px 0 0; color:var(--p-color-contrast-medium); font-size:11px; line-height:1.6; }
 .account-activity-list { margin-top:18px; padding-top:12px; border-top:1px solid var(--p-color-contrast-low); }
 .account-activity-list p { color:var(--p-color-contrast-medium); font-size:10px; line-height:1.7; }
+
+.account-inquiry-response { margin-top:12px !important; padding:12px 14px; border-left:2px solid #111; background:#f3f3f1; color:#333 !important; font-size:12px; line-height:1.65; white-space:pre-wrap; }
+.account-inquiry-response strong { display:block; margin-bottom:4px; color:#111; font-size:9px; letter-spacing:.1em; text-transform:uppercase; }
