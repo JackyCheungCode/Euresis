@@ -80,7 +80,7 @@ export function WheelsPage() {
 
   return (
     <main className="wheels-page">
-      <section className="wheels-hero" aria-labelledby="wheels-title">
+      <section className="wheels-hero scheme-dark" aria-labelledby="wheels-title">
         <div className="wheels-hero__image" role="img" aria-label="Performance alloy wheel detail" />
         <div className="wheels-hero__content">
           <p className="wheels-eyebrow">EURESIS / PERFORMANCE WHEELS</p>
@@ -120,7 +120,7 @@ export function WheelsPage() {
         </div>
       </section>
 
-      <section className="wheels-discovery" id="discovery" aria-labelledby="discovery-title">
+      <section className="wheels-discovery scheme-dark" id="discovery" aria-labelledby="discovery-title">
         <div className="wheels-section-heading">
           <div><p className="wheels-eyebrow">02 / PRODUCT DISCOVERY</p><PHeading id="discovery-title" tag="h2" size="2xl">TWO WAYS TO<br />FIND YOUR WHEELS.</PHeading></div>
           <PText color="contrast-high">Start with your vehicle and refine the fitment, or start with wheel specifications directly. Both paths lead to the same catalogue.</PText>
@@ -200,14 +200,14 @@ export function WheelsPage() {
         </div>
       </section>
 
-      <section className="wheels-inquiry" id="inquiry" aria-labelledby="inquiry-title">
+      <section className="wheels-inquiry scheme-dark" id="inquiry" aria-labelledby="inquiry-title">
         <div className="wheels-inquiry__intro">
           <p className="wheels-eyebrow">06 / GLOBAL ENQUIRY</p>
           <PHeading id="inquiry-title" tag="h2" size="2xl">LET'S FIND<br />YOUR FIT.</PHeading>
           <p>Tell us which wheel and vehicle you are considering. The current demo form validates the enquiry layout locally; it does not transmit or store personal information.</p>
         </div>
         {submitted ? <div className="wheels-inquiry__success" role="status"><strong>Demo enquiry captured in this session.</strong><p>No message was sent. Connect an enquiry endpoint before accepting real customer requests.</p><PButton type="button" variant="secondary" onClick={() => setSubmitted(false)}>Create another demo enquiry</PButton></div> :
-          <form className="wheels-inquiry__form" onSubmit={submitDemoInquiry}>
+          <form className="wheels-inquiry__form scheme-light" onSubmit={submitDemoInquiry}>
             <div className="wheels-inquiry__fields">
               <PInputText label="Name" name="name" required />
               <PInputEmail label="Email" name="email" required />
