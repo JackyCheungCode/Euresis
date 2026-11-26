@@ -40,7 +40,7 @@ export function WheelsPage() {
       && diameterMatches
       && (!fitmentWidth || product.widths?.some((value) => value === fitmentWidth.trim()))
       && (!fitmentOffset || product.offsets?.some((value) => value === fitmentOffset.trim()))
-      && (!fitmentPcd || product.pcd?.some((value) => value.replace(/[×x\\s]/gi, "").toLowerCase() === fitmentPcd.replace(/[×x\\s]/gi, "").toLowerCase()))
+      && (!fitmentPcd || product.pcd?.some((value) => value.replace(/[×x\s]/gi, "").toLowerCase() === fitmentPcd.replace(/[×x\s]/gi, "").toLowerCase()))
       && (!fitmentCenterBore || product.centerBores?.some((value) => value === fitmentCenterBore.trim()))
       && (finish === all || product.finishCount >= Number(finish));
   }), [manufacturing, collection, diameter, fitmentWidth, fitmentOffset, fitmentPcd, fitmentCenterBore, finish]);
@@ -51,6 +51,11 @@ export function WheelsPage() {
     setCollection("ALL");
     setDiameter("ALL");
     setFinish("ALL");
+    setFitmentWidth("");
+    setFitmentOffset("");
+    setFitmentPcd("");
+    setFitmentCenterBore("");
+    setVehicleSummary("");
   };
 
   useEffect(() => {
@@ -193,7 +198,7 @@ export function WheelsPage() {
           <PInputText label="Offset (ET)" name="catalogue-offset" value={fitmentOffset} onChange={(event: SelectUpdateEvent) => setFitmentOffset(String(event.detail.value ?? ""))} />
           <PInputText label="Bolt pattern (PCD)" name="catalogue-pcd" value={fitmentPcd} onChange={(event: SelectUpdateEvent) => setFitmentPcd(String(event.detail.value ?? ""))} />
           <PInputText label="Center bore (CB)" name="catalogue-center-bore" value={fitmentCenterBore} onChange={(event: SelectUpdateEvent) => setFitmentCenterBore(String(event.detail.value ?? ""))} />
-          <PButton type="button" variant="secondary" onClick={() => { resetFilters(); setFitmentWidth(""); setFitmentOffset(""); setFitmentPcd(""); setFitmentCenterBore(""); setVehicleSummary(""); }}>Reset filters</PButton>
+          <PButton type="button" variant="secondary" onClick={resetFilters}>Reset filters</PButton>
         </div>
         <div className="wheels-catalogue__meta"><span>{products.length.toString().padStart(2, "0")} SAMPLE MODELS</span><span>NO PRICING · NO CHECKOUT</span></div>
         {vehicleSummary && <p className="wheels-selected-fitment">Vehicle reference: <strong>{vehicleSummary}</strong> — its selected fitment values have been transferred to the editable specification filters. Sample products do not carry verified technical dimensions yet.</p>}
