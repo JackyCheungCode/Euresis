@@ -2,20 +2,20 @@
 
 import { useState } from "react";
 import {
-  PButton as Button,
-  PButtonPure as ButtonPure,
-  PCheckbox,
-  PDivider,
-  PInputEmail,
-  PInputText,
-  PLink,
-  PRadioGroup,
-  PRadioGroupOption,
-  PSelect,
-  PSelectOption,
-  PSegmentedControl,
-  PSegmentedControlItem,
-  PTextarea,
+  EButton as Button,
+  EIconButton as ButtonPure,
+  ECheckbox,
+  EDivider,
+  EEmailInput,
+  ETextInput,
+  ELink,
+  ERadioGroup,
+  ERadioOption,
+  ESelect,
+  ESelectItem,
+  ESegmentedControl,
+  ESegmentedItem,
+  ETextArea,
 } from "@/src/components/ui/carbon-primitives";
 
 const sections = [
@@ -188,8 +188,8 @@ export function DesignSystemShowcase() {
               </article>
               <article className="ds-component-card">
                 <span className="ds-component-card__label">LINK</span>
-                <div className="ds-control-row"><PLink href="#forms">Text link</PLink><PLink href="#wheel-ui" icon="arrow-up-right">Explore wheel UI</PLink></div>
-                <code>PLink · Carbon navigation pattern</code>
+                <div className="ds-control-row"><ELink href="#forms">Text link</ELink><ELink href="#wheel-ui" icon="arrow-up-right">Explore wheel UI</ELink></div>
+                <code>ELink · Carbon navigation pattern</code>
               </article>
             </div>
           </section>
@@ -202,42 +202,42 @@ export function DesignSystemShowcase() {
             <div className="ds-form-grid">
               <div className="ds-form-card">
                 <span className="ds-component-card__label">TEXT INPUT</span>
-                <PInputText label="Full name" name="showcase-name" placeholder="Enter your name" />
-                <PInputEmail label="Email address" name="showcase-email" placeholder="name@example.com" />
-                <PInputText label="Disabled field" name="showcase-disabled" value="Not editable" disabled />
+                <ETextInput label="Full name" name="showcase-name" placeholder="Enter your name" />
+                <EEmailInput label="Email address" name="showcase-email" placeholder="name@example.com" />
+                <ETextInput label="Disabled field" name="showcase-disabled" value="Not editable" disabled />
               </div>
               <div className="ds-form-card">
                 <span className="ds-component-card__label">SELECT & TEXTAREA</span>
-                <PSelect label="Wheel diameter" name="showcase-diameter">
-                  <PSelectOption value="18">18 inch</PSelectOption>
-                  <PSelectOption value="19">19 inch</PSelectOption>
-                  <PSelectOption value="20">20 inch</PSelectOption>
-                  <PSelectOption value="21">21 inch</PSelectOption>
-                </PSelect>
-                <PTextarea label="Additional notes" name="showcase-notes" placeholder="Enter a message" />
+                <ESelect label="Wheel diameter" name="showcase-diameter">
+                  <ESelectItem value="18">18 inch</ESelectItem>
+                  <ESelectItem value="19">19 inch</ESelectItem>
+                  <ESelectItem value="20">20 inch</ESelectItem>
+                  <ESelectItem value="21">21 inch</ESelectItem>
+                </ESelect>
+                <ETextArea label="Additional notes" name="showcase-notes" placeholder="Enter a message" />
               </div>
               <div className="ds-form-card">
                 <span className="ds-component-card__label">CHECKBOX & RADIO</span>
-                <PCheckbox label="I would like fitment guidance" name="showcase-guidance" />
-                <PCheckbox label="Disabled option" disabled />
-                <PRadioGroup label="Preferred finish" name="showcase-finish" value="satin">
-                  <PRadioGroupOption value="satin" label="Satin black" />
-                  <PRadioGroupOption value="silver" label="Brushed silver" />
-                  <PRadioGroupOption value="bronze" label="Bronze" />
-                </PRadioGroup>
+                <ECheckbox label="I would like fitment guidance" name="showcase-guidance" />
+                <ECheckbox label="Disabled option" disabled />
+                <ERadioGroup label="Preferred finish" name="showcase-finish" value="satin">
+                  <ERadioOption value="satin" label="Satin black" />
+                  <ERadioOption value="silver" label="Brushed silver" />
+                  <ERadioOption value="bronze" label="Bronze" />
+                </ERadioGroup>
               </div>
               <div className="ds-form-card">
                 <span className="ds-component-card__label">SEGMENTED CONTROL</span>
-                <PSegmentedControl label="View mode" name="showcase-view" value="gallery">
-                  <PSegmentedControlItem value="gallery">Gallery</PSegmentedControlItem>
-                  <PSegmentedControlItem value="list">List</PSegmentedControlItem>
-                  <PSegmentedControlItem value="specs">Specs</PSegmentedControlItem>
-                </PSegmentedControl>
-                <PSegmentedControl label="Wheel size" name="showcase-size" value="20">
-                  <PSegmentedControlItem value="18">18"</PSegmentedControlItem>
-                  <PSegmentedControlItem value="19">19"</PSegmentedControlItem>
-                  <PSegmentedControlItem value="20">20"</PSegmentedControlItem>
-                </PSegmentedControl>
+                <ESegmentedControl label="View mode" name="showcase-view" value="gallery">
+                  <ESegmentedItem value="gallery">Gallery</ESegmentedItem>
+                  <ESegmentedItem value="list">List</ESegmentedItem>
+                  <ESegmentedItem value="specs">Specs</ESegmentedItem>
+                </ESegmentedControl>
+                <ESegmentedControl label="Wheel size" name="showcase-size" value="20">
+                  <ESegmentedItem value="18">18"</ESegmentedItem>
+                  <ESegmentedItem value="19">19"</ESegmentedItem>
+                  <ESegmentedItem value="20">20"</ESegmentedItem>
+                </ESegmentedControl>
               </div>
             </div>
           </section>
@@ -296,7 +296,7 @@ export function DesignSystemShowcase() {
             <div className="ds-wheel-grid">
               <article className="ds-wheel-card">
                 <div className="ds-wheel-card__art"><div className="ds-wheel-art"><i /><i /><i /><i /><i /><i /><i /><i /><i /></div><span>01 / FORGED</span></div>
-                <div className="ds-wheel-card__body"><div><strong>RS / 07</strong><span>Monoblock · Forged aluminium</span></div><PLink href="#forms" icon="arrow-up-right">View specifications</PLink></div>
+                <div className="ds-wheel-card__body"><div><strong>RS / 07</strong><span>Monoblock · Forged aluminium</span></div><ELink href="#forms" icon="arrow-up-right">View specifications</ELink></div>
               </article>
               <article className="ds-spec-card">
                 <span className="ds-component-card__label">TECHNICAL SPECIFICATION</span>
