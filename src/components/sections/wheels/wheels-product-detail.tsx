@@ -4,7 +4,7 @@ import { wheelProducts } from "@/src/data/wheels";
 export function WheelsProductDetail({ slug }: { slug: string }) {
   const product = wheelProducts.find((item) => item.slug === slug);
   if (!product) {
-    return <main className="wheel-detail wheel-detail--not-found"><p className="wheels-eyebrow">EURESIS / PRODUCT CATALOGUE</p><PHeading tag="h1" size="2xl">MODEL NOT FOUND.</PHeading><PButton type="button"><a href="/wheels">Back to wheels</a></PButton></main>;
+    return <main className="wheel-detail wheel-detail--not-found"><p className="wheels-eyebrow">EURESIS / PRODUCT CATALOGUE</p><PHeading tag="h1" size="2xl">MODEL NOT FOUND.</PHeading><a className="wheel-detail__back-link" href="/wheels">Back to wheels</a></main>;
   }
 
   const suffix = product.manufacturing === "FORGED" ? "F" : "C";
@@ -19,7 +19,7 @@ export function WheelsProductDetail({ slug }: { slug: string }) {
           <h2>{product.model}</h2>
           <p>{product.description}</p>
           <div className="wheel-detail__tags"><span>{product.manufacturing}</span><span>{product.collection}</span><span>SAMPLE MODEL</span></div>
-          <PButton type="button"><a href="/wheels#inquiry">Request a quote</a></PButton>
+          <a className="wheel-detail__quote-link" href="/wheels#inquiry">Request a quote</a>
           <small>Demonstration product only. No price, inventory or verified fitment is available.</small>
         </div>
       </section>
