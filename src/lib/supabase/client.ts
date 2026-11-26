@@ -58,13 +58,13 @@ export async function resetPassword(email: string) {
   const response = await fetch(`${SUPABASE_URL}/auth/v1/recover?redirect_to=${encodeURIComponent(window.location.origin + "/account")}`, {
     method: "POST", headers: { apikey: SUPABASE_KEY, "Content-Type": "application/json" }, body: JSON.stringify({ email }),
   });
-  if (!response.ok) { const data = await response.json().catch(() => ({})); throw new Error(data.msg || data.message || "Could not send password reset email."); }
+  if (!response.ok) { const data = await response.json().catch(() => ({})) as Record<string, any>; throw new Error(data.msg || data.message || "Could not send password reset email."); }
 }
 export async function updatePassword(password: string) {
   const session = await getSession();
   if (!session) throw new Error("Password reset session expired. Request a new link.");
   const response = await fetch(`${SUPABASE_URL}/auth/v1/user`, { method: "PUT", headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${session.access_token}`, "Content-Type": "application/json" }, body: JSON.stringify({ password }) });
-  if (!response.ok) { const data = await response.json().catch(() => ({})); throw new Error(data.msg || data.message || "Could not update password."); }
+  if (!response.ok) { const data = await response.json().catch(() => ({})) as Record<string, any>; throw new Error(data.msg || data.message || "Could not update password."); }
 }
 export async function signOut() {
   const session = readSession();
