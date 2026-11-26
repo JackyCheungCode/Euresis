@@ -35,7 +35,7 @@ export function WheelsProductDetail({ slug }: { slug: string }) {
         </dl>
         <PText color="contrast-high">All dimensions, materials, offsets, bolt patterns, center bores, load ratings and brake clearances require validation against a real production specification. This sample model does not claim vehicle compatibility.</PText>
       </section>
-      <section className="wheel-detail__source"><span>REFERENCE IMAGE SOURCE</span><a href={product.imageSourceUrl} target="_blank" rel="noreferrer">{product.imageSource} ↗</a></section>
+      
     </main>
   );
 }
