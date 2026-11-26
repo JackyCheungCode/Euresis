@@ -48,3 +48,18 @@ vinext reimplements the Next.js API surface on Vite. It supports substantial App
 Official references:
 - https://vinext.dev/docs/deploying/cloudflare
 - https://github.com/cloudflare/vinext
+
+
+## Wheel-Size Fitment API
+
+The live vehicle selector uses the Wheel-Size API v2 through the server route at `/api/wheel-size/[resource]`. The API key is read only by the Worker and must never be exposed as a `NEXT_PUBLIC_*` or client-side variable.
+
+Configure the production secret before enabling live queries:
+
+```bash
+npx wrangler secret put WHEEL_SIZE_API_KEY
+```
+
+Paste the API key when prompted. The Worker must be redeployed after the secret is configured. Without the secret, the route intentionally returns `503 API_KEY_MISSING`; the UI must not fall back to fabricated vehicle data.
+
+The make/model/year/modification catalogue endpoints may be cached within the API plan's limits. Vehicle fitment search is issued only after the visitor clicks **Search wheel fitment**, in line with Wheel-Size's user-initiated search policy. API terms and plan limits apply: https://developer.wheel-size.com/api-tos
