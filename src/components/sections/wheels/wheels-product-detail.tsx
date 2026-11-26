@@ -1,4 +1,4 @@
-import { PButton, PHeading, PText } from "@porsche-design-system/components-react/ssr";
+import { PHeading, PText } from "@porsche-design-system/components-react/ssr";
 import { wheelProducts } from "@/src/data/wheels";
 
 export function WheelsProductDetail({ slug }: { slug: string }) {
