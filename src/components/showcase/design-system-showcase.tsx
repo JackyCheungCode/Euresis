@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import {
-  PButton,
-  PButtonPure,
+  Button,
+  ButtonPure,
   PCheckbox,
   PDivider,
   PInputEmail,
@@ -16,7 +16,7 @@ import {
   PSegmentedControl,
   PSegmentedControlItem,
   PTextarea,
-} from "@porsche-design-system/components-react/ssr";
+} from "@/src/components/ui/carbon-primitives";
 
 const sections = [
   { id: "overview", label: "Overview", number: "00" },
@@ -75,7 +75,7 @@ export function DesignSystemShowcase() {
     <main className="ds-page">
       <div className="ds-topline">
         <span>DESIGN SYSTEM / COMPONENT LIBRARY</span>
-        <span>RELEASE 01 · PDS 4.10.1</span>
+        <span>RELEASE 02 · CARBON v11</span>
       </div>
 
       <div className="ds-shell">
@@ -94,7 +94,7 @@ export function DesignSystemShowcase() {
           </nav>
           <div className="ds-sidebar__note">
             <span className="ds-kicker">SYSTEM PRINCIPLE</span>
-            <p>Native PDS components. Official design tokens. No parallel UI library.</p>
+            <p>Native Carbon components. Euresis semantic tokens. One consistent UI foundation.</p>
           </div>
         </aside>
 
@@ -121,13 +121,13 @@ export function DesignSystemShowcase() {
           <section className="ds-section" id="colors">
             <div className="ds-section__heading">
               <div><p className="ds-kicker">01 / FOUNDATIONS</p><h2>Color system</h2></div>
-              <p>Semantic colors are inherited from PDS tokens and automatically adapt to the selected color scheme.</p>
+              <p>Semantic colors are inherited from Carbon theme tokens and automatically adapt to the selected color scheme.</p>
             </div>
             <div className="ds-theme-panel">
               <div><strong>Theme preview</strong><span>Switch the sample surface between light and dark.</span></div>
-              <PButton variant="secondary" type="button" icon="theme" onClick={() => setDarkPreview((value) => !value)}>
+              <Button variant="secondary" type="button" icon="theme" onClick={() => setDarkPreview((value) => !value)}>
                 {darkPreview ? "Preview light" : "Preview dark"}
-              </PButton>
+              </Button>
             </div>
             <div className={`ds-color-preview ${darkPreview ? "scheme-dark" : "scheme-light"}`}>
               <div className="ds-color-preview__label"><span>{darkPreview ? "DARK SCHEME" : "LIGHT SCHEME"}</span><span>LIVE TOKEN PREVIEW</span></div>
@@ -148,7 +148,7 @@ export function DesignSystemShowcase() {
           <section className="ds-section" id="typography">
             <div className="ds-section__heading">
               <div><p className="ds-kicker">02 / FOUNDATIONS</p><h2>Typography</h2></div>
-              <p>Type scale and font weights follow the installed PDS typography tokens.</p>
+              <p>Type scale and font weights follow the Carbon type scale.</p>
             </div>
             <div className="ds-type-list">
               {typeSamples.map(([size, token, role]) => (
@@ -168,28 +168,28 @@ export function DesignSystemShowcase() {
           <section className="ds-section" id="buttons">
             <div className="ds-section__heading">
               <div><p className="ds-kicker">03 / COMPONENTS</p><h2>Buttons & links</h2></div>
-              <p>Use buttons for actions and links for navigation. These examples are native PDS React components.</p>
+              <p>Use buttons for actions and links for navigation. These examples are Carbon React components.</p>
             </div>
             <div className="ds-component-grid">
               <article className="ds-component-card">
                 <span className="ds-component-card__label">BUTTON / PRIMARY</span>
-                <div className="ds-control-row"><PButton>Primary action</PButton><PButton disabled>Disabled</PButton></div>
-                <code>PButton · variant=primary</code>
+                <div className="ds-control-row"><Button>Primary action</Button><Button disabled>Disabled</Button></div>
+                <code>Button · variant=primary</code>
               </article>
               <article className="ds-component-card">
                 <span className="ds-component-card__label">BUTTON / SECONDARY</span>
-                <div className="ds-control-row"><PButton variant="secondary">Secondary action</PButton><PButton variant="secondary" icon="arrow-right">Continue</PButton></div>
-                <code>PButton · variant=secondary</code>
+                <div className="ds-control-row"><Button variant="secondary">Secondary action</Button><Button variant="secondary" icon="arrow-right">Continue</Button></div>
+                <code>Button · variant=secondary</code>
               </article>
               <article className="ds-component-card">
                 <span className="ds-component-card__label">BUTTON / PURE</span>
-                <div className="ds-control-row"><PButtonPure icon="menu-lines" hideLabel aria={{ "aria-label": "Open menu" }}>Open menu</PButtonPure><PButtonPure icon="arrow-up-right">Explore</PButtonPure></div>
-                <code>PButtonPure</code>
+                <div className="ds-control-row"><ButtonPure icon="menu-lines" hideLabel aria={{ "aria-label": "Open menu" }}>Open menu</ButtonPure><ButtonPure icon="arrow-up-right">Explore</ButtonPure></div>
+                <code>ButtonPure</code>
               </article>
               <article className="ds-component-card">
                 <span className="ds-component-card__label">LINK</span>
                 <div className="ds-control-row"><PLink href="#forms">Text link</PLink><PLink href="#wheel-ui" icon="arrow-up-right">Explore wheel UI</PLink></div>
-                <code>PLink · PDS navigation pattern</code>
+                <code>PLink · Carbon navigation pattern</code>
               </article>
             </div>
           </section>
@@ -248,9 +248,9 @@ export function DesignSystemShowcase() {
               <p>Global navigation is rendered by the shared site Header and Footer. This section documents the intended hierarchy.</p>
             </div>
             <div className="ds-nav-demo">
-              <div className="ds-nav-demo__bar"><span className="ds-wordmark">EURESIS</span><nav><a href="#overview">Collections</a><a href="#wheel-ui">Fitment</a><a href="#layout">Engineering</a></nav><PButton variant="secondary" icon="arrow-up-right">Contact</PButton></div>
+              <div className="ds-nav-demo__bar"><span className="ds-wordmark">EURESIS</span><nav><a href="#overview">Collections</a><a href="#wheel-ui">Fitment</a><a href="#layout">Engineering</a></nav><Button variant="secondary" icon="arrow-up-right">Contact</Button></div>
               <div className="ds-breadcrumb"><span>Home</span><span>/</span><span>Collections</span><span>/</span><strong>Forged series</strong></div>
-              <div className="ds-mobile-nav-demo"><span className="ds-wordmark">EURESIS</span><PButtonPure icon="menu-lines" hideLabel aria={{ "aria-label": "Open navigation preview" }}>Open navigation</PButtonPure></div>
+              <div className="ds-mobile-nav-demo"><span className="ds-wordmark">EURESIS</span><ButtonPure icon="menu-lines" hideLabel aria={{ "aria-label": "Open navigation preview" }}>Open navigation</ButtonPure></div>
             </div>
             <div className="ds-note">The page-level index on the left is a showcase-only sidebar. It is not added to the public site navigation.</div>
           </section>
@@ -271,7 +271,7 @@ export function DesignSystemShowcase() {
           <section className="ds-section" id="layout">
             <div className="ds-section__heading">
               <div><p className="ds-kicker">07 / FOUNDATIONS</p><h2>Layout & spacing</h2></div>
-              <p>Spacing, radius, and shadow values are consumed directly from PDS tokens.</p>
+              <p>Spacing, radius and elevation follow Carbon foundations with Euresis brand refinements.</p>
             </div>
             <div className="ds-spacing-list">
               {spacingSamples.map(([name, token]) => (
@@ -291,7 +291,7 @@ export function DesignSystemShowcase() {
           <section className="ds-section" id="wheel-ui">
             <div className="ds-section__heading">
               <div><p className="ds-kicker">08 / EURESIS PATTERNS</p><h2>Wheel components</h2></div>
-              <p>Business-specific presentation patterns built around the PDS foundation. These are not checkout or cart components.</p>
+              <p>Business-specific presentation patterns built around the Carbon foundation. These are not checkout or cart components.</p>
             </div>
             <div className="ds-wheel-grid">
               <article className="ds-wheel-card">
@@ -308,7 +308,7 @@ export function DesignSystemShowcase() {
                 <div><span>Finish</span><strong>Satin graphite</strong></div>
               </article>
             </div>
-            <div className="ds-inquiry-strip"><div><span className="ds-kicker">FITMENT / CONSULTATION</span><h3>Need help confirming compatibility?</h3><p>Use an enquiry-led flow for vehicle details and technical verification.</p></div><PButton icon="arrow-up-right">Request fitment advice</PButton></div>
+            <div className="ds-inquiry-strip"><div><span className="ds-kicker">FITMENT / CONSULTATION</span><h3>Need help confirming compatibility?</h3><p>Use an enquiry-led flow for vehicle details and technical verification.</p></div><Button icon="arrow-up-right">Request fitment advice</Button></div>
           </section>
 
           <footer className="ds-page-footer">
