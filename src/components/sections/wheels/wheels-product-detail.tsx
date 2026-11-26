@@ -92,7 +92,7 @@ export function WheelsProductDetail({ slug }: { slug: string }) {
   const loadFitmentResource = async (resource: string, params: Record<string, string> = {}) => {
     const query = new URLSearchParams(params);
     const response = await fetch("/api/wheel-size/" + resource + "?" + query.toString());
-    const body = await response.json();
+    const body: any = await response.json();
     if (!response.ok) throw new Error(body?.error?.message ?? body?.detail ?? "Wheel fitment service unavailable.");
     return Array.isArray(body) ? body : Array.isArray(body?.data) ? body.data : [];
   };
