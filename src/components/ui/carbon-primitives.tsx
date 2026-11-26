@@ -11,7 +11,6 @@ import {
   Select,
   SelectItem,
   TextArea,
-  // Divider is represented with the Carbon horizontal rule pattern.
   TextInput,
   ToggleGroup,
   ToggleGroupItem,
@@ -25,7 +24,7 @@ import {
   Play,
   Search,
   Settings,
-} from "@carbon/icons-react";
+} from "@carbon/react/icons";
 
 type LegacyEvent<T> = { detail: { value: T } };
 const eventOf = <T,>(value: T) => ({ detail: { value } }) as LegacyEvent<T>;
@@ -76,8 +75,9 @@ export function PIcon({ name, size = "md" }: any) {
   const Icon = icons[name] ?? Settings;
   return <Icon size={size === "xl" ? 32 : size === "sm" ? 16 : 24} />;
 }
-export function PLink({ children, href, ...props }: any) {
-  return <Link href={href} {...props}>{children}</Link>;
+export function PLink({ children, href, icon, ...props }: any) {
+  const Icon = icon ? icons[icon] ?? ArrowRight : undefined;
+  return <Link href={href} renderIcon={Icon} {...props}>{children}</Link>;
 }
 export function PLinkPure({ children, ...props }: any) {
   return <Link {...props}>{children}</Link>;
