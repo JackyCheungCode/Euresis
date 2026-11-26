@@ -109,7 +109,7 @@ Fitment states:
 
 The current sample catalogue must never display VERIFIED fitment.
 
-## 10. URL convention
+## 10. Product discovery interaction model\n\nManufacturing type is the shared top-level condition for both discovery paths. After choosing FORGED or CAST, visitors can use either path independently:\n\n- **Vehicle First:** select market, make, model, year and modification; retrieve OE and optional fitment; transfer a chosen fitment into editable wheel-parameter filters; continue refining by diameter, width, PCD and offset. Collection is not required.\n- **Specification First:** select a collection and wheel parameters directly. Vehicle make/model/year/modification is never required.\n\nBoth paths converge on the same Euresis Wheels Catalogue and product detail pages. Moving between paths must not force a reset of the shared manufacturing condition or require completing the other path.\n\nA vehicle-derived specification is a search criterion, not proof that a sample Euresis product fits the vehicle. Only product-level, validated technical records may support a VERIFIED fitment claim. Missing sample specifications must remain unknown rather than being inferred.\n\n## 11. URL convention
 
 - `/wheels`
 - `/wheels/forged`
@@ -120,7 +120,7 @@ The current sample catalogue must never display VERIFIED fitment.
 
 The initial implementation uses product slugs for detail routes. Category landing routes may be added as the catalogue expands.
 
-## 11. Enquiry conversion
+## 12. Enquiry conversion
 
 The initial website is enquiry-led:
 - no cart
