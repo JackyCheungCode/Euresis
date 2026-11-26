@@ -13,9 +13,11 @@
 
 In Supabase Dashboard → Authentication → URL Configuration:
 
-1. Set Site URL to the verified production Euresis origin.
-2. Add the exact production callback `https://<production-host>/account` to Redirect URLs.
-3. Add local development `http://localhost:3001/account` if local testing is required.
+1. The connected Cloudflare account currently has no custom Worker domain or zone route attached to `euresis`; its available Worker subdomain is `https://euresis.xg-y.workers.dev`.
+2. Set Site URL to `https://euresis.xg-y.workers.dev`.
+3. Add `https://euresis.xg-y.workers.dev/account` to Redirect URLs.
+4. Add local development `http://localhost:3001/account` if local testing is required.
+5. If a branded domain is attached to the Worker later, add its `/account` URL to Redirect URLs and update Site URL.
 4. Keep email confirmation enabled for production.
 5. Configure SMTP before production launch if the default Auth email delivery limits are insufficient. Do not upgrade the project without explicit approval.
 
