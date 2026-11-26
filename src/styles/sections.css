@@ -438,7 +438,7 @@
 
 
 /* EURESIS PDS refinement — semantic surfaces, consistent rhythm and product-first imagery. */
-.hero { min-height:min(860px, 92svh); background:var(--p-color-contrast-higher); }
+.hero { min-height:min(860px, 92svh); background:var(--p-color-canvas); }
 .hero::before { background:linear-gradient(90deg, rgb(0 0 0 / 58%) 0%, rgb(0 0 0 / 22%) 58%, transparent 100%), linear-gradient(0deg, rgb(0 0 0 / 58%), transparent 64%); }
 .hero-content { width:min(calc(100% - 2 * var(--euresis-gutter)), var(--euresis-content-width)); padding-block:clamp(150px, 22vh, 220px) clamp(88px, 11vh, 132px); }
 .hero-heading { max-width:900px; font-size:clamp(3.4rem, 8.6vw, 8.4rem); letter-spacing:-.065em; line-height:.91; }
@@ -465,8 +465,8 @@
 .principles__list { border-color:var(--p-color-contrast-low); }
 .principles__item { border-color:var(--p-color-contrast-low); }
 .principles__number { color:var(--p-color-contrast-medium); }
-.fitment { background:var(--p-color-contrast-higher); color:#fff; }
-.fitment .eyebrow { color:rgb(255 255 255 / 72%); }
+.fitment { background:var(--p-color-canvas); color:var(--p-color-primary); }
+.fitment .eyebrow { color:var(--p-color-contrast-medium); }
 @media (max-width:900px) { .hero-content { padding-top:160px; } }
 @media (max-width:600px) {
   .hero { min-height:min(760px, 92svh); }
