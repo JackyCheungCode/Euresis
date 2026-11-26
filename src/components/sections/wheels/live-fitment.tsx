@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { PButton, PHeading, PSelect, PSelectOption } from "@porsche-design-system/components-react/ssr";
+import { PButton, PHeading, PSelect, PSelectOption } from "@/src/components/ui/carbon-primitives";
 
 type SelectUpdateEvent = CustomEvent<{ value?: string | number | null }>;
 type ApiRow = Record<string, any>;
