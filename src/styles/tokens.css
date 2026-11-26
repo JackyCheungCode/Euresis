@@ -22,7 +22,7 @@
 :root {
   --euresis-content-width-wide: 1440px;
   --euresis-content-width-reading: 68ch;
-  --euresis-focus-ring: 2px solid var(--p-color-focus);
+  --euresis-focus-ring: 2px solid var(--p-color-primary);
   --euresis-control-min-height: 44px;
   --euresis-grid-gap: var(--p-spacing-fluid-md);
   --euresis-border-subtle: var(--p-color-contrast-low);
