@@ -177,7 +177,7 @@ export function WheelsProductDetail({ slug }: { slug: string }) {
   });
   const compareFitment = (vehicleRows: Array<Record<string, any>>) => {
     if (!selectedVariant) return vehicleRows.map((row) => ({ ...row, status: "PENDING", reason: "Select a published product variant before comparing dimensions." }));
-    const normalizePcd = (value: unknown) => String(value ?? "").toLowerCase().replace(/[^0-9x]/g, "");
+    const normalizePcd = (value: unknown) => String(value ?? "").toLowerCase().replace(/[×*]/g, "x").replace(/[^0-9x]/g, "");
     const number = (value: unknown) => {
       const parsed = Number.parseFloat(String(value ?? "").replace(/[^0-9.+-]/g, ""));
       return Number.isFinite(parsed) ? parsed : null;
