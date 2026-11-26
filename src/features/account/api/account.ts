@@ -6,16 +6,18 @@ export type Address = { id: string; label: string; recipient: string; phone: str
 export type Preferences = { user_id: string; language: string; currency: string; units: string; contact_method: string; product_updates: boolean };
 export type Enquiry = { id: string; reference: string; subject: string; message: string; status: string; created_at: string };
 export type ServiceCase = { id: string; reference: string; subject: string; description: string; status: string; created_at: string };
+export type WheelInquiry = { id: string; reference: string; product_name: string; product_code: string; vehicle: Record<string, string>; wheel_configurations: Record<string, string>[]; fitment_status: string; requirements: string; status: string; created_at: string };
 export type Order = { id: string; order_number: string; status: string; carrier: string; tracking_number: string; estimated_dispatch_at: string | null; created_at: string; customer_order_items: { product_name: string; specification: string; quantity: number }[]; customer_order_events: { status: string; description: string; occurred_at: string }[] };
 
 const one = <T,>(rows: T[] | null, fallback: T): T => rows?.[0] ?? fallback;
 export async function loadAccount(userId: string) {
-  const [profiles, vehicles, addresses, preferences, enquiries, cases, orders] = await Promise.all([
+  const [profiles, vehicles, addresses, preferences, enquiries, wheelInquiries, cases, orders] = await Promise.all([
     request<Profile[]>("customer_profiles", { query: `select=*&id=eq.${userId}&limit=1` }),
     request<Vehicle[]>("customer_vehicles", { query: "select=*&order=created_at.desc" }),
     request<Address[]>("customer_addresses", { query: "select=*&order=is_default.desc,created_at.desc" }),
     request<Preferences[]>("customer_preferences", { query: "select=*&limit=1" }),
     request<Enquiry[]>("customer_enquiries", { query: "select=*&order=created_at.desc" }),
+    request<WheelInquiry[]>("wheel_inquiries", { query: "select=*&order=created_at.desc" }),
     request<ServiceCase[]>("customer_after_sales_cases", { query: "select=*&order=created_at.desc" }),
     request<Order[]>("customer_orders", { query: "select=*,customer_order_items(product_name,specification,quantity),customer_order_events(status,description,occurred_at)&order=created_at.desc" }),
   ]);
@@ -23,7 +25,7 @@ export async function loadAccount(userId: string) {
     profile: one(profiles, { id: userId, full_name: "", phone: "", company: "", country: "" }),
     vehicles, addresses,
     preferences: one(preferences, { user_id: userId, language: "English", currency: "USD", units: "Metric (mm)", contact_method: "Email", product_updates: true }),
-    enquiries, cases, orders,
+    enquiries, wheelInquiries, cases, orders,
   };
 }
 export async function saveProfile(profile: Profile) {
