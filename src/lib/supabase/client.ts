@@ -36,7 +36,7 @@ export async function getSession(): Promise<AuthSession | null> {
   return session;
 }
 export async function signUp(email: string, password: string, fullName: string) {
-  const data = await authRequest("signup", { email, password, data: { full_name: fullName }, gotrue_meta_security: {} });
+  const data = await authRequest(`signup?redirect_to=${encodeURIComponent(window.location.origin + "/account")}`, { email, password, data: { full_name: fullName } });
   if (data.access_token && data.refresh_token) saveSession({ ...data, expires_at: Math.floor(Date.now() / 1000) + (data.expires_in || 3600) } as AuthSession);
   return data;
 }
