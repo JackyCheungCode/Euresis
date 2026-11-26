@@ -1,49 +1,61 @@
-# EURESIS Global Design System v1.0
+# EURESIS Global Design System v2.0
 
-Status: approved baseline  
-Scope: global site chrome and shared design foundations only.
+Status: active migration baseline  
+Foundation: IBM Carbon Design System v11 / Carbon React  
+Brand layer: Euresis semantic tokens and automotive marketing components
+
+## Design principles
+
+- Carbon React is the only shared UI component foundation.
+- Euresis owns the brand expression: typography scale, image direction, campaign layouts, wheel product presentation and editorial composition.
+- Do not reproduce IBM's product UI visual language as the storefront brand. Use Carbon's accessibility, interaction, grid and component behavior while retaining Euresis' monochrome automotive identity.
+- Keep the site enquiry-led. Do not introduce cart, checkout, payment or pricing flows without explicit product approval.
 
 ## Global layout contract
 
-- `app/layout.tsx` owns the document shell and the single `PorscheDesignSystemProvider`.
-- `src/components/layout/site-layout.tsx` is the canonical composition point for the global Header, page content, and Footer.
-- Route/page files own only their page content. They must not import or render another Header, navigation instance, or Footer.
-- Do not add route-specific copies of global chrome. A future exceptional layout requires explicit design approval.
+- `app/layout.tsx` owns the document shell and Carbon Sass foundation.
+- `src/components/layout/site-layout.tsx` is the canonical composition point for the global Header, compact vehicle fitment bar, page content and Footer.
+- Route/page files own only their page content. They must not render duplicate global chrome.
+- Shared components live under `src/components/layout`, `src/components/ui` and feature-specific component directories.
 
-## Header
+## Header and navigation
 
-- Use the existing EURESIS wordmark and Porsche Design System v4 controls.
-- Keep the current three-zone alignment: menu at start, wordmark centered, search and decorative user placeholder at end.
-- Header is not sticky or fixed. Preserve the current home/inner-page presentation and natural document scrolling.
-- Do not add a scroll-state divider, sticky shadow, or scroll-triggered background transition without approval.
-- Preserve the existing search overlay and suggestion behavior. Search is out of scope for routine layout refactors.
+- Use Carbon React controls for interactive actions and Euresis-owned layout styling for the three-zone header: menu, centered wordmark, account/search.
+- Keep menu and search overlays keyboard accessible, dismissible with Escape and correctly labelled.
+- Navigation destinations must point to implemented routes or verified in-page anchors.
+- Do not introduce a sticky header or scroll-state behavior unless separately approved.
 
-## Sidebar / multi-level navigation
+## Vehicle fitment
 
-- The drilldown navigation is owned by the global Header and rendered once for the whole application.
-- Use the existing PDS `PDrilldown`, `PDrilldownItem`, and `PDrilldownLink` primitives; do not replace them with a second component library or custom imitation.
-- Keep one consistent interaction model for all nesting levels, including open, back, dismiss, Escape, and keyboard accessibility.
-- Keep navigation destinations in the shared navigation definition/component, not duplicated in route pages.
-- Menu labels and destinations must only point to implemented routes or verified in-page anchors. Do not create placeholder business routes as part of a layout change.
+- The compact global vehicle selector remains directly below the Header.
+- Preserve market, make, model, year and trim selection; multiple saved vehicle specifications; and local persistence.
+- Vehicle reference data from Wheel-Size is not Euresis product fitment certification. Product recommendations require an explicit mapping to published Euresis variants and technical verification.
+
+## Carbon component usage
+
+- Install and import shared controls from `@carbon/react`; icons from `@carbon/react/icons`.
+- Compile the Carbon Sass foundation from `app/carbon.scss`.
+- Prefer Carbon Button, Select, TextInput, TextArea, Checkbox, RadioButtonGroup, ToggleGroup, Link, Search and modal/navigation patterns where appropriate.
+- Use semantic HTML for brand-specific marketing compositions where Carbon has no dedicated marketing component. Do not force product Hero, wheel gallery, campaign Banner or editorial sections into generic enterprise cards.
+- Shared Carbon compatibility primitives live in `src/components/ui/carbon-primitives.tsx`; new components should use Carbon APIs directly rather than adding new PDS-style aliases.
+
+## Tokens and styling
+
+- Euresis semantic tokens are maintained in `src/styles/tokens.css`.
+- Carbon styles are loaded from `app/carbon.scss`; application styles are centralized in `app/globals.css`.
+- Use Carbon theme tokens for component surfaces, borders, text, support states and focus indicators. Use Euresis tokens for brand-specific spacing, layout, monochrome surfaces and editorial rhythm.
+- Avoid raw one-off values when an existing Carbon or Euresis token expresses the same intent.
+- Maintain visible keyboard focus, reduced-motion support, responsive layouts and adequate color contrast.
 
 ## Footer
 
 - Render one shared Footer after page content through `SiteLayout`.
-- Preserve the approved navigation groups, EURESIS wordmark, descriptor, and copyright line.
-- Keep desktop/mobile responsive behavior in the shared layout stylesheet.
+- Preserve the Euresis wordmark, descriptor, navigation groups and copyright line.
 - Footer links must target implemented routes or verified anchors.
-
-## Design tokens and components
-
-- Prefer official Porsche Design System v4 components and official PDS Design Tokens.
-- Project semantic aliases live in `src/styles/tokens.css`; aliases should reference PDS tokens rather than introduce a competing palette or spacing scale.
-- Shared layout styling lives in `src/styles/layout.css`; global CSS imports are centralized in `app/globals.css`.
-- Do not introduce another component library, arbitrary one-off design tokens, or duplicate controls already provided by PDS.
-- Use semantic HTML only where PDS has no suitable primitive, while retaining PDS tokens and accessibility requirements.
 
 ## Change control
 
-- A change to Header, navigation, Footer, global tokens, or shared layout CSS is a site-wide change and must be reviewed for desktop and mobile impact.
-- Do not change search behavior during unrelated layout work.
-- Do not add cart, checkout, payment, customer-account, or order-management functionality. EURESIS remains an enquiry-led site.
-- Do not create new business pages or routes without explicit user authorization.
+- Header, navigation, Footer, global tokens, Sass foundation and shared layout CSS are site-wide changes.
+- Review desktop and mobile behavior before merging.
+- Preserve Supabase, Wheel-Size API, customer account, inquiry review and existing business logic during design-system work.
+- Do not claim a vehicle fitment is verified unless product variant dimensions and all relevant clearance requirements have been technically reviewed.
