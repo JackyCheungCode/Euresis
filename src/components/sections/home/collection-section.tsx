@@ -13,7 +13,7 @@ const collections = [
     description:
       "A collection defined by lightweight construction, precise geometry and carefully machined detail.",
     image:
-      "https://images.pexels.com/photos/41081788/pexels-photo-41081788.jpeg?auto=compress&cs=tinysrgb&w=1800",
+      "https://cdn.pixabay.com/photo/2014/01/30/01/55/wheel-rim-254714_1280.jpg",
     alt: "Close-up detail of a custom alloy wheel",
     constructions: ["MONOBLOCK", "2-PIECE", "3-PIECE"],
     position: "center 54%",
@@ -26,7 +26,7 @@ const collections = [
     description:
       "A versatile collection balancing distinctive spoke design, proportion and finish.",
     image:
-      "https://images.pexels.com/photos/32070739/pexels-photo-32070739.jpeg?auto=compress&cs=tinysrgb&w=1800",
+      "https://cdn.pixabay.com/photo/2017/05/08/19/05/rim-2296197_1280.jpg",
     alt: "Polished alloy wheel fitted to a vehicle",
     constructions: ["MONOBLOCK"],
     position: "center 56%",
@@ -65,7 +65,7 @@ export function CollectionSection() {
             id={collection.id}
             key={collection.id}
           >
-            <div className="collection-image-wrap">
+            <div className="collection-image-wrap collection-image-wrap--product">
               <img
                 className="collection-image"
                 src={collection.image}
