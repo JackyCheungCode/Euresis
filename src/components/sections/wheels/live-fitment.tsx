@@ -66,7 +66,7 @@ export function LiveFitment() {
     logo: typeof item.logo === "string" ? item.logo : item.logo?.url ?? item.logo?.src ?? item.image ?? "",
   })).filter((item) => item.slug), [makes]);
 
-  const options = (items: ApiRow[], key: string) => items.map((item) => ({
+  const options = (items: ApiRow[], key: string) => items.map((item) => typeof item === "string" || typeof item === "number" ? ({ value: String(item), label: String(item) }) : ({
     value: String(item.slug ?? item.id ?? item[key] ?? item.name ?? item.year ?? ""),
     label: String(item.name ?? item.title ?? item.trim ?? item.year ?? item.slug ?? ""),
   })).filter((item) => item.value);
@@ -81,7 +81,7 @@ export function LiveFitment() {
         const wheels = Array.isArray(vehicle.wheels) ? vehicle.wheels : [];
         wheels.forEach((wheel: ApiRow, index: number) => results.push({
           ...wheel, _vehicle: vehicle, _id: `${vehicle.modification?.slug ?? vehicle.modification ?? vehicle.make?.slug ?? make}-${index}`,
-          _type: wheel.is_stock || wheel.type === "OE" || wheel.type === "stock" ? "OE" : "OPTIONAL",
+          _type: wheel.is_stock || wheel.type === "OE" || wheel.type === "stock" || index === 0 ? "OE" : "OPTIONAL",
         }));
       });
       setRows(results);
