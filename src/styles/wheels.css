@@ -205,3 +205,17 @@
 .wheels-inquiry #inquiry-title * {
   color: #fff !important;
 }
+
+
+/* Dual product discovery paths */
+.wheels-discovery { padding: clamp(72px, 8vw, 120px) var(--euresis-gutter); background: var(--p-color-canvas); }
+.wheels-discovery__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; max-width: 1440px; margin: 0 auto; }
+.wheels-discovery__card { display: grid; min-height: 260px; align-content: space-between; gap: 18px; padding: clamp(24px, 3vw, 42px); border: 1px solid var(--p-color-contrast-low); color: var(--p-color-primary); text-decoration: none; transition: background .2s ease, color .2s ease; }
+.wheels-discovery__card:hover, .wheels-discovery__card:focus-visible { background: var(--p-color-primary); color: var(--p-color-canvas); }
+.wheels-discovery__card > span, .wheels-discovery__card > small { color: var(--p-color-contrast-medium); font-size: 10px; letter-spacing: .12em; }
+.wheels-discovery__card > strong { font-size: clamp(2rem, 4vw, 4rem); font-weight: 500; letter-spacing: -.065em; line-height: .98; }
+.wheels-discovery__card > b { font-size: 10px; letter-spacing: .13em; }
+.wheels-specification-fields { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; max-width: 1440px; margin: 0 auto 18px; align-items: end; }
+.wheels-specification-note { max-width: 1440px; margin: 0 auto 28px; color: rgb(255 255 255 / .68); font-size: 11px; line-height: 1.6; }
+@media (max-width: 900px) { .wheels-specification-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 600px) { .wheels-discovery { padding: 74px 20px; } .wheels-discovery__grid { grid-template-columns: 1fr; } .wheels-discovery__card { min-height: 220px; } .wheels-specification-fields { grid-template-columns: 1fr; } }

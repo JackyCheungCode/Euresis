@@ -98,20 +98,20 @@ export function LiveFitment() {
     const rim = front.rim_diameter ?? front.rim?.diameter ?? front.diameter;
     const width = front.rim_width ?? front.rim?.width ?? front.width;
     const offset = front.rim_offset ?? front.rim?.offset ?? front.offset;
-    const pcd = row._vehicle?.technical?.bolt_pattern ?? row.technical?.bolt_pattern ?? "";
+    const pcd = front.bolt_pattern ?? front.pcd ?? front.bolt_pattern_full ?? row.bolt_pattern ?? row.pcd ?? row._vehicle?.technical?.bolt_pattern ?? row.technical?.bolt_pattern ?? "";
     const detail = { diameter: rim ? String(rim) : "ALL", width: width ? String(width) : "", offset: offset ? String(offset) : "", pcd, rearDiameter: rear.rim_diameter ?? "", source: row._type, make, model, year, trim };
     window.dispatchEvent(new CustomEvent("euresis:fitment-selected", { detail }));
     setSelected((current) => [...current, row._id]);
     document.getElementById("catalogue")?.scrollIntoView({ behavior: "smooth", block: "start" });
-    window.setTimeout(() => document.querySelector<HTMLInputElement>('[name="filter-diameter"]')?.focus(), 450);
+    window.setTimeout(() => document.querySelector<HTMLInputElement>('[name="catalogue-diameter"]')?.focus(), 450);
   }
 
   return (
     <section className="wheels-fitment" id="vehicle-fitment" aria-labelledby="fitment-title">
       <div className="wheels-fitment__intro">
-        <p className="wheels-eyebrow">03 / VEHICLE FIRST</p>
+        <p className="wheels-eyebrow">03 / VEHICLE FITMENT</p>
         <PHeading id="fitment-title" tag="h2" size="2xl">START WITH<br />YOUR VEHICLE.</PHeading>
-        <p>Find wheel specifications for your vehicle and selected market.</p>
+        <p>Choose your vehicle to retrieve original and optional wheel specifications. You can then transfer any result into the specification filters and continue refining your search. Vehicle selection is optional when you already know your wheel parameters.</p>
       </div>
       <div className="wheels-fitment__form">
         <div className="wheels-fitment__fields wheels-fitment__fields--live">

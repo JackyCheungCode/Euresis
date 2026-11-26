@@ -17,6 +17,10 @@ export type WheelProduct = {
   design: string;
   finishCount: number;
   diameterRange: string;
+  widths?: string[];
+  offsets?: string[];
+  pcd?: string[];
+  centerBores?: string[];
   image: string;
   imageAlt: string;
   imageSource: string;
