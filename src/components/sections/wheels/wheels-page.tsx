@@ -27,6 +27,7 @@ export function WheelsPage() {
   const [fitmentWidth, setFitmentWidth] = useState("");
   const [fitmentOffset, setFitmentOffset] = useState("");
   const [fitmentPcd, setFitmentPcd] = useState("");
+  const [fitmentCenterBore, setFitmentCenterBore] = useState("");
   const [vehicleSummary, setVehicleSummary] = useState("");
   const [country, setCountry] = useState("");
   const [submitted, setSubmitted] = useState(false);
@@ -37,8 +38,12 @@ export function WheelsPage() {
     return (manufacturing === all || product.manufacturing === manufacturing)
       && (collection === all || product.collection === collection)
       && diameterMatches
+      && (!fitmentWidth || product.widths?.some((value) => value === fitmentWidth.trim()))
+      && (!fitmentOffset || product.offsets?.some((value) => value === fitmentOffset.trim()))
+      && (!fitmentPcd || product.pcd?.some((value) => value.replace(/[×x\\s]/gi, "").toLowerCase() === fitmentPcd.replace(/[×x\\s]/gi, "").toLowerCase()))
+      && (!fitmentCenterBore || product.centerBores?.some((value) => value === fitmentCenterBore.trim()))
       && (finish === all || product.finishCount >= Number(finish));
-  }), [manufacturing, collection, diameter, finish]);
+  }), [manufacturing, collection, diameter, fitmentWidth, fitmentOffset, fitmentPcd, fitmentCenterBore, finish]);
 
 
   const resetFilters = () => {
@@ -138,9 +143,9 @@ export function WheelsPage() {
           <PInputText label="Width (J)" name="filter-width" value={fitmentWidth} onChange={(event: SelectUpdateEvent) => setFitmentWidth(String(event.detail.value ?? ""))} placeholder="e.g. 8.5" />
           <PInputText label="Offset (ET)" name="filter-offset" value={fitmentOffset} onChange={(event: SelectUpdateEvent) => setFitmentOffset(String(event.detail.value ?? ""))} placeholder="e.g. 35" />
           <PInputText label="Bolt pattern (PCD)" name="filter-pcd" value={fitmentPcd} onChange={(event: SelectUpdateEvent) => setFitmentPcd(String(event.detail.value ?? ""))} placeholder="e.g. 5×112" />
-          <PInputText label="Center bore (CB)" name="filter-center-bore" placeholder="e.g. 66.6" />
+          <PInputText label="Center bore (CB)" name="filter-center-bore" value={fitmentCenterBore} onChange={(event: SelectUpdateEvent) => setFitmentCenterBore(String(event.detail.value ?? ""))} placeholder="e.g. 66.6" />
         </div>
-        <p className="wheels-specification-note">Width, offset and PCD are editable criteria. The current sample range does not yet contain verified dimensional data, so these values are not used to claim product compatibility.</p>
+        <p className="wheels-specification-note">All dimensions are catalogue filters. A product appears only when its corresponding verified specification is present; the current sample range has no verified width, offset, PCD or center-bore records, so those filters may return no matches.</p>
         <div className="wheels-collection-list">
           {wheelCollections.map((item, index) => (
             <button className={`wheels-collection-item ${collection === item.id ? "is-active" : ""}`} type="button" key={item.id} onClick={() => { setCollection(collection === item.id ? "ALL" : item.id); document.getElementById("discovery")?.scrollIntoView({ behavior: "smooth" }); }}>
@@ -187,7 +192,8 @@ export function WheelsPage() {
           <PInputText label="Width (J)" name="catalogue-width" value={fitmentWidth} onChange={(event: SelectUpdateEvent) => setFitmentWidth(String(event.detail.value ?? ""))} />
           <PInputText label="Offset (ET)" name="catalogue-offset" value={fitmentOffset} onChange={(event: SelectUpdateEvent) => setFitmentOffset(String(event.detail.value ?? ""))} />
           <PInputText label="Bolt pattern (PCD)" name="catalogue-pcd" value={fitmentPcd} onChange={(event: SelectUpdateEvent) => setFitmentPcd(String(event.detail.value ?? ""))} />
-          <PButton type="button" variant="secondary" onClick={() => { resetFilters(); setFitmentWidth(""); setFitmentOffset(""); setFitmentPcd(""); setVehicleSummary(""); }}>Reset filters</PButton>
+          <PInputText label="Center bore (CB)" name="catalogue-center-bore" value={fitmentCenterBore} onChange={(event: SelectUpdateEvent) => setFitmentCenterBore(String(event.detail.value ?? ""))} />
+          <PButton type="button" variant="secondary" onClick={() => { resetFilters(); setFitmentWidth(""); setFitmentOffset(""); setFitmentPcd(""); setFitmentCenterBore(""); setVehicleSummary(""); }}>Reset filters</PButton>
         </div>
         <div className="wheels-catalogue__meta"><span>{products.length.toString().padStart(2, "0")} SAMPLE MODELS</span><span>NO PRICING · NO CHECKOUT</span></div>
         {vehicleSummary && <p className="wheels-selected-fitment">Vehicle reference: <strong>{vehicleSummary}</strong> — its selected fitment values have been transferred to the editable specification filters. Sample products do not carry verified technical dimensions yet.</p>}
