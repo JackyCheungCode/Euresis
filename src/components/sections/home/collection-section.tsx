@@ -1,8 +1,4 @@
-import {
-  PButton,
-  PHeading,
-  PText,
-} from "@/src/components/ui/carbon-primitives";
+import { PHeading, PText } from "@/src/components/ui/carbon-primitives";
 
 const collections = [
   {
@@ -93,9 +89,7 @@ export function CollectionSection() {
                   <li key={construction}>{construction}</li>
                 ))}
               </ul>
-              <PButton variant="secondary" type="button">
-                <a href="/wheels">Discuss your fitment</a>
-              </PButton>
+              <a className="cds--btn cds--btn--secondary collection-details__link" href="/wheels">Discuss your fitment <span aria-hidden="true">↗</span></a>
             </div>
           </article>
         ))}
