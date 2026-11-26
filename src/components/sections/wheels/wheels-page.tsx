@@ -93,13 +93,13 @@ export function WheelsPage() {
           <PText color="contrast-high">Explore the Euresis range by manufacturing process, then discover the design collection that fits your direction.</PText>
         </div>
         <div className="wheels-manufacturing__grid">
-          <button className={`manufacturing-card ${manufacturing === "FORGED" ? "is-active" : ""}`} type="button" onClick={() => { setManufacturing(manufacturing === "FORGED" ? "ALL" : "FORGED"); document.getElementById("catalogue")?.scrollIntoView({ behavior: "smooth" }); }}>
+          <button className={`manufacturing-card ${manufacturing === "FORGED" ? "is-active" : ""}`} type="button" onClick={() => { setManufacturing(manufacturing === "FORGED" ? "ALL" : "FORGED"); document.getElementById("discovery")?.scrollIntoView({ behavior: "smooth" }); }}>
             <img src="https://images.pexels.com/photos/41081788/pexels-photo-41081788.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="Reference image of a detailed alloy wheel" loading="lazy" />
             <span className="manufacturing-card__number">01 / F</span>
             <span className="manufacturing-card__copy"><strong>FORGED</strong><small>PRECISION · STRENGTH · LIGHTWEIGHT</small></span>
             <span className="manufacturing-card__arrow">↗</span>
           </button>
-          <button className={`manufacturing-card ${manufacturing === "CAST" ? "is-active" : ""}`} type="button" onClick={() => { setManufacturing(manufacturing === "CAST" ? "ALL" : "CAST"); document.getElementById("catalogue")?.scrollIntoView({ behavior: "smooth" }); }}>
+          <button className={`manufacturing-card ${manufacturing === "CAST" ? "is-active" : ""}`} type="button" onClick={() => { setManufacturing(manufacturing === "CAST" ? "ALL" : "CAST"); document.getElementById("discovery")?.scrollIntoView({ behavior: "smooth" }); }}>
             <img src="https://images.pexels.com/photos/32070739/pexels-photo-32070739.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="Reference image of a polished alloy wheel" loading="lazy" />
             <span className="manufacturing-card__number">02 / C</span>
             <span className="manufacturing-card__copy"><strong>CAST</strong><small>DESIGN · VERSATILITY · PERFORMANCE</small></span>
@@ -143,7 +143,7 @@ export function WheelsPage() {
         <p className="wheels-specification-note">Width, offset and PCD are editable criteria. The current sample range does not yet contain verified dimensional data, so these values are not used to claim product compatibility.</p>
         <div className="wheels-collection-list">
           {wheelCollections.map((item, index) => (
-            <button className={`wheels-collection-item ${collection === item.id ? "is-active" : ""}`} type="button" key={item.id} onClick={() => { setCollection(collection === item.id ? "ALL" : item.id); document.getElementById("catalogue")?.scrollIntoView({ behavior: "smooth" }); }}>
+            <button className={`wheels-collection-item ${collection === item.id ? "is-active" : ""}`} type="button" key={item.id} onClick={() => { setCollection(collection === item.id ? "ALL" : item.id); document.getElementById("discovery")?.scrollIntoView({ behavior: "smooth" }); }}>
               <span className="wheels-collection-item__index">0{index + 1}</span>
               <span className="wheels-collection-item__name">{item.id}</span>
               <span className="wheels-collection-item__subtitle">{item.subtitle}</span>
