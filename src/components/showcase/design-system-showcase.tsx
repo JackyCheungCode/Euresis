@@ -33,39 +33,39 @@ const sections = [
 const colorTokens = [
   { name: "Canvas", token: "--cds-background", role: "Main page background" },
   { name: "Surface", token: "--cds-layer", role: "Cards and grouped content" },
-  { name: "Primary", token: "--p-color-primary", role: "Primary text and emphasis" },
-  { name: "Contrast higher", token: "--p-color-contrast-higher", role: "Strong secondary text" },
-  { name: "Contrast high", token: "--p-color-contrast-high", role: "Body copy" },
-  { name: "Contrast medium", token: "--p-color-contrast-medium", role: "Muted labels" },
-  { name: "Contrast lower", token: "--p-color-contrast-lower", role: "Borders and dividers" },
-  { name: "Info", token: "--p-color-info", role: "Informational state" },
-  { name: "Success", token: "--p-color-success", role: "Success state" },
-  { name: "Warning", token: "--p-color-warning", role: "Warning state" },
-  { name: "Error", token: "--p-color-error", role: "Error state" },
-  { name: "Focus", token: "--p-color-focus", role: "Keyboard focus indicator" },
+  { name: "Primary", token: "--euresis-black", role: "Primary text and emphasis" },
+  { name: "Contrast higher", token: "--euresis-graphite", role: "Strong secondary text" },
+  { name: "Contrast high", token: "--euresis-graphite", role: "Body copy" },
+  { name: "Contrast medium", token: "--euresis-steel", role: "Muted labels" },
+  { name: "Contrast lower", token: "--euresis-line", role: "Borders and dividers" },
+  { name: "Info", token: "--cds-support-info", role: "Informational state" },
+  { name: "Success", token: "--cds-support-success", role: "Success state" },
+  { name: "Warning", token: "--cds-support-warning", role: "Warning state" },
+  { name: "Error", token: "--cds-support-error", role: "Error state" },
+  { name: "Focus", token: "--cds-focus", role: "Keyboard focus indicator" },
 ];
 
 const typeSamples = [
-  ["5XL", "--p-typescale-5xl", "Display / campaign"],
-  ["4XL", "--p-typescale-4xl", "Page title"],
-  ["3XL", "--p-typescale-3xl", "Section heading"],
-  ["2XL", "--p-typescale-2xl", "Subsection heading"],
-  ["XL", "--p-typescale-xl", "Card heading"],
-  ["LG", "--p-typescale-lg", "Lead paragraph"],
-  ["MD", "--p-typescale-md", "Body text"],
-  ["SM", "--p-typescale-sm", "Supporting text"],
-  ["XS", "--p-typescale-xs", "Metadata"],
-  ["2XS", "--p-typescale-2xs", "Eyebrow / caption"],
+  ["5XL", "3rem", "Display / campaign"],
+  ["4XL", "2.5rem", "Page title"],
+  ["3XL", "2rem", "Section heading"],
+  ["2XL", "1.5rem", "Subsection heading"],
+  ["XL", "1.25rem", "Card heading"],
+  ["LG", "1.125rem", "Lead paragraph"],
+  ["MD", "1rem", "Body text"],
+  ["SM", "0.875rem", "Supporting text"],
+  ["XS", "0.75rem", "Metadata"],
+  ["2XS", "0.625rem", "Eyebrow / caption"],
 ];
 
 const spacingSamples = [
-  ["2XS", "--p-spacing-static-2xs"],
-  ["XS", "--p-spacing-static-xs"],
-  ["SM", "--p-spacing-static-sm"],
-  ["MD", "--p-spacing-static-md"],
-  ["LG", "--p-spacing-static-lg"],
-  ["XL", "--p-spacing-static-xl"],
-  ["2XL", "--p-spacing-static-2xl"],
+  ["2XS", "0.125rem"],
+  ["XS", "0.25rem"],
+  ["SM", "0.5rem"],
+  ["MD", "1rem"],
+  ["LG", "1.5rem"],
+  ["XL", "2rem"],
+  ["2XL", "2rem"],
 ];
 
 export function DesignSystemShowcase() {
@@ -142,7 +142,7 @@ export function DesignSystemShowcase() {
                 ))}
               </div>
             </div>
-            <p className="ds-note">Color values are not redefined in this page. Swatches read the installed Porsche Design System CSS variables.</p>
+            <p className="ds-note">Color values are not redefined in this page. Swatches read the installed Carbon Design System CSS variables.</p>
           </section>
 
           <section className="ds-section" id="typography">
@@ -285,7 +285,7 @@ export function DesignSystemShowcase() {
               <div><span>CONTENT / WIDE</span><strong>Product and collection grid</strong><p>Responsive columns with consistent gutters.</p></div>
               <div><span>CONTENT / FULL</span><strong>Immersive campaign sections</strong><p>Large visual areas with controlled text width.</p></div>
             </div>
-            <div className="ds-token-chips"><span>RADIUS / SM <b>var(--p-radius-sm)</b></span><span>RADIUS / MD <b>var(--p-radius-md)</b></span><span>RADIUS / LG <b>var(--p-radius-lg)</b></span><span>SHADOW / MD <b>var(--p-shadow-md)</b></span></div>
+            <div className="ds-token-chips"><span>RADIUS / SM <b>var(0)</b></span><span>RADIUS / MD <b>var(4px)</b></span><span>RADIUS / LG <b>var(8px)</b></span><span>SHADOW / MD <b>var(0 2px 6px rgba(0,0,0,.16))</b></span></div>
           </section>
 
           <section className="ds-section" id="wheel-ui">
