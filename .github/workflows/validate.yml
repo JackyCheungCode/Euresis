@@ -39,7 +39,8 @@ jobs:
           git add package.json package-lock.json .gitignore
           if ! git diff --cached --quiet; then
             git commit -m "build: persist vinext setup and lockfile [skip ci]"
-            git push
+            TARGET_BRANCH="${GITHUB_HEAD_REF:-${GITHUB_REF_NAME}}"
+            git push origin "HEAD:${TARGET_BRANCH}"
           fi
 
       - name: Check vinext compatibility
