@@ -1,4 +1,4 @@
-/* Euresis Wheels catalogue — page composition only; controls remain PDS components. */
+/* Euresis Wheels catalogue — Carbon component integration and page composition. */
 .wheels-page { color: var(--euresis-black); background: var(--euresis-white); }
 .wheels-eyebrow { margin: 0; color: var(--euresis-steel); font-size: 10px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; }
 .wheels-hero { position: relative; display: flex; min-height: min(780px, 88svh); align-items: flex-end; overflow: hidden; background: var(--euresis-black); color: var(--euresis-white); }
@@ -197,7 +197,7 @@
 @media (max-width: 600px) { .wheels-discovery { padding: var(--euresis-section-space-mobile) 20px; } .wheels-discovery__grid { grid-template-columns: 1fr; } .wheels-discovery__card { min-height: 220px; } }
 
 
-/* Explicit foreground/surface pairing for dark PDS sections. */
+/* Explicit foreground/surface pairing for dark sections. */
 .wheels-discovery,
 .wheels-inquiry { background: #111 !important; color: #fff !important; }
 .wheels-discovery .wheels-eyebrow,
@@ -217,7 +217,7 @@
 
 
 /* Full-page foreground/background contrast audit.
-   Every section owns an explicit PDS color scheme; component hosts inherit
+   Every section owns an explicit Euresis color scheme; Carbon component hosts inherit
    the matching foreground instead of relying on global defaults. */
 .wheels-page { background: var(--euresis-white); color: var(--euresis-black); }
 
@@ -252,7 +252,7 @@
   color: var(--euresis-steel);
 }
 
-/* Dark sections: all text-bearing PDS hosts and native text use the same
+/* Dark sections: all Carbon hosts and native text use the same
    light foreground. Keep the enquiry form itself explicitly light. */
 .wheels-discovery.scheme-dark,
 .wheels-inquiry.scheme-dark {
@@ -324,7 +324,7 @@
 }
 
 
-/* Full-page PDS v4 theme and mobile readability audit */
+/* Full-page Carbon theme and mobile readability audit */
 .wheels-page { color: var(--euresis-black); }
 .wheels-page .scheme-light { color-scheme: light; }
 .wheels-page .scheme-dark { color-scheme: dark; }
@@ -377,7 +377,6 @@
   .wheels-discovery__grid { grid-template-columns: 1fr; gap: 14px; }
   .wheels-discovery__card { min-height: 230px; gap: 14px; padding: 22px; }
   .wheels-discovery__card > strong { font-size: clamp(1.9rem, 8.5vw, 2.65rem); line-height: 1.02; }
-  .wheels-discovery__icon p-icon { --p-icon-size: 28px; }
   .wheels-catalogue__meta { gap: 10px; flex-wrap: wrap; line-height: 1.5; }
   .wheels-filters { grid-template-columns: minmax(0, 1fr); }
   .wheels-filters > :last-child { grid-column: auto; }
@@ -670,7 +669,7 @@
 .wheel-inquiry-document section:has(table) { overflow-x:auto; }
 
 
-/* Porsche-inspired product detail redesign */
+/* Euresis product detail redesign */
 .wheel-detail-banner{position:relative;min-height:clamp(440px,58vw,720px);overflow:hidden;background:#161616;color:#fff}
 .wheel-detail-banner>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.58);transform:scale(1.01)}
 .wheel-detail-banner__shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.78),rgba(0,0,0,.16) 72%),linear-gradient(0deg,rgba(0,0,0,.32),transparent 40%)}
