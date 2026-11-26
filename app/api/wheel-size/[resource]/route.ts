@@ -20,7 +20,7 @@ export async function GET(request: Request, context: { params: Promise<{ resourc
     headers: { Accept: "application/json", "Accept-Encoding": "gzip" },
     signal: AbortSignal.timeout(15000),
   });
-  const body = await upstream.json().catch(() => null);
+  const body: any = await upstream.json().catch(() => null);
   if (!upstream.ok) {
     return Response.json({ error: { code: "WHEEL_SIZE_UPSTREAM", message: body?.detail ?? body?.message ?? `Wheel-Size returned HTTP ${upstream.status}.` } }, { status: upstream.status });
   }
