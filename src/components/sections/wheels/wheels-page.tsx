@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import {
   PButton,
   PHeading,
+  PIcon,
   PInputEmail,
   PInputText,
   PSelect,
@@ -98,7 +99,7 @@ export function WheelsPage() {
         <video ref={heroVideoRef} className="wheels-hero__video" autoPlay muted loop playsInline preload="metadata" aria-hidden="true" tabIndex={-1} poster="https://images.pexels.com/videos/28180175/free-video-28180175.jpg?auto=compress&cs=tinysrgb&w=2200"><source src="https://videos.pexels.com/video-files/28180175/28180175-hd_1920_1080_30fps.mp4" type="video/mp4" /></video>
         <div className="wheels-hero__content">
           <p className="wheels-eyebrow">EURESIS / PERFORMANCE WHEELS</p>
-          <PHeading id="wheels-title" tag="h1" size="3xl" className="wheels-hero__title">
+          <PHeading id="wheels-title" tag="h1" size="3xl" color="contrast-high" className="wheels-hero__title">
             ENGINEERED<br />FOR MOTION.
           </PHeading>
           <p className="wheels-hero__lead">Two manufacturing disciplines. Six design collections. One uncompromising point of view.</p>
@@ -115,7 +116,7 @@ export function WheelsPage() {
         <div className="wheels-section-heading">
           <div>
             <p className="wheels-eyebrow">01 / MANUFACTURING</p>
-            <PHeading id="manufacturing-title" tag="h2" size="2xl">TWO WAYS TO<br />DEFINE PERFORMANCE.</PHeading>
+            <PHeading id="manufacturing-title" tag="h2" size="2xl" color="primary">TWO WAYS TO<br />DEFINE PERFORMANCE.</PHeading>
           </div>
           <PText color="contrast-high">Explore the Euresis range by manufacturing process, then discover the design collection that fits your direction.</PText>
         </div>
@@ -137,12 +138,12 @@ export function WheelsPage() {
 
       <section className="wheels-discovery scheme-dark" id="discovery" aria-labelledby="discovery-title">
         <div className="wheels-section-heading">
-          <div><p className="wheels-eyebrow">02 / PRODUCT DISCOVERY</p><PHeading id="discovery-title" tag="h2" size="2xl">TWO WAYS TO<br />FIND YOUR WHEELS.</PHeading></div>
+          <div><p className="wheels-eyebrow">02 / PRODUCT DISCOVERY</p><PHeading id="discovery-title" tag="h2" size="2xl" color="contrast-high">TWO WAYS TO<br />FIND YOUR WHEELS.</PHeading></div>
           <PText color="contrast-high">Start with your vehicle and refine the fitment, or start with wheel specifications directly. Both paths lead to the same catalogue.</PText>
         </div>
         <div className="wheels-discovery__grid">
-          <a className="wheels-discovery__card" href="#vehicle-fitment"><span>01 / VEHICLE FIRST</span><strong>Find wheels for<br />your vehicle.</strong><small>Make · Model · Year · Modification</small><b>START WITH VEHICLE ↗</b></a>
-          <a className="wheels-discovery__card" href="#catalogue"><span>02 / SPECIFICATION FIRST</span><strong>Know your fitment?<br />Start with the numbers.</strong><small>Collection · Diameter · Width · PCD · Offset</small><b>FILTER BY SPECIFICATION ↗</b></a>
+          <a className="wheels-discovery__card" href="#vehicle-fitment"><span className="wheels-discovery__icon"><PIcon name="car" size="xl" color="inherit" /></span><span>01 / VEHICLE FIRST</span><strong>Find wheels for<br />your vehicle.</strong><small>Make · Model · Year · Modification</small><b>START WITH VEHICLE ↗</b></a>
+          <a className="wheels-discovery__card" href="#catalogue"><span className="wheels-discovery__icon"><PIcon name="tire" size="xl" color="inherit" /></span><span>02 / SPECIFICATION FIRST</span><strong>Know your fitment?<br />Start with the numbers.</strong><small>Collection · Diameter · Width · PCD · Offset</small><b>FILTER BY SPECIFICATION ↗</b></a>
         </div>
       </section>
 
@@ -152,7 +153,7 @@ export function WheelsPage() {
         <div className="wheels-section-heading">
           <div>
             <p className="wheels-eyebrow">04 / UNIFIED CATALOGUE</p>
-            <PHeading id="catalogue-title" tag="h2" size="2xl">THE WHEEL<br />CATALOGUE.</PHeading>
+            <PHeading id="catalogue-title" tag="h2" size="2xl" color="primary">THE WHEEL<br />CATALOGUE.</PHeading>
           </div>
           <PText color="contrast-high">Explore the Euresis wheel range. Filter by manufacturing, collection and wheel dimensions.</PText>
         </div>
@@ -207,18 +208,18 @@ export function WheelsPage() {
       <section className="wheels-engineering scheme-light" aria-labelledby="engineering-title">
         <div>
           <p className="wheels-eyebrow">05 / ENGINEERING</p>
-          <PHeading id="engineering-title" tag="h2" size="2xl">FORM FOLLOWS<br />FUNCTION.</PHeading>
+          <PHeading id="engineering-title" tag="h2" size="2xl" color="primary">FORM FOLLOWS<br />FUNCTION.</PHeading>
         </div>
         <div className="wheels-engineering__copy">
           <p>Every production wheel requires its own verified technical specification. Construction method, dimensions, load rating and vehicle clearance are confirmed at product level—not inferred from a collection name.</p>
-          <div className="wheels-engineering__labels"><span>MANUFACTURING</span><span>GEOMETRY</span><span>MATERIALS</span><span>FITMENT</span></div>
+          <div className="wheels-engineering__labels"><span><PIcon name="wrench" size="sm" /> MANUFACTURING</span><span><PIcon name="configurate" size="sm" /> GEOMETRY</span><span><PIcon name="weight" size="sm" /> MATERIALS</span><span><PIcon name="car" size="sm" /> FITMENT</span></div>
         </div>
       </section>
 
       <section className="wheels-inquiry scheme-dark" id="inquiry" aria-labelledby="inquiry-title">
         <div className="wheels-inquiry__intro">
           <p className="wheels-eyebrow">06 / GLOBAL ENQUIRY</p>
-          <PHeading id="inquiry-title" tag="h2" size="2xl">LET'S FIND<br />YOUR FIT.</PHeading>
+          <PHeading id="inquiry-title" tag="h2" size="2xl" color="contrast-high">LET'S FIND<br />YOUR FIT.</PHeading>
           <p>Tell us which wheel and vehicle you are considering. The current demo form validates the enquiry layout locally; it does not transmit or store personal information.</p>
         </div>
         {submitted ? <div className="wheels-inquiry__success" role="status"><strong>Demo enquiry captured in this session.</strong><p>No message was sent. Connect an enquiry endpoint before accepting real customer requests.</p><PButton type="button" variant="secondary" onClick={() => setSubmitted(false)}>Create another demo enquiry</PButton></div> :
