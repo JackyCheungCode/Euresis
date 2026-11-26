@@ -156,7 +156,7 @@ export function WheelsPage() {
           <PText color="contrast-high">Explore the first Euresis sample range. Images are visual references, not photographs of confirmed Euresis production models.</PText>
         </div>
         <div className="wheels-filters" aria-label="Catalogue filters">
-          <PSelect label="Manufacturing" name="filter-manufacturing" value={manufacturing} onChange={(event: SelectUpdateEvent) => setManufacturing(event.detail.value as typeof manufacturing)}>
+          <PSelect label="Manufacturing" name="filter-manufacturing" value={manufacturing} onChange={(event: SelectUpdateEvent) => setManufacturing(String(event.detail.value ?? "") as typeof manufacturing)}>
             <PSelectOption value="ALL">All manufacturing</PSelectOption>
             <PSelectOption value="FORGED">Forged</PSelectOption>
             <PSelectOption value="CAST">Cast</PSelectOption>
