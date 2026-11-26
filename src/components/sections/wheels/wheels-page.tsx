@@ -2,15 +2,15 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
-  PButton as Button,
-  PHeading,
-  PIcon,
-  PInputEmail,
-  PInputText,
-  PSelect,
-  PSelectOption,
-  PTextarea,
-  PText,
+  EButton as Button,
+  EHeading,
+  EIcon,
+  EEmailInput,
+  ETextInput,
+  ESelect,
+  ESelectItem,
+  ETextArea,
+  EText,
 } from "@/src/components/ui/carbon-primitives";
 import { wheelCollections, wheelProducts } from "@/src/data/wheels";
 import { LiveFitment } from "./live-fitment";
@@ -95,9 +95,9 @@ export function WheelsPage() {
         <video ref={heroVideoRef} className="wheels-hero__video" autoPlay muted loop playsInline preload="metadata" aria-hidden="true" tabIndex={-1} poster="https://images.pexels.com/videos/28180175/free-video-28180175.jpg?auto=compress&cs=tinysrgb&w=2200"><source src="https://videos.pexels.com/video-files/40930926/40930926-hd_1920_1080_30fps.mp4" type="video/mp4" /></video>
         <div className="wheels-hero__content">
           <p className="wheels-eyebrow">EURESIS / PERFORMANCE WHEELS</p>
-          <PHeading id="wheels-title" tag="h1" size="3xl" color="contrast-high" className="wheels-hero__title">
+          <EHeading id="wheels-title" tag="h1" size="3xl" color="contrast-high" className="wheels-hero__title">
             ENGINEERED<br />FOR MOTION.
-          </PHeading>
+          </EHeading>
           <p className="wheels-hero__lead">Two manufacturing disciplines. Six design collections. One uncompromising point of view.</p>
           <div className="wheels-hero__actions">
             <a className="wheels-hero__primary-link" href="#catalogue">Explore the wheels <span aria-hidden="true">↗</span></a>
@@ -112,9 +112,9 @@ export function WheelsPage() {
         <div className="wheels-section-heading">
           <div>
             <p className="wheels-eyebrow">01 / MANUFACTURING</p>
-            <PHeading id="manufacturing-title" tag="h2" size="2xl" color="primary">TWO WAYS TO<br />DEFINE PERFORMANCE.</PHeading>
+            <EHeading id="manufacturing-title" tag="h2" size="2xl" color="primary">TWO WAYS TO<br />DEFINE PERFORMANCE.</EHeading>
           </div>
-          <PText color="contrast-high">Explore the Euresis range by manufacturing process, then discover the design collection that fits your direction.</PText>
+          <EText color="contrast-high">Explore the Euresis range by manufacturing process, then discover the design collection that fits your direction.</EText>
         </div>
         <div className="wheels-manufacturing__grid">
           <button className={`manufacturing-card ${manufacturing === "FORGED" ? "is-active" : ""}`} type="button" onClick={() => { setManufacturing(manufacturing === "FORGED" ? "ALL" : "FORGED"); document.getElementById("discovery")?.scrollIntoView({ behavior: "smooth" }); }}>
@@ -134,12 +134,12 @@ export function WheelsPage() {
 
       <section className="wheels-discovery scheme-dark" id="discovery" aria-labelledby="discovery-title">
         <div className="wheels-section-heading">
-          <div><p className="wheels-eyebrow">02 / PRODUCT DISCOVERY</p><PHeading id="discovery-title" tag="h2" size="2xl" color="inherit">TWO WAYS TO<br />FIND YOUR WHEELS.</PHeading></div>
-          <PText color="inherit">Start with your vehicle and refine the fitment, or start with wheel specifications directly. Both paths lead to the same catalogue.</PText>
+          <div><p className="wheels-eyebrow">02 / PRODUCT DISCOVERY</p><EHeading id="discovery-title" tag="h2" size="2xl" color="inherit">TWO WAYS TO<br />FIND YOUR WHEELS.</EHeading></div>
+          <EText color="inherit">Start with your vehicle and refine the fitment, or start with wheel specifications directly. Both paths lead to the same catalogue.</EText>
         </div>
         <div className="wheels-discovery__grid">
-          <a className="wheels-discovery__card" href="#vehicle-fitment"><span className="wheels-discovery__icon"><PIcon name="car" size="xl" color="inherit" /></span><span>01 / VEHICLE FIRST</span><strong>Find wheels for<br />your vehicle.</strong><small>Make · Model · Year · Modification</small><b>START WITH VEHICLE ↗</b></a>
-          <a className="wheels-discovery__card" href="#catalogue"><span className="wheels-discovery__icon"><PIcon name="tire" size="xl" color="inherit" /></span><span>02 / SPECIFICATION FIRST</span><strong>Know your fitment?<br />Start with the numbers.</strong><small>Collection · Diameter · Width · PCD · Offset</small><b>FILTER BY SPECIFICATION ↗</b></a>
+          <a className="wheels-discovery__card" href="#vehicle-fitment"><span className="wheels-discovery__icon"><EIcon name="car" size="xl" color="inherit" /></span><span>01 / VEHICLE FIRST</span><strong>Find wheels for<br />your vehicle.</strong><small>Make · Model · Year · Modification</small><b>START WITH VEHICLE ↗</b></a>
+          <a className="wheels-discovery__card" href="#catalogue"><span className="wheels-discovery__icon"><EIcon name="tire" size="xl" color="inherit" /></span><span>02 / SPECIFICATION FIRST</span><strong>Know your fitment?<br />Start with the numbers.</strong><small>Collection · Diameter · Width · PCD · Offset</small><b>FILTER BY SPECIFICATION ↗</b></a>
         </div>
       </section>
 
@@ -149,34 +149,34 @@ export function WheelsPage() {
         <div className="wheels-section-heading">
           <div>
             <p className="wheels-eyebrow">04 / UNIFIED CATALOGUE</p>
-            <PHeading id="catalogue-title" tag="h2" size="2xl" color="primary">THE WHEEL<br />CATALOGUE.</PHeading>
+            <EHeading id="catalogue-title" tag="h2" size="2xl" color="primary">THE WHEEL<br />CATALOGUE.</EHeading>
           </div>
-          <PText color="contrast-high">Explore the Euresis wheel range. Filter by manufacturing, collection and wheel dimensions.</PText>
+          <EText color="contrast-high">Explore the Euresis wheel range. Filter by manufacturing, collection and wheel dimensions.</EText>
         </div>
         <div className="wheels-filters" aria-label="Catalogue filters">
-          <PSelect label="Manufacturing" name="filter-manufacturing" value={manufacturing} onChange={(event: SelectUpdateEvent) => setManufacturing(String(event.detail.value ?? "") as typeof manufacturing)}>
-            <PSelectOption value="ALL">All manufacturing</PSelectOption>
-            <PSelectOption value="FORGED">Forged</PSelectOption>
-            <PSelectOption value="CAST">Cast</PSelectOption>
-          </PSelect>
-          <PSelect label="Collection" name="filter-collection" value={collection} onChange={(event: SelectUpdateEvent) => setCollection(String(event.detail.value ?? ""))}>
-            <PSelectOption value="ALL">All collections</PSelectOption>
-            {wheelCollections.map((item) => <PSelectOption key={item.id} value={item.id}>{item.id}</PSelectOption>)}
-          </PSelect>
-          <PSelect label="Diameter" name="catalogue-diameter" value={diameter} onChange={(event: SelectUpdateEvent) => setDiameter(String(event.detail.value ?? ""))}>
-            <PSelectOption value="ALL">All diameters</PSelectOption>
-            {diameter !== "ALL" && !["17","18","19","20","21","22"].includes(diameter) && <PSelectOption value={diameter}>{diameter} inch · API selection</PSelectOption>}
-            {["17","18","19","20","21","22"].map((value) => <PSelectOption key={value} value={value}>{value} inch</PSelectOption>)}
-          </PSelect>
-          <PSelect label="Finish options" name="filter-finish" value={finish} onChange={(event: SelectUpdateEvent) => setFinish(String(event.detail.value ?? ""))}>
-            <PSelectOption value="ALL">Any finish count</PSelectOption>
-            <PSelectOption value="3">3+ finishes</PSelectOption>
-            <PSelectOption value="4">4+ finishes</PSelectOption>
-          </PSelect>
-          <PInputText label="Width (J)" name="catalogue-width" value={fitmentWidth} onChange={(event: InputUpdateEvent) => setFitmentWidth(inputValue(event))} />
-          <PInputText label="Offset (ET)" name="catalogue-offset" value={fitmentOffset} onChange={(event: InputUpdateEvent) => setFitmentOffset(inputValue(event))} />
-          <PInputText label="Bolt pattern (PCD)" name="catalogue-pcd" value={fitmentPcd} onChange={(event: InputUpdateEvent) => setFitmentPcd(inputValue(event))} />
-          <PInputText label="Center bore (CB)" name="catalogue-center-bore" value={fitmentCenterBore} onChange={(event: InputUpdateEvent) => setFitmentCenterBore(inputValue(event))} />
+          <ESelect label="Manufacturing" name="filter-manufacturing" value={manufacturing} onChange={(event: SelectUpdateEvent) => setManufacturing(String(event.detail.value ?? "") as typeof manufacturing)}>
+            <ESelectItem value="ALL">All manufacturing</ESelectItem>
+            <ESelectItem value="FORGED">Forged</ESelectItem>
+            <ESelectItem value="CAST">Cast</ESelectItem>
+          </ESelect>
+          <ESelect label="Collection" name="filter-collection" value={collection} onChange={(event: SelectUpdateEvent) => setCollection(String(event.detail.value ?? ""))}>
+            <ESelectItem value="ALL">All collections</ESelectItem>
+            {wheelCollections.map((item) => <ESelectItem key={item.id} value={item.id}>{item.id}</ESelectItem>)}
+          </ESelect>
+          <ESelect label="Diameter" name="catalogue-diameter" value={diameter} onChange={(event: SelectUpdateEvent) => setDiameter(String(event.detail.value ?? ""))}>
+            <ESelectItem value="ALL">All diameters</ESelectItem>
+            {diameter !== "ALL" && !["17","18","19","20","21","22"].includes(diameter) && <ESelectItem value={diameter}>{diameter} inch · API selection</ESelectItem>}
+            {["17","18","19","20","21","22"].map((value) => <ESelectItem key={value} value={value}>{value} inch</ESelectItem>)}
+          </ESelect>
+          <ESelect label="Finish options" name="filter-finish" value={finish} onChange={(event: SelectUpdateEvent) => setFinish(String(event.detail.value ?? ""))}>
+            <ESelectItem value="ALL">Any finish count</ESelectItem>
+            <ESelectItem value="3">3+ finishes</ESelectItem>
+            <ESelectItem value="4">4+ finishes</ESelectItem>
+          </ESelect>
+          <ETextInput label="Width (J)" name="catalogue-width" value={fitmentWidth} onChange={(event: InputUpdateEvent) => setFitmentWidth(inputValue(event))} />
+          <ETextInput label="Offset (ET)" name="catalogue-offset" value={fitmentOffset} onChange={(event: InputUpdateEvent) => setFitmentOffset(inputValue(event))} />
+          <ETextInput label="Bolt pattern (PCD)" name="catalogue-pcd" value={fitmentPcd} onChange={(event: InputUpdateEvent) => setFitmentPcd(inputValue(event))} />
+          <ETextInput label="Center bore (CB)" name="catalogue-center-bore" value={fitmentCenterBore} onChange={(event: InputUpdateEvent) => setFitmentCenterBore(inputValue(event))} />
           <Button type="button" variant="secondary" onClick={resetFilters}>Reset filters</Button>
         </div>
         <div className="wheels-catalogue__meta"><span>{products.length.toString().padStart(2, "0")} SAMPLE MODELS</span><span>NO PRICING · NO CHECKOUT</span></div>
@@ -204,28 +204,28 @@ export function WheelsPage() {
       <section className="wheels-engineering scheme-light" aria-labelledby="engineering-title">
         <div>
           <p className="wheels-eyebrow">05 / ENGINEERING</p>
-          <PHeading id="engineering-title" tag="h2" size="2xl" color="primary">FORM FOLLOWS<br />FUNCTION.</PHeading>
+          <EHeading id="engineering-title" tag="h2" size="2xl" color="primary">FORM FOLLOWS<br />FUNCTION.</EHeading>
         </div>
         <div className="wheels-engineering__copy">
           <p>Every production wheel requires its own verified technical specification. Construction method, dimensions, load rating and vehicle clearance are confirmed at product level—not inferred from a collection name.</p>
-          <div className="wheels-engineering__labels"><span><PIcon name="wrench" size="sm" /> MANUFACTURING</span><span><PIcon name="configurate" size="sm" /> GEOMETRY</span><span><PIcon name="weight" size="sm" /> MATERIALS</span><span><PIcon name="car" size="sm" /> FITMENT</span></div>
+          <div className="wheels-engineering__labels"><span><EIcon name="wrench" size="sm" /> MANUFACTURING</span><span><EIcon name="configurate" size="sm" /> GEOMETRY</span><span><EIcon name="weight" size="sm" /> MATERIALS</span><span><EIcon name="car" size="sm" /> FITMENT</span></div>
         </div>
       </section>
 
       <section className="wheels-inquiry scheme-dark" id="inquiry" aria-labelledby="inquiry-title">
         <div className="wheels-inquiry__intro">
           <p className="wheels-eyebrow">06 / GLOBAL ENQUIRY</p>
-          <PHeading id="inquiry-title" tag="h2" size="2xl" color="inherit">LET'S FIND<br />YOUR FIT.</PHeading>
+          <EHeading id="inquiry-title" tag="h2" size="2xl" color="inherit">LET'S FIND<br />YOUR FIT.</EHeading>
           <p>Tell us which wheel and vehicle you are considering. The current demo form validates the enquiry layout locally; it does not transmit or store personal information.</p>
         </div>
         {submitted ? <div className="wheels-inquiry__success" role="status"><strong>Demo enquiry captured in this session.</strong><p>No message was sent. Connect an enquiry endpoint before accepting real customer requests.</p><Button type="button" variant="secondary" onClick={() => setSubmitted(false)}>Create another demo enquiry</Button></div> :
           <form className="wheels-inquiry__form scheme-light" onSubmit={submitDemoInquiry}>
             <div className="wheels-inquiry__fields">
-              <PInputText label="Name" name="name" required />
-              <PInputEmail label="Email" name="email" required />
+              <ETextInput label="Name" name="name" required />
+              <EEmailInput label="Email" name="email" required />
               <CountryRegionSelect value={country} onChange={setCountry} />
-              <PInputText label="Vehicle" name="vehicle" value={vehicleSummary} placeholder="Make / Model / Year / Trim" />
-              <PTextarea label="Wheel model and requirements" name="message" required />
+              <ETextInput label="Vehicle" name="vehicle" value={vehicleSummary} placeholder="Make / Model / Year / Trim" />
+              <ETextArea label="Wheel model and requirements" name="message" required />
             </div>
             <Button type="submit">Submit demo enquiry</Button>
             <span className="wheels-demo-note">DEMO ONLY / FORM DATA IS NOT TRANSMITTED</span>
