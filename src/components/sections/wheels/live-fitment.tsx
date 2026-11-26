@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { PButton, PHeading, PSelect, PSelectOption } from "@porsche-design-system/components-react/ssr";
 
 type SelectUpdateEvent = CustomEvent<{ value?: string | number | null }>;
@@ -27,6 +27,7 @@ export function LiveFitment() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [queried, setQueried] = useState(false);
+  const liveRegion = useRef<HTMLDivElement>(null);
 
   async function load(resource: string, params: Record<string, string> = {}) {
     const query = new URLSearchParams(params);
