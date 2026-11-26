@@ -42,7 +42,7 @@ const icons: Record<string, React.ComponentType<{ size?: number }>> = {
 
 export function PButton({ children, variant, compact, hideLabel, icon, aria, ...props }: any) {
   const Icon = icon ? icons[icon] ?? ArrowRight : undefined;
-  return <Button {...props} kind={variant === "secondary" ? "secondary" : "primary"} size={compact ? "sm" : "md"} renderIcon={Icon} aria-label={aria?.["aria-label"]}>{children}</Button>;
+  return <Button {...props} kind={variant === "secondary" ? "secondary" : "primary"} size={compact ? "sm" : "md"} renderIcon={Icon} hasIconOnly={hideLabel} iconDescription={aria?.["aria-label"] ?? flattenText(children)} aria-label={aria?.["aria-label"]}>{children}</Button>;
 }
 export function PButtonPure({ children, icon = "arrow-right", hideLabel, aria, ...props }: any) {
   const Icon = icons[icon] ?? ArrowRight;
