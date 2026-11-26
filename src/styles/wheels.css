@@ -553,3 +553,15 @@
   .wheels-page .wheels-filters { padding-block: 16px; }
   .wheels-page .wheel-product-card__image { aspect-ratio: 1 / 1; }
 }
+
+
+/* Audit remediation: semantic links, focus visibility and responsive interaction styles. */
+.wheels-hero__primary-link,.wheels-hero__secondary-link{display:inline-flex;min-height:var(--euresis-control-min-height);align-items:center;justify-content:center;gap:12px;font-size:12px;font-weight:600;letter-spacing:.08em;text-decoration:none;text-transform:uppercase}
+.wheels-hero__primary-link{padding:0 22px;background:var(--p-color-canvas);color:var(--p-color-primary)}
+.wheels-hero__secondary-link{color:var(--p-color-contrast-high);text-decoration:underline;text-underline-offset:6px}
+.wheels-page :is(a,button,input,select,textarea,p-select,p-button):focus-visible{outline:var(--euresis-focus-ring);outline-offset:3px}
+.wheels-fitment__table-wrap{overscroll-behavior-inline:contain}
+.wheels-fitment__table th{position:sticky;top:0;background:var(--p-color-canvas)}
+.wheels-fitment__api-error{overflow-wrap:anywhere}
+@media(max-width:600px){.wheels-hero__actions{align-items:flex-start;flex-direction:column}.wheels-hero__primary-link{min-height:48px}}
+@media(prefers-reduced-motion:reduce){.wheels-page *,.wheels-page *::before,.wheels-page *::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
