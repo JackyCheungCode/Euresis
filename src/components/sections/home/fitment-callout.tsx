@@ -1,4 +1,4 @@
-import { PLink } from "@/src/components/ui/carbon-primitives";
+import { ELink } from "@/src/components/ui/carbon-primitives";
 
 export function FitmentCallout() {
   return (
@@ -9,7 +9,7 @@ export function FitmentCallout() {
       </div>
       <div className="fitment-copy">
         <p>Wheel fitment is specific to the vehicle and its configuration. Start with your vehicle and explore the dimensions and specifications that matter.</p>
-        <PLink href="/wheels#vehicle-fitment" icon="arrow-right">Find your vehicle</PLink>
+        <ELink href="/wheels#vehicle-fitment" icon="arrow-right">Find your vehicle</ELink>
         <span className="fitment__note">FITMENT GUIDANCE · SPECIFICATION · ENQUIRIES</span>
       </div>
     </section>
