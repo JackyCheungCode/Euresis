@@ -214,3 +214,111 @@
 @media (max-width: 600px) {
   .wheels-hero__video-control { right: 20px; bottom: 16px; }
 }
+
+
+/* Full-page foreground/background contrast audit.
+   Every section owns an explicit PDS color scheme; component hosts inherit
+   the matching foreground instead of relying on global defaults. */
+.wheels-page { background: var(--p-color-canvas); color: var(--p-color-primary); }
+
+.wheels-manufacturing.scheme-light,
+.wheels-fitment.scheme-light,
+.wheels-catalogue.scheme-light,
+.wheels-engineering.scheme-light {
+  color-scheme: light;
+  color: var(--p-color-primary);
+  background: var(--p-color-canvas);
+}
+.wheels-manufacturing.scheme-light p-heading,
+.wheels-fitment.scheme-light p-heading,
+.wheels-catalogue.scheme-light p-heading,
+.wheels-engineering.scheme-light p-heading,
+.wheels-manufacturing.scheme-light h2,
+.wheels-fitment.scheme-light h2,
+.wheels-catalogue.scheme-light h2,
+.wheels-engineering.scheme-light h2 {
+  color: var(--p-color-primary) !important;
+}
+.wheels-manufacturing.scheme-light p-text,
+.wheels-fitment.scheme-light p-text,
+.wheels-catalogue.scheme-light p-text,
+.wheels-engineering.scheme-light p-text {
+  color: var(--p-color-contrast-high) !important;
+}
+.wheels-manufacturing.scheme-light .wheels-eyebrow,
+.wheels-fitment.scheme-light .wheels-eyebrow,
+.wheels-catalogue.scheme-light .wheels-eyebrow,
+.wheels-engineering.scheme-light .wheels-eyebrow {
+  color: var(--p-color-contrast-medium);
+}
+
+/* Dark sections: all text-bearing PDS hosts and native text use the same
+   light foreground. Keep the enquiry form itself explicitly light. */
+.wheels-discovery.scheme-dark,
+.wheels-inquiry.scheme-dark {
+  color-scheme: dark;
+  color: #fff;
+  background: #111;
+}
+.wheels-discovery.scheme-dark p-heading,
+.wheels-discovery.scheme-dark h2,
+.wheels-inquiry.scheme-dark p-heading,
+.wheels-inquiry.scheme-dark h2 {
+  color: #fff !important;
+}
+.wheels-discovery.scheme-dark p-text,
+.wheels-discovery.scheme-dark .wheels-section-heading > p,
+.wheels-inquiry.scheme-dark p-text,
+.wheels-inquiry.scheme-dark .wheels-inquiry__intro > p:not(.wheels-eyebrow) {
+  color: rgb(255 255 255 / .82) !important;
+}
+.wheels-discovery.scheme-dark .wheels-eyebrow,
+.wheels-inquiry.scheme-dark .wheels-eyebrow {
+  color: rgb(255 255 255 / .72) !important;
+}
+.wheels-inquiry.scheme-dark .wheels-inquiry__form.scheme-light {
+  color-scheme: light;
+  color: var(--p-color-primary);
+  background: var(--p-color-canvas);
+}
+.wheels-inquiry.scheme-dark .wheels-inquiry__success {
+  color: #111;
+  background: #fff;
+}
+.wheels-inquiry.scheme-dark .wheels-inquiry__success p {
+  color: #333;
+}
+
+/* Maintain readable metadata and controls on light catalogue surfaces. */
+.wheels-catalogue.scheme-light .wheel-product-card,
+.wheels-catalogue.scheme-light .wheel-product-card__body,
+.wheels-catalogue.scheme-light .wheels-filters {
+  color: var(--p-color-primary);
+}
+.wheels-catalogue.scheme-light .wheel-product-card__body > p {
+  color: var(--p-color-contrast-high);
+}
+.wheels-catalogue.scheme-light .wheel-product-card__eyebrow,
+.wheels-catalogue.scheme-light .wheel-product-card__specs,
+.wheels-catalogue.scheme-light .wheels-catalogue__meta {
+  color: var(--p-color-contrast-medium);
+}
+.wheels-fitment.scheme-light .wheels-fitment__table th,
+.wheels-fitment.scheme-light .wheels-fitment__results-heading span,
+.wheels-fitment.scheme-light .wheels-fitment__table-note,
+.wheels-fitment.scheme-light .wheels-selected-fitment {
+  color: var(--p-color-contrast-medium);
+}
+.wheels-fitment.scheme-light .wheels-fitment__table td,
+.wheels-fitment.scheme-light .wheels-fitment__results-heading strong {
+  color: var(--p-color-contrast-high);
+}
+.wheels-fitment.scheme-light .fitment-use-button {
+  color: var(--p-color-primary);
+  border-color: var(--p-color-primary);
+}
+.wheels-fitment.scheme-light .fitment-use-button:hover,
+.wheels-fitment.scheme-light .fitment-use-button:focus-visible {
+  color: var(--p-color-canvas);
+  background: var(--p-color-primary);
+}
