@@ -32,12 +32,19 @@ export async function saveProfile(profile: Profile) {
 export async function addVehicle(userId: string, vehicle: Omit<Vehicle, "id">) {
   return request<Vehicle[]>("customer_vehicles", { method: "POST", query: "select=*", body: { ...vehicle, user_id: userId }, prefer: "return=representation" });
 }
+export async function updateVehicle(id: string, vehicle: Omit<Vehicle, "id">) {
+  return request<Vehicle[]>("customer_vehicles", { method: "PATCH", query: `id=eq.${id}&select=*`, body: vehicle, prefer: "return=representation" });
+}
 export async function removeVehicle(id: string) {
   return request<null>("customer_vehicles", { method: "DELETE", query: `id=eq.${id}` });
 }
 export async function addAddress(userId: string, address: Omit<Address, "id">) {
   if (address.is_default) await request<null>("customer_addresses", { method: "PATCH", query: "is_default=eq.true", body: { is_default: false } });
   return request<Address[]>("customer_addresses", { method: "POST", query: "select=*", body: { ...address, user_id: userId }, prefer: "return=representation" });
+}
+export async function updateAddress(id: string, address: Omit<Address, "id">) {
+  if (address.is_default) await request<null>("customer_addresses", { method: "PATCH", query: "is_default=eq.true", body: { is_default: false } });
+  return request<Address[]>("customer_addresses", { method: "PATCH", query: `id=eq.${id}&select=*`, body: address, prefer: "return=representation" });
 }
 export async function setDefaultAddress(id: string) {
   await request<null>("customer_addresses", { method: "PATCH", query: "is_default=eq.true", body: { is_default: false } });
