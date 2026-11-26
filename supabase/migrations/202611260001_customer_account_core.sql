@@ -21,7 +21,7 @@ create or replace function public.handle_new_customer() returns trigger language
 create trigger on_auth_user_created_customer after insert on auth.users for each row execute procedure public.handle_new_customer();
 revoke execute on function public.handle_new_customer() from public, anon, authenticated;
 create or replace function public.set_updated_at() returns trigger language plpgsql set search_path = '' as $$ begin new.updated_at=now(); return new; end; $$;
-do $$ declare t text; begin foreach t in array array['customer_profiles','customer_vehicles','customer_addresses','customer_preferences','customer_enquiries','customer_after_sales_cases','customer_orders'] loop execute format('create trigger %I_updated_at before update on public.%I for each row execute procedure public.set_updated_at()',t,t); end loop; end $$;
+do $$ declare t text; begin foreach t in array array['customer_profiles','customer_vehicles','customer_addresses','customer_preferences','customer_enquiries','customer_after_sales_cases','customer_orders'] loop execute format('create trigger %I before update on public.%I for each row execute procedure public.set_updated_at()',t || '_updated_at',t); end loop; end $$;
 alter table public.customer_profiles enable row level security;
 alter table public.customer_vehicles enable row level security;
 alter table public.customer_addresses enable row level security;
