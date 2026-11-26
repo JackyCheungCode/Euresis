@@ -107,7 +107,7 @@ export function LiveFitment() {
   }
 
   return (
-    <section className="wheels-fitment" id="vehicle-fitment" aria-labelledby="fitment-title">
+    <section className="wheels-fitment scheme-light" id="vehicle-fitment" aria-labelledby="fitment-title">
       <div className="wheels-fitment__intro">
         <p className="wheels-eyebrow">03 / VEHICLE FITMENT</p>
         <PHeading id="fitment-title" tag="h2" size="2xl">START WITH<br />YOUR VEHICLE.</PHeading>
