@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
 
 type Customer = {
   name: string;
@@ -96,7 +96,7 @@ export function AccountPage() {
 
   const firstName = useMemo(() => account.customer.name.trim().split(/\s+/)[0] || "Customer", [account.customer.name]);
   const saveNotice = (message: string) => { setNotice(message); window.setTimeout(() => setNotice(""), 2600); };
-  const signIn = (event: React.FormEvent<HTMLFormElement>) => {
+  const signIn = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!authEmail.includes("@") || authPassword.length < 6) {
       setAuthError("Enter a valid email address and a password of at least 6 characters.");
