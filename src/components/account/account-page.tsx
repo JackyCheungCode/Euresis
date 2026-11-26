@@ -1,30 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useState, type FormEvent } from "react";
-
-type Customer = {
-  name: string;
-  email: string;
-  phone: string;
-  company: string;
-  country: string;
-};
-type Vehicle = { id: number; make: string; model: string; year: string; trim: string; notes: string };
-type Address = { id: number; label: string; recipient: string; phone: string; country: string; region: string; city: string; postal: string; line1: string; line2: string; isDefault: boolean };
-type AccountData = { customer: Customer; vehicles: Vehicle[]; addresses: Address[]; preferences: { currency: string; language: string; contact: string; updates: boolean; units: string } };
-
-const STORAGE_KEY = "euresis-customer-account-v1";
-const initialData: AccountData = {
-  customer: { name: "Alex Morgan", email: "alex.morgan@example.com", phone: "+1 415 555 0138", company: "Morgan Automotive", country: "United States" },
-  vehicles: [
-    { id: 1, make: "Porsche", model: "911 Carrera GTS", year: "2024", trim: "992.1", notes: "Daily driver · factory PCCB" },
-    { id: 2, make: "BMW", model: "M3 Competition", year: "2023", trim: "G80", notes: "Track setup" },
-  ],
-  addresses: [
-    { id: 1, label: "Business", recipient: "Alex Morgan", phone: "+1 415 555 0138", country: "United States", region: "California", city: "San Francisco", postal: "94103", line1: "410 Townsend Street", line2: "Suite 300", isDefault: true },
-  ],
-  preferences: { currency: "USD", language: "English", contact: "Email", updates: true, units: "Metric (mm)" },
-};
+import { useCallback, useEffect, useMemo, useState, type FormEvent, type ReactNode } from "react";
+import { acceptAuthRedirect, currentUser, getSession, signIn, signOut, signUp, resetPassword, updatePassword, type AuthUser } from "@/src/lib/supabase/client";
+import { addAddress, addVehicle, createEnquiry, createServiceCase, loadAccount, removeAddress, removeVehicle, savePreferences, saveProfile, setDefaultAddress, type Address, type Enquiry, type Order, type Preferences, type Profile, type ServiceCase, type Vehicle } from "@/src/features/account/api/account";
 
 const navItems = [
   ["overview", "Overview", "01"], ["profile", "Personal information", "02"], ["vehicles", "My vehicles", "03"],
@@ -32,21 +10,11 @@ const navItems = [
   ["aftersales", "After-sales", "07"], ["orders", "Orders & delivery", "08"],
 ] as const;
 type Section = (typeof navItems)[number][0];
+type Data = Awaited<ReturnType<typeof loadAccount>>;
+type IconName = "user" | "car" | "pin" | "sliders" | "message" | "tool" | "box" | "plus" | "arrow" | "logout";
 
-const inquiries = [
-  { id: "ENQ-260184", title: "FORGED / F-01 · 21-inch fitment", date: "18 Nov 2026", status: "In review", tone: "progress" },
-  { id: "ENQ-260102", title: "Custom finish consultation", date: "02 Nov 2026", status: "Replied", tone: "complete" },
-];
-const serviceCases = [
-  { id: "AS-260031", title: "Finish inspection · F-01 Satin Graphite", date: "12 Nov 2026", status: "Awaiting review", tone: "progress" },
-];
-const orders = [
-  { id: "EU-2026-00842", title: "FORGED / F-01 · 21 × 9.5 / 21 × 11", date: "04 Nov 2026", status: "In production", step: 2 },
-];
-
-function Icon({ name }: { name: "grid" | "user" | "car" | "pin" | "sliders" | "message" | "tool" | "box" | "plus" | "arrow" | "logout" }) {
-  const paths: Record<string, string> = {
-    grid: "M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z",
+function Icon({ name }: { name: IconName }) {
+  const paths: Record<IconName, string> = {
     user: "M20 21a8 8 0 0 0-16 0M12 13a5 5 0 1 0 0-10 5 5 0 0 0 0 10Z",
     car: "m5 11 1.5-5h11L19 11M3 11h18l1 7H2l1-7Zm2 7v2m14-2v2M6 14h.01M18 14h.01",
     pin: "M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Zm-5 0a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z",
@@ -60,157 +28,210 @@ function Icon({ name }: { name: "grid" | "user" | "car" | "pin" | "sliders" | "m
   };
   return <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d={paths[name]} /></svg>;
 }
+function dateLabel(value: string) { return new Intl.DateTimeFormat(undefined, { day: "2-digit", month: "short", year: "numeric" }).format(new Date(value)); }
+function statusLabel(value: string) { return value.replaceAll("_", " ").replace(/\b\w/g, (letter) => letter.toUpperCase()); }
+function Field({ label, value, onChange, required = false, type = "text", placeholder = "" }: { label: string; value: string; onChange: (value: string) => void; required?: boolean; type?: string; placeholder?: string }) {
+  return <label>{label}<input type={type} required={required} value={value} placeholder={placeholder} onChange={(event) => onChange(event.target.value)} /></label>;
+}
+function Heading({ kicker, title, description, action }: { kicker: string; title: string; description: string; action?: ReactNode }) {
+  return <div className="account-page-heading account-page-heading--compact"><div><span className="account-kicker">{kicker}</span><h1>{title}</h1><p>{description}</p></div>{action}</div>;
+}
 
 export function AccountPage() {
   const [ready, setReady] = useState(false);
-  const [account, setAccount] = useState<AccountData>(initialData);
-  const [signedIn, setSignedIn] = useState(false);
+  const [user, setUser] = useState<AuthUser | null>(null);
+  const [data, setData] = useState<Data | null>(null);
   const [section, setSection] = useState<Section>("overview");
-  const [authMode, setAuthMode] = useState<"login" | "register">("login");
+  const [authMode, setAuthMode] = useState<"login" | "register" | "reset">("login");
   const [authEmail, setAuthEmail] = useState("");
   const [authPassword, setAuthPassword] = useState("");
   const [authName, setAuthName] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [resetMode, setResetMode] = useState(false);
   const [authError, setAuthError] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [notice, setNotice] = useState("");
   const [vehicleForm, setVehicleForm] = useState(false);
   const [addressForm, setAddressForm] = useState(false);
-  const [vehicleDraft, setVehicleDraft] = useState({ make: "", model: "", year: "", trim: "", notes: "" });
-  const [addressDraft, setAddressDraft] = useState({ label: "Home", recipient: "", phone: "", country: "", region: "", city: "", postal: "", line1: "", line2: "" });
-  const [notice, setNotice] = useState("");
+  const [enquiryForm, setEnquiryForm] = useState(false);
+  const [serviceForm, setServiceForm] = useState(false);
+  const [vehicleDraft, setVehicleDraft] = useState({ make: "", model: "", model_year: "", trim: "", notes: "" });
+  const [addressDraft, setAddressDraft] = useState({ label: "Home", recipient: "", phone: "", country: "", region: "", city: "", postal_code: "", line1: "", line2: "" });
+  const [enquiryDraft, setEnquiryDraft] = useState({ subject: "", message: "" });
+  const [serviceDraft, setServiceDraft] = useState({ subject: "", description: "" });
 
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) {
-        const parsed = JSON.parse(stored) as { account?: AccountData; signedIn?: boolean };
-        if (parsed.account) setAccount(parsed.account);
-        if (parsed.signedIn) setSignedIn(true);
-      }
-    } catch { /* Ignore malformed local demo data. */ }
-    setReady(true);
+  const refresh = useCallback(async (customerId: string) => {
+    const next = await loadAccount(customerId);
+    setData(next);
   }, []);
-
   useEffect(() => {
-    if (!ready) return;
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ account, signedIn }));
-  }, [account, signedIn, ready]);
+    let active = true;
+    (async () => {
+      try {
+        const fromEmail = acceptAuthRedirect();
+        const session = await getSession();
+        const customer = session ? await currentUser() : null;
+        if (!active) return;
+        setUser(customer);
+        setResetMode(fromEmail && window.location.hash.includes("type=recovery"));
+        if (customer) {
+          setAuthEmail(customer.email);
+          await refresh(customer.id);
+        }
+      } catch (error) {
+        if (active) setAuthError(error instanceof Error ? error.message : "Unable to load your account.");
+      } finally { if (active) setReady(true); }
+    })();
+    return () => { active = false; };
+  }, [refresh]);
 
-  const firstName = useMemo(() => account.customer.name.trim().split(/\s+/)[0] || "Customer", [account.customer.name]);
-  const saveNotice = (message: string) => { setNotice(message); window.setTimeout(() => setNotice(""), 2600); };
-  const signIn = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (!authEmail.includes("@") || authPassword.length < 6) {
-      setAuthError("Enter a valid email address and a password of at least 6 characters.");
-      return;
-    }
-    if (authMode === "register") {
-      if (authName.trim().length < 2) { setAuthError("Please enter your full name."); return; }
-      setAccount((current) => ({ ...current, customer: { ...current.customer, name: authName.trim(), email: authEmail.trim() } }));
-    } else {
-      setAccount((current) => ({ ...current, customer: { ...current.customer, email: authEmail.trim() } }));
-    }
-    setAuthError("");
-    setSignedIn(true);
+  const firstName = useMemo(() => (data?.profile.full_name || user?.user_metadata?.full_name || "Customer").trim().split(/\s+/)[0], [data, user]);
+  const saveNotice = (message: string) => { setNotice(message); window.setTimeout(() => setNotice(""), 3000); };
+  const run = async (task: () => Promise<unknown>, success: string, reload = true) => {
+    if (!user) return;
+    setBusy(true); setAuthError("");
+    try { await task(); if (reload) await refresh(user.id); saveNotice(success); }
+    catch (error) { setAuthError(error instanceof Error ? error.message : "Something went wrong."); }
+    finally { setBusy(false); }
   };
-  const signOut = () => { setSignedIn(false); setSection("overview"); setAuthPassword(""); };
-  const updateCustomer = (key: keyof Customer, value: string) => setAccount((current) => ({ ...current, customer: { ...current.customer, [key]: value } }));
-  const addVehicle = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (!vehicleDraft.make.trim() || !vehicleDraft.model.trim()) return;
-    setAccount((current) => ({ ...current, vehicles: [...current.vehicles, { ...vehicleDraft, id: Date.now() }] }));
-    setVehicleDraft({ make: "", model: "", year: "", trim: "", notes: "" }); setVehicleForm(false); saveNotice("Vehicle added to your garage.");
+
+  const handleAuth = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault(); setBusy(true); setAuthError("");
+    try {
+      if (authMode === "reset") {
+        await resetPassword(authEmail.trim());
+        saveNotice("Password reset email sent. Check your inbox.");
+        setAuthMode("login");
+      } else if (resetMode) {
+        await updatePassword(newPassword);
+        setResetMode(false); setAuthMode("login"); setAuthPassword("");
+        saveNotice("Password updated. You can now sign in.");
+      } else if (authMode === "register") {
+        if (authName.trim().length < 2) throw new Error("Enter your full name.");
+        const result = await signUp(authEmail.trim(), authPassword, authName.trim());
+        if (result.access_token) {
+          const customer = await currentUser();
+          if (customer) { setUser(customer); await refresh(customer.id); }
+        } else {
+          saveNotice("Registration received. Confirm your email using the link we sent, then return here to sign in.");
+        }
+      } else {
+        await signIn(authEmail.trim(), authPassword);
+        const customer = await currentUser();
+        if (!customer) throw new Error("Sign-in succeeded but the customer session could not be loaded.");
+        setUser(customer); await refresh(customer.id);
+      }
+    } catch (error) { setAuthError(error instanceof Error ? error.message : "Authentication failed."); }
+    finally { setBusy(false); }
   };
-  const addAddress = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (!addressDraft.recipient.trim() || !addressDraft.line1.trim() || !addressDraft.city.trim()) return;
-    setAccount((current) => ({ ...current, addresses: [...current.addresses, { ...addressDraft, id: Date.now(), isDefault: current.addresses.length === 0 }] }));
-    setAddressForm(false); setAddressDraft({ label: "Home", recipient: "", phone: "", country: "", region: "", city: "", postal: "", line1: "", line2: "" }); saveNotice("Shipping address saved.");
-  };
+  const handleSignOut = async () => { await signOut(); setUser(null); setData(null); setSection("overview"); setAuthPassword(""); setNotice(""); };
+  const updateProfile = (key: keyof Profile, value: string) => setData((current) => current ? ({ ...current, profile: { ...current.profile, [key]: value } }) : current);
+  const updatePreferences = (key: keyof Preferences, value: string | boolean) => setData((current) => current ? ({ ...current, preferences: { ...current.preferences, [key]: value } }) : current);
 
   if (!ready) return <main className="account-page"><div className="account-loading">Loading your account…</div></main>;
 
-  if (!signedIn) return (
+  if (!user || !data) return (
     <main className="account-auth">
-      <div className="account-auth__visual">
-        <div className="account-auth__visual-copy"><span className="account-kicker">EURESIS / CUSTOMER PORTAL</span><h1>Your ownership.<br />In one place.</h1><p>Manage your vehicles, enquiries and orders with a single Euresis account.</p></div>
-        <span className="account-auth__visual-index">PRECISION PERFORMANCE / 01—08</span>
-      </div>
-      <section className="account-auth__panel">
-        <a className="account-auth__back" href="/">← Back to Euresis</a>
-        <div className="account-auth__form-wrap">
-          <span className="account-kicker">CUSTOMER ACCOUNT</span>
-          <h2>{authMode === "login" ? "Welcome back." : "Create your account."}</h2>
-          <p className="account-muted">{authMode === "login" ? "Sign in to access your personal garage and orders." : "Set up your Euresis customer profile."}</p>
-          <div className="account-auth__switch"><button className={authMode === "login" ? "is-active" : ""} onClick={() => { setAuthMode("login"); setAuthError(""); }}>Sign in</button><button className={authMode === "register" ? "is-active" : ""} onClick={() => { setAuthMode("register"); setAuthError(""); }}>Create account</button></div>
-          <form className="account-form" onSubmit={signIn}>
-            {authMode === "register" && <label>Full name<input required autoComplete="name" value={authName} onChange={(e) => setAuthName(e.target.value)} placeholder="Your full name" /></label>}
-            <label>Email address<input required type="email" autoComplete="email" value={authEmail} onChange={(e) => setAuthEmail(e.target.value)} placeholder="name@example.com" /></label>
-            <label>Password<input required type="password" minLength={6} autoComplete={authMode === "login" ? "current-password" : "new-password"} value={authPassword} onChange={(e) => setAuthPassword(e.target.value)} placeholder="At least 6 characters" /></label>
-            {authError && <p className="account-form__error" role="alert">{authError}</p>}
-            <button className="account-button account-button--dark" type="submit">{authMode === "login" ? "Sign in" : "Create account"} <Icon name="arrow" /></button>
-          </form>
-          <p className="account-auth__disclaimer">Frontend preview only. Account details are stored locally in this browser; secure authentication and password recovery will be connected with the backend phase.</p>
+      <div className="account-auth__visual"><div className="account-auth__visual-copy"><span className="account-kicker">EURESIS / CUSTOMER PORTAL</span><h1>Your ownership.<br />In one place.</h1><p>Manage your vehicles, enquiries and orders with a secure Euresis account.</p></div><span className="account-auth__visual-index">PRECISION PERFORMANCE / 01—08</span></div>
+      <section className="account-auth__panel"><a className="account-auth__back" href="/">← Back to Euresis</a><div className="account-auth__form-wrap">
+        <span className="account-kicker">CUSTOMER ACCOUNT</span>
+        <h2>{resetMode ? "Choose a new password." : authMode === "login" ? "Welcome back." : authMode === "register" ? "Create your account." : "Reset your password."}</h2>
+        <p className="account-muted">{resetMode ? "Set a new password for your Euresis account." : authMode === "login" ? "Sign in to access your personal garage and orders." : authMode === "register" ? "Create a secure customer profile." : "We will email you a secure password reset link."}</p>
+        {!resetMode && <div className="account-auth__switch"><button className={authMode === "login" ? "is-active" : ""} onClick={() => { setAuthMode("login"); setAuthError(""); }}>Sign in</button><button className={authMode === "register" ? "is-active" : ""} onClick={() => { setAuthMode("register"); setAuthError(""); }}>Create account</button></div>}
+        <form className="account-form" onSubmit={handleAuth}>
+          {authMode === "register" && <Field label="Full name" value={authName} onChange={setAuthName} required placeholder="Your full name" />}
+          {!resetMode && <Field label="Password" type="password" value={authPassword} onChange={setAuthPassword} required placeholder="At least 8 characters" />}
+          {resetMode && <Field label="New password" type="password" value={newPassword} onChange={setNewPassword} required placeholder="At least 8 characters" />}
+          {authMode !== "reset" && <Field label="Email address" type="email" value={authEmail} onChange={setAuthEmail} required placeholder="name@example.com" />}
+          {authMode === "reset" && <Field label="Email address" type="email" value={authEmail} onChange={setAuthEmail} required placeholder="name@example.com" />}
+          {authError && <p className="account-form__error" role="alert">{authError}</p>}
+          <button className="account-button account-button--dark" type="submit" disabled={busy}>{busy ? "Please wait…" : resetMode ? "Update password" : authMode === "login" ? "Sign in" : authMode === "register" ? "Create account" : "Send reset link"} <Icon name="arrow" /></button>
+        </form>
+        {!resetMode && authMode === "login" && <button className="account-text-link" onClick={() => { setAuthMode("reset"); setAuthError(""); }}>Forgot password?</button>}
+        {authMode === "reset" && <button className="account-text-link" onClick={() => setAuthMode("login")}>Back to sign in</button>}
+        <p className="account-auth__disclaimer">Your password is handled by Supabase Auth. Customer records are stored securely and isolated by database row-level security.</p>
+      </div></section>
+    </main>
+  );
+
+  const { profile, vehicles, addresses, preferences, enquiries, cases, orders } = data;
+  const statusPill = (status: string) => <span className="account-status">{statusLabel(status)}</span>;
+  const vehicleAction = <button className="account-button account-button--dark" onClick={() => setVehicleForm(!vehicleForm)}><Icon name="plus" /> Add vehicle</button>;
+  const addressAction = <button className="account-button account-button--dark" onClick={() => setAddressForm(!addressForm)}><Icon name="plus" /> Add address</button>;
+
+  return <main className="account-page"><div className="account-shell">
+    <aside className="account-sidebar">
+      <div className="account-sidebar__heading"><span className="account-kicker">MY EURESIS</span><h2>Account</h2></div>
+      <div className="account-user"><div className="account-user__avatar">{firstName.slice(0, 1).toUpperCase()}</div><div><strong>{profile.full_name || user.email}</strong><span>{user.email}</span></div></div>
+      <nav className="account-nav" aria-label="Account navigation">{navItems.map(([id, label, number]) => <button key={id} className={section === id ? "is-active" : ""} onClick={() => setSection(id)}><span className="account-nav__number">{number}</span><span>{label}</span><span className="account-nav__arrow">↗</span></button>)}</nav>
+      <button className="account-signout" onClick={handleSignOut}><Icon name="logout" /> Sign out</button>
+    </aside>
+    <section className="account-content">
+      <div className="account-content__top"><span className="account-kicker">CUSTOMER PORTAL / {navItems.find(([id]) => id === section)?.[1].toUpperCase()}</span><span className="account-content__secure"><i /> SECURE ACCOUNT</span></div>
+      {notice && <div className="account-notice" role="status">{notice}</div>}
+      {authError && <p className="account-form__error" role="alert">{authError}</p>}
+
+      {section === "overview" && <>
+        <div className="account-page-heading"><div><span className="account-kicker">YOUR EURESIS</span><h1>Good to see you,<br />{firstName}.</h1><p>Your vehicles, conversations and purchases, connected to one account.</p></div><span className="account-heading-mark">E.</span></div>
+        <div className="account-stat-grid"><button onClick={() => setSection("vehicles")}><span>MY VEHICLES</span><strong>{vehicles.length.toString().padStart(2, "0")}</strong><small>Saved vehicles <b>↗</b></small></button><button onClick={() => setSection("inquiries")}><span>OPEN ENQUIRIES</span><strong>{enquiries.filter((item) => !["closed"].includes(item.status)).length.toString().padStart(2, "0")}</strong><small>Customer conversations <b>↗</b></small></button><button onClick={() => setSection("orders")}><span>ACTIVE ORDERS</span><strong>{orders.filter((item) => !["delivered", "cancelled"].includes(item.status)).length.toString().padStart(2, "0")}</strong><small>Orders in progress <b>↗</b></small></button></div>
+        <div className="account-overview-grid">
+          <section className="account-card"><div className="account-card__heading"><div><span className="account-kicker">GARAGE</span><h2>Your vehicles</h2></div><button className="account-text-link" onClick={() => setSection("vehicles")}>View all ↗</button></div>
+            {vehicles.slice(0, 2).map((vehicle) => <div className="account-vehicle-row" key={vehicle.id}><div className="account-vehicle-mark"><Icon name="car" /></div><div><strong>{vehicle.model_year} {vehicle.make} {vehicle.model}</strong><span>{vehicle.trim || "Vehicle profile"}</span></div><span className="account-row-arrow">↗</span></div>)}
+            {!vehicles.length && <p className="account-empty">Your garage is ready. Add your first vehicle.</p>}
+            <button className="account-inline-add" onClick={() => { setSection("vehicles"); setVehicleForm(true); }}><Icon name="plus" /> Add a vehicle</button>
+          </section>
+          <section className="account-card"><div className="account-card__heading"><div><span className="account-kicker">RECENT ACTIVITY</span><h2>Enquiries</h2></div><button className="account-text-link" onClick={() => setSection("inquiries")}>View all ↗</button></div>
+            {enquiries.slice(0, 3).map((item) => <div className="account-activity-row" key={item.id}><div><strong>{item.subject}</strong><span>{item.reference} · {dateLabel(item.created_at)}</span></div>{statusPill(item.status)}</div>)}
+            {!enquiries.length && <p className="account-empty">No enquiries yet.</p>}
+          </section>
         </div>
-      </section>
-    </main>
-  );
-
-  return (
-    <main className="account-page">
-      <div className="account-shell">
-        <aside className="account-sidebar">
-          <div className="account-sidebar__heading"><span className="account-kicker">MY EURESIS</span><h2>Account</h2></div>
-          <div className="account-user"><div className="account-user__avatar">{firstName.slice(0, 1).toUpperCase()}</div><div><strong>{account.customer.name}</strong><span>{account.customer.email}</span></div></div>
-          <nav className="account-nav" aria-label="Account navigation">
-            {navItems.map(([id, label, number]) => <button key={id} className={section === id ? "is-active" : ""} onClick={() => setSection(id)}><span className="account-nav__number">{number}</span><span>{label}</span><span className="account-nav__arrow">↗</span></button>)}
-          </nav>
-          <button className="account-signout" onClick={signOut}><Icon name="logout" /> Sign out</button>
-        </aside>
-
-        <section className="account-content">
-          <div className="account-content__top"><span className="account-kicker">CUSTOMER PORTAL / {navItems.find(([id]) => id === section)?.[1].toUpperCase()}</span><span className="account-content__secure"><i /> PERSONAL SPACE</span></div>
-          {notice && <div className="account-notice" role="status">{notice}</div>}
-
-          {section === "overview" && <>
-            <div className="account-page-heading"><div><span className="account-kicker">YOUR EURESIS</span><h1>Good to see you,<br />{firstName}.</h1><p>Everything connected to your Euresis experience, in one place.</p></div><span className="account-heading-mark">E.</span></div>
-            <div className="account-stat-grid">
-              <button onClick={() => setSection("vehicles")}><span>MY VEHICLES</span><strong>{account.vehicles.length.toString().padStart(2, "0")}</strong><small>Vehicles in your garage <b>↗</b></small></button>
-              <button onClick={() => setSection("inquiries")}><span>OPEN ENQUIRIES</span><strong>02</strong><small>One response received <b>↗</b></small></button>
-              <button onClick={() => setSection("orders")}><span>ACTIVE ORDERS</span><strong>01</strong><small>Currently in production <b>↗</b></small></button>
-            </div>
-            <div className="account-overview-grid">
-              <section className="account-card"><div className="account-card__heading"><div><span className="account-kicker">GARAGE</span><h2>Your vehicles</h2></div><button className="account-text-link" onClick={() => setSection("vehicles")}>View all ↗</button></div>
-                {account.vehicles.slice(0, 2).map((vehicle) => <div className="account-vehicle-row" key={vehicle.id}><div className="account-vehicle-mark"><Icon name="car" /></div><div><strong>{vehicle.year} {vehicle.make} {vehicle.model}</strong><span>{vehicle.trim || "Vehicle profile"}</span></div><span className="account-row-arrow">↗</span></div>)}
-                {account.vehicles.length === 0 && <p className="account-empty">Your garage is ready. Add your first vehicle to save fitment details.</p>}
-                <button className="account-inline-add" onClick={() => { setSection("vehicles"); setVehicleForm(true); }}><Icon name="plus" /> Add a vehicle</button>
-              </section>
-              <section className="account-card"><div className="account-card__heading"><div><span className="account-kicker">RECENT ACTIVITY</span><h2>Enquiries</h2></div><button className="account-text-link" onClick={() => setSection("inquiries")}>View all ↗</button></div>
-                {inquiries.slice(0, 2).map((item) => <div className="account-activity-row" key={item.id}><div><strong>{item.title}</strong><span>{item.id} · {item.date}</span></div><span className="account-status">{item.status}</span></div>)}
-              </section>
-            </div>
-            <section className="account-card account-order-card"><div className="account-card__heading"><div><span className="account-kicker">ORDER TRACKING</span><h2>Latest order</h2></div><button className="account-text-link" onClick={() => setSection("orders")}>Track order ↗</button></div><div className="account-order-summary"><div><span className="account-kicker">{orders[0].id}</span><h3>{orders[0].title}</h3><p>Placed {orders[0].date} · Estimated dispatch subject to production schedule</p></div><span className="account-status account-status--dark">{orders[0].status}</span></div><div className="account-progress"><span className="is-done">Order confirmed</span><span className="is-done">In production</span><span>Quality inspection</span><span>Dispatched</span></div></section>
-          </>}
-
-          {section === "profile" && <><div className="account-page-heading account-page-heading--compact"><div><span className="account-kicker">PROFILE / 02</span><h1>Personal information.</h1><p>Keep your contact details up to date for a seamless ownership experience.</p></div></div><section className="account-card account-edit-card"><div className="account-card__heading"><div><span className="account-kicker">YOUR DETAILS</span><h2>Contact information</h2></div></div><div className="account-form-grid">{([["name","Full name"],["email","Email address"],["phone","Phone number"],["company","Company"],["country","Country / region"]] as const).map(([key,label]) => <label key={key}>{label}<input value={account.customer[key]} onChange={(e) => updateCustomer(key, e.target.value)} /></label>)}</div><div className="account-card__footer"><span>Changes are saved automatically in this browser preview.</span><button className="account-button account-button--dark" onClick={() => saveNotice("Personal information saved.")}>Save changes <Icon name="arrow" /></button></div></section></>}
-
-          {section === "vehicles" && <><div className="account-page-heading account-page-heading--compact"><div><span className="account-kicker">GARAGE / 03</span><h1>Your vehicles.</h1><p>Save your vehicles to make wheel fitment enquiries faster and more precise.</p></div><button className="account-button account-button--dark" onClick={() => setVehicleForm(!vehicleForm)}><Icon name="plus" /> Add vehicle</button></div>
-            {vehicleForm && <form className="account-card account-entry-form" onSubmit={addVehicle}><div className="account-card__heading"><h2>New vehicle</h2><button type="button" className="account-text-link" onClick={() => setVehicleForm(false)}>Cancel</button></div><div className="account-form-grid">{([["make","Make"],["model","Model"],["year","Model year"],["trim","Generation / trim"],["notes","Notes"]] as const).map(([key,label]) => <label key={key}>{label}<input required={key === "make" || key === "model"} value={vehicleDraft[key]} onChange={(e) => setVehicleDraft((v) => ({ ...v, [key]: e.target.value }))} placeholder={label} /></label>)}</div><button className="account-button account-button--dark" type="submit">Save vehicle <Icon name="arrow" /></button></form>}
-            <div className="account-list-stack">{account.vehicles.map((vehicle) => <article className="account-card account-vehicle-card" key={vehicle.id}><div className="account-vehicle-card__visual"><Icon name="car" /><span>VEHICLE PROFILE</span></div><div className="account-vehicle-card__body"><span className="account-kicker">{vehicle.year || "YEAR NOT SET"} / {vehicle.trim || "GENERATION NOT SET"}</span><h2>{vehicle.make} {vehicle.model}</h2><p>{vehicle.notes || "No additional notes"}</p><button className="account-text-link account-danger-link" onClick={() => { setAccount((current) => ({ ...current, vehicles: current.vehicles.filter((v) => v.id !== vehicle.id) })); saveNotice("Vehicle removed."); }}>Remove vehicle</button></div></article>)}{account.vehicles.length === 0 && <div className="account-card account-empty">No vehicles saved yet. Add a vehicle to start building your garage.</div>}</div>
-          </>}
-
-          {section === "addresses" && <><div className="account-page-heading account-page-heading--compact"><div><span className="account-kicker">DELIVERY / 04</span><h1>Shipping addresses.</h1><p>Manage the destinations used for quotations, orders and delivery.</p></div><button className="account-button account-button--dark" onClick={() => setAddressForm(!addressForm)}><Icon name="plus" /> Add address</button></div>
-            {addressForm && <form className="account-card account-entry-form" onSubmit={addAddress}><div className="account-card__heading"><h2>New address</h2><button type="button" className="account-text-link" onClick={() => setAddressForm(false)}>Cancel</button></div><div className="account-form-grid">{([["label","Address label"],["recipient","Recipient"],["phone","Phone"],["country","Country"],["region","State / region"],["city","City"],["postal","Postal code"],["line1","Address line 1"],["line2","Address line 2"]] as const).map(([key,label]) => <label key={key}>{label}<input required={["recipient","city","line1","country"].includes(key)} value={addressDraft[key]} onChange={(e) => setAddressDraft((v) => ({ ...v, [key]: e.target.value }))} /></label>)}</div><button className="account-button account-button--dark" type="submit">Save address <Icon name="arrow" /></button></form>}
-            <div className="account-address-grid">{account.addresses.map((address) => <article className="account-card account-address-card" key={address.id}><div className="account-card__heading"><span className="account-kicker">{address.label.toUpperCase()}</span>{address.isDefault && <span className="account-default">DEFAULT</span>}</div><h2>{address.recipient}</h2><p>{address.line1}{address.line2 ? `, ${address.line2}` : ""}<br />{address.city}, {address.region} {address.postal}<br />{address.country}</p><span>{address.phone}</span><div className="account-address-actions">{!address.isDefault && <button className="account-text-link" onClick={() => { setAccount((current) => ({ ...current, addresses: current.addresses.map((a) => ({ ...a, isDefault: a.id === address.id })) })); saveNotice("Default shipping address updated."); }}>Set as default</button>}<button className="account-text-link account-danger-link" onClick={() => setAccount((current) => ({ ...current, addresses: current.addresses.filter((a) => a.id !== address.id) }))}>Remove address</button></div></article>)}{account.addresses.length === 0 && <div className="account-card account-empty">No shipping addresses saved.</div>}</div>
-          </>}
-
-          {section === "preferences" && <><div className="account-page-heading account-page-heading--compact"><div><span className="account-kicker">SETTINGS / 05</span><h1>Your preferences.</h1><p>Set how Euresis communicates and presents product information.</p></div></div><section className="account-card account-preferences"><div className="account-preference-row"><div><strong>Preferred language</strong><span>Language for account communication</span></div><select value={account.preferences.language} onChange={(e) => setAccount((c) => ({ ...c, preferences: { ...c.preferences, language: e.target.value } }))}><option>English</option><option>简体中文</option><option>繁體中文</option><option>日本語</option><option>Deutsch</option></select></div><div className="account-preference-row"><div><strong>Display currency</strong><span>Currency for quotations and estimates</span></div><select value={account.preferences.currency} onChange={(e) => setAccount((c) => ({ ...c, preferences: { ...c.preferences, currency: e.target.value } }))}><option>USD</option><option>EUR</option><option>GBP</option><option>JPY</option><option>CNY</option></select></div><div className="account-preference-row"><div><strong>Specification units</strong><span>Preferred units for wheel dimensions</span></div><select value={account.preferences.units} onChange={(e) => setAccount((c) => ({ ...c, preferences: { ...c.preferences, units: e.target.value } }))}><option>Metric (mm)</option><option>Imperial (inch)</option></select></div><div className="account-preference-row"><div><strong>Preferred contact method</strong><span>How our team should contact you</span></div><select value={account.preferences.contact} onChange={(e) => setAccount((c) => ({ ...c, preferences: { ...c.preferences, contact: e.target.value } }))}><option>Email</option><option>Phone</option><option>WhatsApp</option></select></div><div className="account-preference-row"><div><strong>Product and engineering updates</strong><span>Receive new collections, product and technical updates</span></div><label className="account-toggle"><input type="checkbox" checked={account.preferences.updates} onChange={(e) => setAccount((c) => ({ ...c, preferences: { ...c.preferences, updates: e.target.checked } }))} /><span /></label></div><div className="account-card__footer"><span>Preferences save automatically in this browser preview.</span><button className="account-button account-button--dark" onClick={() => saveNotice("Preferences saved.")}>Save preferences <Icon name="arrow" /></button></div></section></>}
-
-          {section === "inquiries" && <><div className="account-page-heading account-page-heading--compact"><div><span className="account-kicker">COMMUNICATION / 06</span><h1>My enquiries.</h1><p>Review product questions, fitment requests and conversations with our team.</p></div><a className="account-button account-button--dark" href="/wheels#inquiry">New enquiry <Icon name="arrow" /></a></div><div className="account-table">{inquiries.map((item) => <article key={item.id}><div><span className="account-kicker">{item.id} · {item.date}</span><h2>{item.title}</h2></div><span className="account-status">{item.status}</span><button className="account-text-link" onClick={() => saveNotice(`Enquiry ${item.id} selected. Detailed message history will be connected to the backend.`)}>View details ↗</button></article>)}</div><p className="account-footnote">Enquiry history shown here is demonstration content. Live messages will appear when the customer service backend is connected.</p></>}
-
-          {section === "aftersales" && <><div className="account-page-heading account-page-heading--compact"><div><span className="account-kicker">OWNERSHIP SUPPORT / 07</span><h1>After-sales service.</h1><p>Track service requests, warranty reviews and product support cases.</p></div><button className="account-button account-button--dark" onClick={() => saveNotice("Service request form will be connected in the backend phase.")}>Request support <Icon name="arrow" /></button></div><div className="account-table">{serviceCases.map((item) => <article key={item.id}><div><span className="account-kicker">{item.id} · {item.date}</span><h2>{item.title}</h2></div><span className="account-status">{item.status}</span><button className="account-text-link" onClick={() => saveNotice(`Case ${item.id} selected. Case documents and messages will be connected later.`)}>View case ↗</button></article>)}</div><div className="account-support-note"><span className="account-kicker">EURESIS CUSTOMER CARE</span><h2>We are here to help.</h2><p>For fitment, finish or product support, contact our team with your vehicle and order reference.</p><a href="/wheels#inquiry">Contact Euresis ↗</a></div></>}
-
-          {section === "orders" && <><div className="account-page-heading account-page-heading--compact"><div><span className="account-kicker">PURCHASES / 08</span><h1>Orders & delivery.</h1><p>Follow order progress from confirmation through dispatch and delivery.</p></div></div>{orders.map((order) => <section className="account-card account-order-detail" key={order.id}><div className="account-card__heading"><div><span className="account-kicker">ORDER REFERENCE / {order.id}</span><h2>{order.title}</h2></div><span className="account-status account-status--dark">{order.status}</span></div><p>Order placed {order.date}</p><div className="account-timeline">{["Order confirmed","In production","Quality inspection","Dispatched","Delivered"].map((step, index) => <div className={index < order.step ? "is-done" : index === order.step ? "is-current" : ""} key={step}><i /><span>{step}</span></div>)}</div><div className="account-shipping-note"><Icon name="box" /><div><strong>Shipment tracking</strong><span>Tracking number and carrier updates will be displayed here once the order is dispatched.</span></div></div></section>)}<p className="account-footnote">Order and logistics information is sample data for the frontend preview. Live order status will be integrated after backend development.</p></>}
+        <section className="account-card account-order-card"><div className="account-card__heading"><div><span className="account-kicker">ORDER TRACKING</span><h2>Latest order</h2></div><button className="account-text-link" onClick={() => setSection("orders")}>View orders ↗</button></div>
+          {orders[0] ? <div className="account-order-summary"><div><span className="account-kicker">{orders[0].order_number}</span><h3>{orders[0].customer_order_items?.map((item) => item.product_name).join(", ") || "Euresis order"}</h3><p>Placed {dateLabel(orders[0].created_at)}</p></div>{statusPill(orders[0].status)}</div> : <p className="account-empty">Your confirmed orders will appear here.</p>}
         </section>
-      </div>
-    </main>
-  );
+      </>}
+
+      {section === "profile" && <><Heading kicker="PROFILE / 02" title="Personal information." description="Maintain the contact details used for quotations and customer support."/><section className="account-card account-edit-card"><div className="account-card__heading"><div><span className="account-kicker">YOUR DETAILS</span><h2>Contact information</h2></div></div><div className="account-form-grid">
+        <Field label="Full name" value={profile.full_name} onChange={(v) => updateProfile("full_name", v)} required/>
+        <label>Email address<input type="email" value={user.email} disabled/><span className="account-field-hint">Change email through account security settings.</span></label>
+        <Field label="Phone number" value={profile.phone} onChange={(v) => updateProfile("phone", v)}/>
+        <Field label="Company" value={profile.company} onChange={(v) => updateProfile("company", v)}/>
+        <Field label="Country / region" value={profile.country} onChange={(v) => updateProfile("country", v)}/>
+      </div><div className="account-card__footer"><span>Saved to your secure customer profile.</span><button className="account-button account-button--dark" disabled={busy} onClick={() => run(() => saveProfile(profile), "Personal information saved.")}>Save changes <Icon name="arrow"/></button></div></section></>}
+
+      {section === "vehicles" && <><Heading kicker="GARAGE / 03" title="Your vehicles." description="Save your vehicles to make wheel fitment enquiries faster and more precise." action={vehicleAction}/>
+        {vehicleForm && <form className="account-card account-entry-form" onSubmit={(event) => { event.preventDefault(); run(async () => { await addVehicle(user.id, vehicleDraft); setVehicleDraft({ make: "", model: "", model_year: "", trim: "", notes: "" }); setVehicleForm(false); }, "Vehicle added to your garage."); }}><div className="account-card__heading"><h2>New vehicle</h2><button type="button" className="account-text-link" onClick={() => setVehicleForm(false)}>Cancel</button></div><div className="account-form-grid"><Field label="Make" value={vehicleDraft.make} onChange={(v) => setVehicleDraft((x) => ({...x,make:v}))} required/><Field label="Model" value={vehicleDraft.model} onChange={(v) => setVehicleDraft((x) => ({...x,model:v}))} required/><Field label="Model year" value={vehicleDraft.model_year} onChange={(v) => setVehicleDraft((x) => ({...x,model_year:v}))}/><Field label="Generation / trim" value={vehicleDraft.trim} onChange={(v) => setVehicleDraft((x) => ({...x,trim:v}))}/><Field label="Notes" value={vehicleDraft.notes} onChange={(v) => setVehicleDraft((x) => ({...x,notes:v}))}/></div><button className="account-button account-button--dark" disabled={busy}>Save vehicle <Icon name="arrow"/></button></form>}
+        <div className="account-list-stack">{vehicles.map((vehicle) => <article className="account-card account-vehicle-card" key={vehicle.id}><div className="account-vehicle-card__visual"><Icon name="car"/><span>VEHICLE PROFILE</span></div><div className="account-vehicle-card__body"><span className="account-kicker">{vehicle.model_year || "YEAR NOT SET"} / {vehicle.trim || "GENERATION NOT SET"}</span><h2>{vehicle.make} {vehicle.model}</h2><p>{vehicle.notes || "No additional notes"}</p><button className="account-text-link account-danger-link" disabled={busy} onClick={() => run(() => removeVehicle(vehicle.id), "Vehicle removed.")}>Remove vehicle</button></div></article>)}{!vehicles.length && <div className="account-card account-empty">No vehicles saved yet. Add a vehicle to start your garage.</div>}</div>
+      </>}
+
+      {section === "addresses" && <><Heading kicker="DELIVERY / 04" title="Shipping addresses." description="Manage the destinations used for quotations, orders and delivery." action={addressAction}/>
+        {addressForm && <form className="account-card account-entry-form" onSubmit={(event) => { event.preventDefault(); run(async () => { await addAddress(user.id, {...addressDraft,is_default:addresses.length===0}); setAddressForm(false); setAddressDraft({label:"Home",recipient:"",phone:"",country:"",region:"",city:"",postal_code:"",line1:"",line2:""}); }, "Shipping address saved."); }}><div className="account-card__heading"><h2>New address</h2><button type="button" className="account-text-link" onClick={() => setAddressForm(false)}>Cancel</button></div><div className="account-form-grid">
+          <Field label="Address label" value={addressDraft.label} onChange={(v)=>setAddressDraft(x=>({...x,label:v}))}/><Field label="Recipient" value={addressDraft.recipient} onChange={(v)=>setAddressDraft(x=>({...x,recipient:v}))} required/><Field label="Phone" value={addressDraft.phone} onChange={(v)=>setAddressDraft(x=>({...x,phone:v}))}/><Field label="Country" value={addressDraft.country} onChange={(v)=>setAddressDraft(x=>({...x,country:v}))} required/><Field label="State / region" value={addressDraft.region} onChange={(v)=>setAddressDraft(x=>({...x,region:v}))}/><Field label="City" value={addressDraft.city} onChange={(v)=>setAddressDraft(x=>({...x,city:v}))} required/><Field label="Postal code" value={addressDraft.postal_code} onChange={(v)=>setAddressDraft(x=>({...x,postal_code:v}))}/><Field label="Address line 1" value={addressDraft.line1} onChange={(v)=>setAddressDraft(x=>({...x,line1:v}))} required/><Field label="Address line 2" value={addressDraft.line2} onChange={(v)=>setAddressDraft(x=>({...x,line2:v}))}/></div><button className="account-button account-button--dark" disabled={busy}>Save address <Icon name="arrow"/></button></form>}
+        <div className="account-address-grid">{addresses.map((address) => <article className="account-card account-address-card" key={address.id}><div className="account-card__heading"><span className="account-kicker">{address.label.toUpperCase()}</span>{address.is_default && <span className="account-default">DEFAULT</span>}</div><h2>{address.recipient}</h2><p>{address.line1}{address.line2 ? `, ${address.line2}` : ""}<br/>{address.city}, {address.region} {address.postal_code}<br/>{address.country}</p><span>{address.phone}</span><div className="account-address-actions">{!address.is_default && <button className="account-text-link" onClick={() => run(() => setDefaultAddress(address.id), "Default shipping address updated.")}>Set as default</button>}<button className="account-text-link account-danger-link" onClick={() => run(() => removeAddress(address.id), "Address removed.")}>Remove address</button></div></article>)}{!addresses.length && <div className="account-card account-empty">No shipping addresses saved.</div>}</div>
+      </>}
+
+      {section === "preferences" && <><Heading kicker="SETTINGS / 05" title="Your preferences." description="Choose how Euresis communicates and presents product information."/><section className="account-card account-preferences">
+        {([["language","Preferred language","Language for account communication",["English","简体中文","繁體中文","日本語","Deutsch"]],["currency","Display currency","Currency for quotations and estimates",["USD","EUR","GBP","JPY","CNY","TWD"]],["units","Specification units","Preferred units for wheel dimensions",["Metric (mm)","Imperial (inch)"]],["contact_method","Preferred contact method","How our team should contact you",["Email","Phone","WhatsApp"]]] as const).map(([key,title,description,options])=><div className="account-preference-row" key={key}><div><strong>{title}</strong><span>{description}</span></div><select value={preferences[key]} onChange={(event)=>updatePreferences(key,event.target.value)}>{options.map((option)=><option key={option}>{option}</option>)}</select></div>)}
+        <div className="account-preference-row"><div><strong>Product and engineering updates</strong><span>Receive new collections and technical updates</span></div><label className="account-toggle"><input type="checkbox" checked={preferences.product_updates} onChange={(event)=>updatePreferences("product_updates",event.target.checked)}/><span/></label></div>
+        <div className="account-card__footer"><span>Preferences are saved to your customer profile.</span><button className="account-button account-button--dark" disabled={busy} onClick={()=>run(()=>savePreferences(preferences),"Preferences saved.")}>Save preferences <Icon name="arrow"/></button></div>
+      </section></>}
+
+      {section === "inquiries" && <><Heading kicker="COMMUNICATION / 06" title="My enquiries." description="Review product questions, fitment requests and conversations with our team." action={<button className="account-button account-button--dark" onClick={()=>setEnquiryForm(!enquiryForm)}><Icon name="plus"/> New enquiry</button>}/>
+        {enquiryForm && <form className="account-card account-entry-form" onSubmit={(event)=>{event.preventDefault();run(async()=>{await createEnquiry(user.id,enquiryDraft.subject,enquiryDraft.message);setEnquiryForm(false);setEnquiryDraft({subject:"",message:""});},"Enquiry submitted.");}}><div className="account-form-grid"><Field label="Subject" value={enquiryDraft.subject} onChange={(v)=>setEnquiryDraft(x=>({...x,subject:v}))} required/></div><label>Message<textarea required rows={4} value={enquiryDraft.message} onChange={(e)=>setEnquiryDraft(x=>({...x,message:e.target.value}))}/></label><button className="account-button account-button--dark" disabled={busy}>Submit enquiry <Icon name="arrow"/></button></form>}
+        <div className="account-table">{enquiries.map((item: Enquiry)=><article key={item.id}><div><span className="account-kicker">{item.reference} · {dateLabel(item.created_at)}</span><h2>{item.subject}</h2><p>{item.message}</p></div>{statusPill(item.status)}</article>)}{!enquiries.length && <div className="account-card account-empty">No enquiries have been submitted from this account yet.</div>}</div>
+      </>}
+
+      {section === "aftersales" && <><Heading kicker="OWNERSHIP SUPPORT / 07" title="After-sales service." description="Submit and track warranty reviews and product support cases." action={<button className="account-button account-button--dark" onClick={()=>setServiceForm(!serviceForm)}><Icon name="plus"/> Request support</button>}/>
+        {serviceForm && <form className="account-card account-entry-form" onSubmit={(event)=>{event.preventDefault();run(async()=>{await createServiceCase(user.id,serviceDraft.subject,serviceDraft.description);setServiceForm(false);setServiceDraft({subject:"",description:""});},"Support request submitted.");}}><Field label="Subject" value={serviceDraft.subject} onChange={(v)=>setServiceDraft(x=>({...x,subject:v}))} required/><label>Describe the issue<textarea required rows={4} value={serviceDraft.description} onChange={(e)=>setServiceDraft(x=>({...x,description:e.target.value}))}/></label><button className="account-button account-button--dark" disabled={busy}>Submit request <Icon name="arrow"/></button></form>}
+        <div className="account-table">{cases.map((item: ServiceCase)=><article key={item.id}><div><span className="account-kicker">{item.reference} · {dateLabel(item.created_at)}</span><h2>{item.subject}</h2><p>{item.description}</p></div>{statusPill(item.status)}</article>)}{!cases.length && <div className="account-card account-empty">No after-sales requests have been submitted.</div>}</div>
+        <div className="account-support-note"><span className="account-kicker">EURESIS CUSTOMER CARE</span><h2>We are here to help.</h2><p>For fitment, finish or product support, contact our team with your vehicle and order reference.</p><a href="/wheels#inquiry">Contact Euresis ↗</a></div>
+      </>}
+
+      {section === "orders" && <><Heading kicker="PURCHASES / 08" title="Orders & delivery." description="Follow order progress from confirmation through dispatch and delivery."/>
+        {orders.map((order: Order)=><section className="account-card account-order-detail" key={order.id}><div className="account-card__heading"><div><span className="account-kicker">ORDER REFERENCE / {order.order_number}</span><h2>{order.customer_order_items?.map((item)=>item.product_name).join(", ") || "Euresis order"}</h2></div>{statusPill(order.status)}</div><p>Order placed {dateLabel(order.created_at)}</p>{order.customer_order_items?.map((item,index)=><p key={index}>{item.product_name} · {item.specification} · Qty {item.quantity}</p>)}<div className="account-timeline">{["confirmed","in_production","quality_check","dispatched","delivered"].map((step,index)=>{const current=["confirmed","in_production","quality_check","dispatched","delivered"].indexOf(order.status);return <div className={index<current?"is-done":index===current?"is-current":""} key={step}><i/><span>{statusLabel(step)}</span></div>;})}</div>
+          <div className="account-shipping-note"><Icon name="box"/><div><strong>{order.tracking_number ? `${order.carrier || "Carrier"} · ${order.tracking_number}` : "Shipment tracking"}</strong><span>{order.tracking_number ? "Use the tracking reference with the carrier for the latest delivery scan." : "Carrier and tracking details will appear after dispatch."}</span></div></div>
+          {order.customer_order_events?.length>0 && <div className="account-activity-list">{order.customer_order_events.map((event,index)=><p key={index}><strong>{statusLabel(event.status)}</strong> · {event.description} · {dateLabel(event.occurred_at)}</p>)}</div>}
+        </section>)}{!orders.length && <div className="account-card account-empty">Orders linked to this customer account will appear here once confirmed by Euresis.</div>}
+      </>}
+    </section>
+  </div></main>;
 }
