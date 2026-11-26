@@ -1,13 +1,176 @@
+"use client";
+
+import { useEffect, useState, type FormEvent } from "react";
 import { PHeading, PText } from "@porsche-design-system/components-react/ssr";
 import { wheelProducts } from "@/src/data/wheels";
+import { currentUser, request, submitWheelInquiry } from "@/src/lib/supabase/client";
+
+type WheelConfiguration = {
+  diameter: string;
+  width: string;
+  pcd: string;
+  offset: string;
+  centerBore: string;
+  boltSpec: string;
+  loadRating: string;
+  finish: string;
+  quantity: string;
+};
+
+type VehicleDetails = {
+  make: string;
+  model: string;
+  generation: string;
+  year: string;
+  trim: string;
+  originalWheel: string;
+  brakeNotes: string;
+};
+
+const emptyConfiguration = (): WheelConfiguration => ({
+  diameter: "", width: "", pcd: "", offset: "", centerBore: "",
+  boltSpec: "", loadRating: "", finish: "", quantity: "4",
+});
+
+const hasVehicleData = (vehicle: VehicleDetails) =>
+  Object.values(vehicle).some((value) => value.trim().length > 0);
+
+const makeReference = () => {
+  const date = new Date();
+  const stamp = date.getFullYear().toString() +
+    String(date.getMonth() + 1).padStart(2, "0") +
+    String(date.getDate()).padStart(2, "0");
+  const suffix = typeof crypto !== "undefined" && "randomUUID" in crypto
+    ? crypto.randomUUID().slice(0, 8).toUpperCase()
+    : Math.random().toString(36).slice(2, 10).toUpperCase();
+  return "ER-" + stamp + "-" + suffix;
+};
+
+function TextField({
+  label, value, onChange, placeholder = "", type = "text",
+}: {
+  label: string; value: string; onChange: (value: string) => void;
+  placeholder?: string; type?: string;
+}) {
+  return (
+    <label className="wheel-inquiry-field">
+      <span>{label}</span>
+      <input type={type} value={value} placeholder={placeholder}
+        onChange={(event) => onChange(event.target.value)} />
+    </label>
+  );
+}
 
 export function WheelsProductDetail({ slug }: { slug: string }) {
   const product = wheelProducts.find((item) => item.slug === slug);
+  const [mode, setMode] = useState<"vehicle" | "specs">("vehicle");
+  const [vehicle, setVehicle] = useState<VehicleDetails>({
+    make: "", model: "", generation: "", year: "", trim: "", originalWheel: "", brakeNotes: "",
+  });
+  const [configuration, setConfiguration] = useState<WheelConfiguration>(emptyConfiguration());
+  const [configurations, setConfigurations] = useState<WheelConfiguration[]>([]);
+  const [customer, setCustomer] = useState({ name: "", company: "", email: "", phone: "", country: "" });
+  const [requirements, setRequirements] = useState("");
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [reference, setReference] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      try {
+        const user = await currentUser();
+        if (!active || !user) return;
+        setCustomer((current) => ({
+          ...current,
+          name: current.name || String(user.user_metadata?.full_name || ""),
+          email: current.email || String(user.email || ""),
+        }));
+        const profiles = await request<Array<{ full_name: string; phone: string; company: string; country: string }>>(
+          "customer_profiles", { query: "select=*&id=eq." + user.id + "&limit=1" },
+        );
+        if (!active || !profiles[0]) return;
+        const profile = profiles[0];
+        setCustomer((current) => ({
+          ...current,
+          name: current.name || profile.full_name || "",
+          phone: current.phone || profile.phone || "",
+          company: current.company || profile.company || "",
+          country: current.country || profile.country || "",
+        }));
+      } catch {
+        // Guests can complete the same inquiry form manually.
+      }
+    })();
+    return () => { active = false; };
+  }, []);
+
   if (!product) {
     return <main className="wheel-detail wheel-detail--not-found"><p className="wheels-eyebrow">EURESIS / PRODUCT CATALOGUE</p><PHeading tag="h1" size="2xl">MODEL NOT FOUND.</PHeading><a className="wheel-detail__back-link" href="/wheels">Back to wheels</a></main>;
   }
 
   const suffix = product.manufacturing === "FORGED" ? "F" : "C";
+  const updateVehicle = (key: keyof VehicleDetails, value: string) =>
+    setVehicle((current) => ({ ...current, [key]: value }));
+  const updateCustomer = (key: keyof typeof customer, value: string) =>
+    setCustomer((current) => ({ ...current, [key]: value }));
+  const updateConfiguration = (key: keyof WheelConfiguration, value: string) =>
+    setConfiguration((current) => ({ ...current, [key]: value }));
+
+  const addConfiguration = () => {
+    const hasValues = Object.entries(configuration).some(([key, value]) => key !== "quantity" && value.trim());
+    if (!hasValues) {
+      setError("Enter at least one wheel specification before adding a configuration.");
+      return;
+    }
+    setConfigurations((current) => [...current, configuration]);
+    setConfiguration(emptyConfiguration());
+    setError("");
+  };
+
+  const createPreview = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setError("");
+    if (!customer.email.trim() && !customer.phone.trim()) {
+      setError("Please provide at least one contact method: email or phone.");
+      return;
+    }
+    setReference(makeReference());
+    setPreviewOpen(true);
+    window.setTimeout(() => document.getElementById("wheel-inquiry-preview")?.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
+  };
+
+  const submitInquiry = async () => {
+    if (submitted || busy) return;
+    setBusy(true);
+    setError("");
+    try {
+      await submitWheelInquiry({
+        reference,
+        product_slug: product.slug,
+        product_code: product.code,
+        product_name: product.collection + "-" + suffix + " " + product.model,
+        manufacturing: product.manufacturing,
+        customer_name: customer.name.trim(),
+        company: customer.company.trim(),
+        contact_email: customer.email.trim(),
+        contact_phone: customer.phone.trim(),
+        country: customer.country.trim(),
+        vehicle,
+        wheel_configurations: configurations,
+        fitment_status: hasVehicleData(vehicle) ? "pending_verification" : "unverified",
+        requirements: requirements.trim(),
+      });
+      setSubmitted(true);
+    } catch (submitError) {
+      setError(submitError instanceof Error ? submitError.message : "Unable to submit your inquiry. Please try again.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
   return (
     <main className="wheel-detail">
       <div className="wheel-detail__breadcrumb"><a href="/wheels">WHEELS</a><span>/</span><span>{product.manufacturing}</span><span>/</span><span>{product.collection}</span></div>
@@ -19,10 +182,11 @@ export function WheelsProductDetail({ slug }: { slug: string }) {
           <h2>{product.model}</h2>
           <p>{product.description}</p>
           <div className="wheel-detail__tags"><span>{product.manufacturing}</span><span>{product.collection}</span><span>SAMPLE MODEL</span></div>
-          <a className="wheel-detail__quote-link" href="/wheels#inquiry">Request a quote</a>
-          <small>Demonstration product only. No price, inventory or verified fitment is available.</small>
+          <a className="wheel-detail__quote-link" href="#wheel-inquiry">Create inquiry sheet</a>
+          <small>Demonstration product. Production specifications, pricing, stock and vehicle fitment require confirmation.</small>
         </div>
       </section>
+
       <section className="wheel-detail__specs">
         <div><p className="wheels-eyebrow">DESIGN INFORMATION</p><PHeading tag="h2" size="xl">MODEL OVERVIEW.</PHeading></div>
         <dl>
@@ -35,7 +199,122 @@ export function WheelsProductDetail({ slug }: { slug: string }) {
         </dl>
         <PText color="contrast-high">All dimensions, materials, offsets, bolt patterns, center bores, load ratings and brake clearances require validation against a real production specification. This sample model does not claim vehicle compatibility.</PText>
       </section>
-      
+
+      <section className="wheel-inquiry-builder" id="wheel-inquiry">
+        <div className="wheel-inquiry-builder__intro">
+          <p className="wheels-eyebrow">PRODUCT CONFIGURATION / INQUIRY</p>
+          <h2>SPECIFY YOUR<br />REQUIREMENTS.</h2>
+          <p>Build a professional, price-free inquiry document for this wheel. You can start with your vehicle or enter wheel specifications directly.</p>
+          <span className="wheel-inquiry-builder__note">NO PRICING · NO PAYMENT DETAILS · SUBJECT TO TECHNICAL VERIFICATION</span>
+        </div>
+
+        <form className="wheel-inquiry-form" onSubmit={createPreview}>
+          <div className="wheel-inquiry-form__section">
+            <div className="wheel-inquiry-form__heading"><span>01 / CONFIGURATION METHOD</span><strong>How would you like to start?</strong></div>
+            <div className="wheel-inquiry-tabs" role="tablist" aria-label="Inquiry configuration method">
+              <button type="button" className={mode === "vehicle" ? "is-active" : ""} onClick={() => setMode("vehicle")}>BY VEHICLE</button>
+              <button type="button" className={mode === "specs" ? "is-active" : ""} onClick={() => setMode("specs")}>BY WHEEL SPECS</button>
+            </div>
+            {mode === "vehicle" ? (
+              <div className="wheel-inquiry-fields">
+                <TextField label="Vehicle make" value={vehicle.make} onChange={(value) => updateVehicle("make", value)} placeholder="e.g. BMW" />
+                <TextField label="Vehicle model" value={vehicle.model} onChange={(value) => updateVehicle("model", value)} placeholder="e.g. M3" />
+                <TextField label="Generation / chassis" value={vehicle.generation} onChange={(value) => updateVehicle("generation", value)} placeholder="e.g. G80" />
+                <TextField label="Model year" value={vehicle.year} onChange={(value) => updateVehicle("year", value)} placeholder="e.g. 2025" />
+                <TextField label="Trim / version" value={vehicle.trim} onChange={(value) => updateVehicle("trim", value)} placeholder="e.g. Competition" />
+                <TextField label="Current wheel specification" value={vehicle.originalWheel} onChange={(value) => updateVehicle("originalWheel", value)} placeholder="Optional" />
+                <label className="wheel-inquiry-field wheel-inquiry-field--full"><span>Brake / clearance notes</span><textarea rows={3} value={vehicle.brakeNotes} onChange={(event) => updateVehicle("brakeNotes", event.target.value)} placeholder="Optional: brake package, suspension changes, clearance concerns" /></label>
+              </div>
+            ) : (
+              <div className="wheel-inquiry-fields">
+                <TextField label="Diameter (inch)" value={configuration.diameter} onChange={(value) => updateConfiguration("diameter", value)} placeholder="e.g. 20" />
+                <TextField label="Width (J)" value={configuration.width} onChange={(value) => updateConfiguration("width", value)} placeholder="e.g. 9.5" />
+                <TextField label="PCD" value={configuration.pcd} onChange={(value) => updateConfiguration("pcd", value)} placeholder="e.g. 5x112" />
+                <TextField label="Offset (ET)" value={configuration.offset} onChange={(value) => updateConfiguration("offset", value)} placeholder="e.g. ET35" />
+                <TextField label="Center bore (mm)" value={configuration.centerBore} onChange={(value) => updateConfiguration("centerBore", value)} placeholder="e.g. 66.6" />
+                <TextField label="Bolt specification" value={configuration.boltSpec} onChange={(value) => updateConfiguration("boltSpec", value)} placeholder="Optional" />
+                <TextField label="Load rating (kg)" value={configuration.loadRating} onChange={(value) => updateConfiguration("loadRating", value)} placeholder="Optional" />
+                <TextField label="Finish / colour" value={configuration.finish} onChange={(value) => updateConfiguration("finish", value)} placeholder="e.g. Satin black" />
+                <TextField label="Quantity" value={configuration.quantity} onChange={(value) => updateConfiguration("quantity", value)} placeholder="4" />
+                <div className="wheel-inquiry-field wheel-inquiry-field--action"><button type="button" className="wheel-inquiry-secondary" onClick={addConfiguration}>ADD THIS CONFIGURATION +</button></div>
+              </div>
+            )}
+            {mode === "vehicle" && <div className="wheel-inquiry-fields wheel-inquiry-fields--specs">
+              <TextField label="Requested diameter (inch)" value={configuration.diameter} onChange={(value) => updateConfiguration("diameter", value)} placeholder="Optional" />
+              <TextField label="Requested width (J)" value={configuration.width} onChange={(value) => updateConfiguration("width", value)} placeholder="Optional" />
+              <TextField label="PCD" value={configuration.pcd} onChange={(value) => updateConfiguration("pcd", value)} placeholder="Optional" />
+              <TextField label="Offset (ET)" value={configuration.offset} onChange={(value) => updateConfiguration("offset", value)} placeholder="Optional" />
+              <TextField label="Center bore (mm)" value={configuration.centerBore} onChange={(value) => updateConfiguration("centerBore", value)} placeholder="Optional" />
+              <TextField label="Quantity" value={configuration.quantity} onChange={(value) => updateConfiguration("quantity", value)} placeholder="4" />
+              <div className="wheel-inquiry-field wheel-inquiry-field--action"><button type="button" className="wheel-inquiry-secondary" onClick={addConfiguration}>ADD THIS CONFIGURATION +</button></div>
+            </div>}
+            <p className="wheel-inquiry-help">Vehicle details are optional. Missing year, trim or chassis information will be marked as not provided; it will not block your inquiry.</p>
+            {configurations.length > 0 && <div className="wheel-inquiry-config-list">
+              <strong>ADDED CONFIGURATIONS ({configurations.length})</strong>
+              {configurations.map((item, index) => <article key={index}>
+                <div><b>Configuration {index + 1}</b><span>{[item.diameter ? item.diameter + " in" : "", item.width ? item.width + "J" : "", item.pcd, item.offset, item.centerBore ? "CB " + item.centerBore + " mm" : ""].filter(Boolean).join(" · ") || "Specification to be confirmed"}</span><small>Qty {item.quantity || "Not specified"}</small></div>
+                <button type="button" aria-label={"Remove configuration " + (index + 1)} onClick={() => setConfigurations((current) => current.filter((_, itemIndex) => itemIndex !== index))}>REMOVE</button>
+              </article>)}
+            </div>}
+          </div>
+
+          <div className="wheel-inquiry-form__section">
+            <div className="wheel-inquiry-form__heading"><span>02 / CUSTOMER DETAILS</span><strong>How can we contact you?</strong></div>
+            <div className="wheel-inquiry-fields">
+              <TextField label="Contact name" value={customer.name} onChange={(value) => updateCustomer("name", value)} placeholder="Your name" />
+              <TextField label="Company" value={customer.company} onChange={(value) => updateCustomer("company", value)} placeholder="Optional" />
+              <TextField label="Email address" type="email" value={customer.email} onChange={(value) => updateCustomer("email", value)} placeholder="name@example.com" />
+              <TextField label="Phone / WhatsApp" value={customer.phone} onChange={(value) => updateCustomer("phone", value)} placeholder="Country code + number" />
+              <TextField label="Country / region" value={customer.country} onChange={(value) => updateCustomer("country", value)} placeholder="Optional" />
+            </div>
+            <p className="wheel-inquiry-help">At least one contact method (email or phone) is required. If you are signed in, saved customer details are prefilled where available.</p>
+          </div>
+
+          <div className="wheel-inquiry-form__section">
+            <div className="wheel-inquiry-form__heading"><span>03 / REQUIREMENTS</span><strong>Additional information</strong></div>
+            <label className="wheel-inquiry-field"><span>Requirements / notes</span><textarea rows={4} value={requirements} onChange={(event) => setRequirements(event.target.value)} placeholder="Custom finish, intended use, destination, packaging or other requirements" /></label>
+          </div>
+
+          {error && <p className="wheel-inquiry-error" role="alert">{error}</p>}
+          {submitted && <p className="wheel-inquiry-success" role="status">Inquiry {reference} has been submitted and saved.</p>}
+          <button className="wheel-inquiry-primary" type="submit">PREVIEW INQUIRY DOCUMENT ↗</button>
+        </form>
+      </section>
+
+      {previewOpen && <section className="wheel-inquiry-preview" id="wheel-inquiry-preview">
+        <div className="wheel-inquiry-preview__toolbar">
+          <div><p className="wheels-eyebrow">DOCUMENT PREVIEW</p><h2>Review your inquiry sheet.</h2><p>Export the document as PDF or submit it securely to Euresis.</p></div>
+          <div className="wheel-inquiry-preview__actions">
+            <button type="button" className="wheel-inquiry-secondary" onClick={() => window.print()}>EXPORT PDF / PRINT</button>
+            <button type="button" className="wheel-inquiry-primary" onClick={submitInquiry} disabled={busy || submitted}>{submitted ? "INQUIRY SUBMITTED" : busy ? "SUBMITTING…" : "SUBMIT INQUIRY"}</button>
+          </div>
+        </div>
+        <article className="wheel-inquiry-document">
+          <header className="wheel-inquiry-document__header">
+            <div><strong className="wheel-inquiry-document__brand">EURESIS</strong><span>AUTOMOTIVE WHEEL SPECIALIST</span></div>
+            <div><b>WHEEL SPECIFICATION</b><b>& INQUIRY SHEET</b><small>NON-COMMERCIAL · NO PRICING</small></div>
+          </header>
+          <div className="wheel-inquiry-document__meta"><span>INQUIRY REFERENCE <b>{reference}</b></span><span>ISSUED <b>{new Intl.DateTimeFormat("en-GB", { day: "2-digit", month: "short", year: "numeric" }).format(new Date())}</b></span></div>
+          <section><h3>01 / CUSTOMER INFORMATION</h3><div className="wheel-inquiry-document__grid">
+            <div><small>CONTACT NAME</small><b>{customer.name || "Not provided"}</b></div>
+            <div><small>COMPANY</small><b>{customer.company || "Not provided"}</b></div>
+            <div><small>EMAIL</small><b>{customer.email || "Not provided"}</b></div>
+            <div><small>PHONE / WHATSAPP</small><b>{customer.phone || "Not provided"}</b></div>
+            <div><small>COUNTRY / REGION</small><b>{customer.country || "Not provided"}</b></div>
+          </div></section>
+          <section><h3>02 / VEHICLE INFORMATION</h3><div className="wheel-inquiry-document__grid">
+            {([["MAKE", vehicle.make], ["MODEL", vehicle.model], ["GENERATION / CHASSIS", vehicle.generation], ["MODEL YEAR", vehicle.year], ["TRIM / VERSION", vehicle.trim], ["CURRENT WHEEL SPEC", vehicle.originalWheel], ["BRAKE / CLEARANCE NOTES", vehicle.brakeNotes]] as [string, string][]).map(([label, value]) => <div key={label}><small>{label}</small><b>{value || "Not provided"}</b></div>)}
+          </div><p className="wheel-inquiry-document__status">FITMENT STATUS: {hasVehicleData(vehicle) ? "PENDING VERIFICATION" : "UNVERIFIED — VEHICLE DETAILS NOT PROVIDED"}</p></section>
+          <section><h3>03 / PRODUCT INFORMATION</h3><div className="wheel-inquiry-document__product"><img src={product.image} alt={product.imageAlt}/><div><small>PRODUCT / MODEL</small><b>{product.collection}-{suffix} {product.model}</b><span>Product code: {product.code}</span><span>Manufacturing: {product.manufacturing}</span><span>Design: {product.design}</span></div></div></section>
+          <section><h3>04 / WHEEL CONFIGURATIONS</h3>{configurations.length ? <table><thead><tr><th>NO.</th><th>DIAMETER</th><th>WIDTH</th><th>PCD</th><th>ET</th><th>CB</th><th>FINISH</th><th>QTY</th></tr></thead><tbody>{configurations.map((item, index) => <tr key={index}><td>{index + 1}</td><td>{item.diameter || "—"}</td><td>{item.width || "—"}</td><td>{item.pcd || "—"}</td><td>{item.offset || "—"}</td><td>{item.centerBore || "—"}</td><td>{item.finish || "—"}</td><td>{item.quantity || "—"}</td></tr>)}</tbody></table> : <p>No exact wheel configuration specified. Please confirm the required specification with Euresis.</p>}
+            {configurations.some((item) => item.boltSpec || item.loadRating) && <div className="wheel-inquiry-document__extra">{configurations.map((item, index) => <p key={index}>Configuration {index + 1}: Bolt specification — {item.boltSpec || "Not provided"} · Load rating — {item.loadRating || "Not provided"} kg</p>)}</div>}
+          </section>
+          <section><h3>05 / CUSTOMER REQUIREMENTS</h3><p className="wheel-inquiry-document__notes">{requirements || "No additional requirements provided."}</p></section>
+          <footer className="wheel-inquiry-document__footer"><b>EURESIS / WHEEL SPECIFICATION & INQUIRY DOCUMENT</b><p>This document records customer-provided requirements only. It is not a quotation, commercial invoice, order confirmation or fitment certification. All specifications and vehicle compatibility are subject to technical review and written confirmation by Euresis.</p><span>NO PRICING · NO PAYMENT TERMS · NO COMMERCIAL VALUE</span></footer>
+        </article>
+        {error && <p className="wheel-inquiry-error" role="alert">{error}</p>}
+        {submitted && <p className="wheel-inquiry-success" role="status">Thank you. Your inquiry reference is {reference}. You can print or save this document as PDF for your records.</p>}
+      </section>}
     </main>
   );
 }

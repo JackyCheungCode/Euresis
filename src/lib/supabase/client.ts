@@ -81,3 +81,31 @@ export async function request<T>(table: string, options: { method?: string; quer
 export function acceptAuthRedirect() {
   return typeof window !== "undefined" && window.location.hash.includes("access_token=");
 }
+
+
+export type WheelInquirySubmission = {
+  reference: string;
+  product_slug: string;
+  product_code: string;
+  product_name: string;
+  manufacturing: string;
+  customer_name: string;
+  company: string;
+  contact_email: string;
+  contact_phone: string;
+  country: string;
+  vehicle: Record<string, string>;
+  wheel_configurations: Record<string, string>[];
+  fitment_status: "verified" | "potential" | "pending_verification" | "unverified" | "not_applicable";
+  requirements: string;
+};
+
+export async function submitWheelInquiry(payload: WheelInquirySubmission): Promise<void> {
+  const { data, error } = await supabase.auth.getSession();
+  if (error) throw error;
+  const { error: insertError } = await supabase.from("wheel_inquiries").insert({
+    ...payload,
+    user_id: data.session?.user.id ?? null,
+  });
+  if (insertError) throw insertError;
+}
