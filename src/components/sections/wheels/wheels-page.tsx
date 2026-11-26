@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   PButton,
   PHeading,
@@ -33,6 +33,20 @@ export function WheelsPage() {
   const [vehicleSummary, setVehicleSummary] = useState("");
   const [country, setCountry] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const heroVideoRef = useRef<HTMLVideoElement>(null);
+  const [heroVideoPaused, setHeroVideoPaused] = useState(false);
+
+  const toggleHeroVideo = () => {
+    const video = heroVideoRef.current;
+    if (!video) return;
+    if (video.paused) {
+      void video.play();
+      setHeroVideoPaused(false);
+    } else {
+      video.pause();
+      setHeroVideoPaused(true);
+    }
+  };
 
   const products = useMemo(() => wheelProducts.filter((product) => {
     const range = product.diameterRange.match(/\d+/g)?.map(Number) ?? [];
@@ -81,7 +95,7 @@ export function WheelsPage() {
   return (
     <main className="wheels-page">
       <section className="wheels-hero scheme-dark" aria-labelledby="wheels-title">
-        <div className="wheels-hero__image" role="img" aria-label="Performance alloy wheel detail" />
+        <video ref={heroVideoRef} className="wheels-hero__video" autoPlay muted loop playsInline preload="metadata" aria-hidden="true" tabIndex={-1} poster="https://images.pexels.com/photos/41081788/pexels-photo-41081788.jpeg?auto=compress&cs=tinysrgb&w=2200"><source src="https://videos.pexels.com/video-files/33374865/14209289_3840_2160_24fps.mp4" type="video/mp4" /></video>
         <div className="wheels-hero__content">
           <p className="wheels-eyebrow">EURESIS / PERFORMANCE WHEELS</p>
           <PHeading id="wheels-title" tag="h1" size="3xl" className="wheels-hero__title">
@@ -94,6 +108,7 @@ export function WheelsPage() {
           </div>
         </div>
         <span className="wheels-hero__index">EURESIS / PERFORMANCE WHEELS</span>
+        <PButton className="wheels-hero__video-control" type="button" variant="secondary" compact hideLabel icon={heroVideoPaused ? "play" : "pause"} aria={{ "aria-label": heroVideoPaused ? "Play background video" : "Pause background video" }} onClick={toggleHeroVideo}>{heroVideoPaused ? "Play background video" : "Pause background video"}</PButton>
       </section>
 
       <section className="wheels-manufacturing" aria-labelledby="manufacturing-title">

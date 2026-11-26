@@ -25,7 +25,7 @@ export function SiteHeader() {
   const searchRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    setIsHome(window.location.pathname === "/");
+    setIsHome(window.location.pathname === "/" || window.location.pathname === "/wheels");
   }, []);
 
   useEffect(() => {
