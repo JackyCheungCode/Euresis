@@ -1,4 +1,4 @@
-import { notFound } from "vinext/server";
+import { notFound } from "next/navigation";
 import { wheelProducts } from "@/src/data/wheels";
 
 export function generateStaticParams() {
