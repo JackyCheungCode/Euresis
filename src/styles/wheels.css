@@ -652,3 +652,19 @@
   .wheel-inquiry-document section { break-inside:avoid; }
   .wheel-inquiry-document__header,.wheel-inquiry-document__meta,.wheel-inquiry-document__footer { break-inside:avoid; }
 }
+
+
+/* Product inquiry now selects a real, published variant instead of free-typing wheel dimensions. */
+.wheel-inquiry-field select { width:100%; min-height:48px; padding:12px 42px 12px 13px; border:1px solid #c9c9c5; border-radius:0; background:#fff; color:#111; font:inherit; font-size:13px; }
+.wheel-inquiry-field select:focus-visible { outline:2px solid #555; outline-offset:2px; }
+.wheel-inquiry-variant-summary { display:grid; gap:7px; margin-top:18px; padding:18px; border:1px solid #d8d8d5; background:#f7f7f5; }
+.wheel-inquiry-variant-summary > span,.wheel-inquiry-variant-summary small { color:#777; font-size:9px; font-weight:700; letter-spacing:.12em; }
+.wheel-inquiry-variant-summary strong { font-size:17px; font-weight:600; }
+.wheel-inquiry-variant-summary p { margin:0; color:#555; font-size:12px; line-height:1.6; }
+.wheel-inquiry-fields--variant { margin-top:16px; }
+.wheel-inquiry-no-variants { margin-top:10px; padding:20px; border-left:3px solid #8b6b32; background:#f7f5ef; }
+.wheel-inquiry-no-variants strong { font-size:14px; }
+.wheel-inquiry-no-variants p { margin:8px 0 0; color:#625b4d; font-size:12px; line-height:1.7; }
+.wheel-inquiry-field button:disabled { opacity:.45; cursor:not-allowed; }
+.wheel-inquiry-document table { min-width:650px; }
+.wheel-inquiry-document section:has(table) { overflow-x:auto; }

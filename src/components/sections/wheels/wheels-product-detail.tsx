@@ -6,6 +6,8 @@ import { wheelProducts } from "@/src/data/wheels";
 import { currentUser, request, submitWheelInquiry } from "@/src/lib/supabase/client";
 
 type WheelConfiguration = {
+  variantId: string;
+  variantLabel: string;
   diameter: string;
   width: string;
   pcd: string;
@@ -26,11 +28,6 @@ type VehicleDetails = {
   originalWheel: string;
   brakeNotes: string;
 };
-
-const emptyConfiguration = (): WheelConfiguration => ({
-  diameter: "", width: "", pcd: "", offset: "", centerBore: "",
-  boltSpec: "", loadRating: "", finish: "", quantity: "4",
-});
 
 const hasVehicleData = (vehicle: VehicleDetails) =>
   Object.values(vehicle).some((value) => value.trim().length > 0);
@@ -63,11 +60,11 @@ function TextField({
 
 export function WheelsProductDetail({ slug }: { slug: string }) {
   const product = wheelProducts.find((item) => item.slug === slug);
-  const [mode, setMode] = useState<"vehicle" | "specs">("vehicle");
   const [vehicle, setVehicle] = useState<VehicleDetails>({
     make: "", model: "", generation: "", year: "", trim: "", originalWheel: "", brakeNotes: "",
   });
-  const [configuration, setConfiguration] = useState<WheelConfiguration>(emptyConfiguration());
+  const [selectedVariantId, setSelectedVariantId] = useState("");
+  const [quantity, setQuantity] = useState("4");
   const [configurations, setConfigurations] = useState<WheelConfiguration[]>([]);
   const [customer, setCustomer] = useState({ name: "", company: "", email: "", phone: "", country: "" });
   const [requirements, setRequirements] = useState("");
@@ -116,17 +113,38 @@ export function WheelsProductDetail({ slug }: { slug: string }) {
     setVehicle((current) => ({ ...current, [key]: value }));
   const updateCustomer = (key: keyof typeof customer, value: string) =>
     setCustomer((current) => ({ ...current, [key]: value }));
-  const updateConfiguration = (key: keyof WheelConfiguration, value: string) =>
-    setConfiguration((current) => ({ ...current, [key]: value }));
+  const productVariants = (product.variants ?? []).filter((variant) => variant.available !== false);
+  const selectedVariant = productVariants.find((variant) => variant.id === selectedVariantId);
+  const formatVariant = (variant: typeof productVariants[number]) => [
+    variant.diameterInches ? variant.diameterInches + " in" : "",
+    variant.widthInches ? variant.widthInches + "J" : "",
+    variant.pcd || "",
+    variant.offsetMm !== undefined ? "ET" + variant.offsetMm : "",
+    variant.centerBoreMm !== undefined ? "CB " + variant.centerBoreMm + " mm" : "",
+    variant.finish || "",
+  ].filter(Boolean).join(" · ");
+  const formatConfiguration = (item: WheelConfiguration) => [item.diameter ? item.diameter + " in" : "", item.width ? item.width + "J" : "", item.pcd, item.offset, item.centerBore ? "CB " + item.centerBore + " mm" : "", item.finish].filter(Boolean).join(" · ") || "Technical details pending";
 
   const addConfiguration = () => {
-    const hasValues = Object.entries(configuration).some(([key, value]) => key !== "quantity" && value.trim());
-    if (!hasValues) {
-      setError("Enter at least one wheel specification before adding a configuration.");
+    if (!selectedVariant) {
+      setError("Please select one of the published product specifications.");
       return;
     }
-    setConfigurations((current) => [...current, configuration]);
-    setConfiguration(emptyConfiguration());
+    const snapshot: WheelConfiguration = {
+      variantId: selectedVariant.id,
+      variantLabel: selectedVariant.label || formatVariant(selectedVariant) || selectedVariant.id,
+      diameter: selectedVariant.diameterInches?.toString() || "",
+      width: selectedVariant.widthInches?.toString() || "",
+      pcd: selectedVariant.pcd || "",
+      offset: selectedVariant.offsetMm !== undefined ? "ET" + selectedVariant.offsetMm : "",
+      centerBore: selectedVariant.centerBoreMm?.toString() || "",
+      boltSpec: selectedVariant.boltSpec || "",
+      loadRating: selectedVariant.loadRatingKg?.toString() || "",
+      finish: selectedVariant.finish || "",
+      quantity: String(Math.max(1, Number.parseInt(quantity, 10) || 1)),
+    };
+    setConfigurations((current) => [...current, snapshot]);
+    setQuantity("4");
     setError("");
   };
 
@@ -147,6 +165,7 @@ export function WheelsProductDetail({ slug }: { slug: string }) {
     setBusy(true);
     setError("");
     try {
+      if (productVariants.length > 0 && configurations.length === 0) throw new Error("Add at least one published product specification before submitting.");
       await submitWheelInquiry({
         reference,
         product_slug: product.slug,
@@ -204,57 +223,56 @@ export function WheelsProductDetail({ slug }: { slug: string }) {
         <div className="wheel-inquiry-builder__intro">
           <p className="wheels-eyebrow">PRODUCT CONFIGURATION / INQUIRY</p>
           <h2>SPECIFY YOUR<br />REQUIREMENTS.</h2>
-          <p>Build a professional, price-free inquiry document for this wheel. You can start with your vehicle or enter wheel specifications directly.</p>
+          <p>Select a published product specification, add your vehicle details and prepare a professional, price-free inquiry document.</p>
           <span className="wheel-inquiry-builder__note">NO PRICING · NO PAYMENT DETAILS · SUBJECT TO TECHNICAL VERIFICATION</span>
         </div>
 
         <form className="wheel-inquiry-form" onSubmit={createPreview}>
           <div className="wheel-inquiry-form__section">
-            <div className="wheel-inquiry-form__heading"><span>01 / CONFIGURATION METHOD</span><strong>How would you like to start?</strong></div>
-            <div className="wheel-inquiry-tabs" role="tablist" aria-label="Inquiry configuration method">
-              <button type="button" className={mode === "vehicle" ? "is-active" : ""} onClick={() => setMode("vehicle")}>BY VEHICLE</button>
-              <button type="button" className={mode === "specs" ? "is-active" : ""} onClick={() => setMode("specs")}>BY WHEEL SPECS</button>
-            </div>
-            {mode === "vehicle" ? (
-              <div className="wheel-inquiry-fields">
-                <TextField label="Vehicle make" value={vehicle.make} onChange={(value) => updateVehicle("make", value)} placeholder="e.g. BMW" />
-                <TextField label="Vehicle model" value={vehicle.model} onChange={(value) => updateVehicle("model", value)} placeholder="e.g. M3" />
-                <TextField label="Generation / chassis" value={vehicle.generation} onChange={(value) => updateVehicle("generation", value)} placeholder="e.g. G80" />
-                <TextField label="Model year" value={vehicle.year} onChange={(value) => updateVehicle("year", value)} placeholder="e.g. 2025" />
-                <TextField label="Trim / version" value={vehicle.trim} onChange={(value) => updateVehicle("trim", value)} placeholder="e.g. Competition" />
-                <TextField label="Current wheel specification" value={vehicle.originalWheel} onChange={(value) => updateVehicle("originalWheel", value)} placeholder="Optional" />
-                <label className="wheel-inquiry-field wheel-inquiry-field--full"><span>Brake / clearance notes</span><textarea rows={3} value={vehicle.brakeNotes} onChange={(event) => updateVehicle("brakeNotes", event.target.value)} placeholder="Optional: brake package, suspension changes, clearance concerns" /></label>
-              </div>
+            <div className="wheel-inquiry-form__heading"><span>01 / PRODUCT SPECIFICATION</span><strong>Select an available specification.</strong></div>
+            {productVariants.length > 0 ? (
+              <>
+                <label className="wheel-inquiry-field">
+                  <span>Product variant / specification</span>
+                  <select value={selectedVariantId} onChange={(event) => setSelectedVariantId(event.target.value)} required>
+                    <option value="">Select a published specification</option>
+                    {productVariants.filter((variant) => variant.available !== false).map((variant) => (
+                      <option key={variant.id} value={variant.id}>
+                        {(variant.label || formatVariant(variant) || variant.id) + " · " + variant.id}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                {selectedVariant && (
+                  <div className="wheel-inquiry-variant-summary">
+                    <span>SELECTED PRODUCT SPECIFICATION</span>
+                    <strong>{selectedVariant.label || formatVariant(selectedVariant) || selectedVariant.id}</strong>
+                    <p>{formatVariant(selectedVariant) || "Additional technical details are not published."}</p>
+                    <small>Variant ID: {selectedVariant.id}</small>
+                  </div>
+                )}
+                <div className="wheel-inquiry-fields wheel-inquiry-fields--variant">
+                  <TextField label="Quantity" type="number" value={quantity} onChange={setQuantity} placeholder="4" />
+                  <div className="wheel-inquiry-field wheel-inquiry-field--action">
+                    <button type="button" className="wheel-inquiry-secondary" onClick={addConfiguration} disabled={!selectedVariant}>ADD SELECTED SPECIFICATION +</button>
+                  </div>
+                </div>
+              </>
             ) : (
-              <div className="wheel-inquiry-fields">
-                <TextField label="Diameter (inch)" value={configuration.diameter} onChange={(value) => updateConfiguration("diameter", value)} placeholder="e.g. 20" />
-                <TextField label="Width (J)" value={configuration.width} onChange={(value) => updateConfiguration("width", value)} placeholder="e.g. 9.5" />
-                <TextField label="PCD" value={configuration.pcd} onChange={(value) => updateConfiguration("pcd", value)} placeholder="e.g. 5x112" />
-                <TextField label="Offset (ET)" value={configuration.offset} onChange={(value) => updateConfiguration("offset", value)} placeholder="e.g. ET35" />
-                <TextField label="Center bore (mm)" value={configuration.centerBore} onChange={(value) => updateConfiguration("centerBore", value)} placeholder="e.g. 66.6" />
-                <TextField label="Bolt specification" value={configuration.boltSpec} onChange={(value) => updateConfiguration("boltSpec", value)} placeholder="Optional" />
-                <TextField label="Load rating (kg)" value={configuration.loadRating} onChange={(value) => updateConfiguration("loadRating", value)} placeholder="Optional" />
-                <TextField label="Finish / colour" value={configuration.finish} onChange={(value) => updateConfiguration("finish", value)} placeholder="e.g. Satin black" />
-                <TextField label="Quantity" value={configuration.quantity} onChange={(value) => updateConfiguration("quantity", value)} placeholder="4" />
-                <div className="wheel-inquiry-field wheel-inquiry-field--action"><button type="button" className="wheel-inquiry-secondary" onClick={addConfiguration}>ADD THIS CONFIGURATION +</button></div>
+              <div className="wheel-inquiry-no-variants" role="status">
+                <strong>Production specifications are not published yet.</strong>
+                <p>This is a demonstration model. We have not received verified size, PCD, offset or centre-bore combinations for this product, so no selectable variants are shown. You can still submit a product enquiry and ask our team to confirm the available specifications.</p>
               </div>
             )}
-            {mode === "vehicle" && <div className="wheel-inquiry-fields wheel-inquiry-fields--specs">
-              <TextField label="Requested diameter (inch)" value={configuration.diameter} onChange={(value) => updateConfiguration("diameter", value)} placeholder="Optional" />
-              <TextField label="Requested width (J)" value={configuration.width} onChange={(value) => updateConfiguration("width", value)} placeholder="Optional" />
-              <TextField label="PCD" value={configuration.pcd} onChange={(value) => updateConfiguration("pcd", value)} placeholder="Optional" />
-              <TextField label="Offset (ET)" value={configuration.offset} onChange={(value) => updateConfiguration("offset", value)} placeholder="Optional" />
-              <TextField label="Center bore (mm)" value={configuration.centerBore} onChange={(value) => updateConfiguration("centerBore", value)} placeholder="Optional" />
-              <TextField label="Quantity" value={configuration.quantity} onChange={(value) => updateConfiguration("quantity", value)} placeholder="4" />
-              <div className="wheel-inquiry-field wheel-inquiry-field--action"><button type="button" className="wheel-inquiry-secondary" onClick={addConfiguration}>ADD THIS CONFIGURATION +</button></div>
-            </div>}
-            <p className="wheel-inquiry-help">Vehicle details are optional. Missing year, trim or chassis information will be marked as not provided; it will not block your inquiry.</p>
+            <p className="wheel-inquiry-help">Only specifications explicitly published for this product can be selected. The diameter concept shown above is a design range, not a list of confirmed variants.</p>
             {configurations.length > 0 && <div className="wheel-inquiry-config-list">
-              <strong>ADDED CONFIGURATIONS ({configurations.length})</strong>
-              {configurations.map((item, index) => <article key={index}>
-                <div><b>Configuration {index + 1}</b><span>{[item.diameter ? item.diameter + " in" : "", item.width ? item.width + "J" : "", item.pcd, item.offset, item.centerBore ? "CB " + item.centerBore + " mm" : ""].filter(Boolean).join(" · ") || "Specification to be confirmed"}</span><small>Qty {item.quantity || "Not specified"}</small></div>
-                <button type="button" aria-label={"Remove configuration " + (index + 1)} onClick={() => setConfigurations((current) => current.filter((_, itemIndex) => itemIndex !== index))}>REMOVE</button>
-              </article>)}
+              <strong>ADDED PRODUCT SPECIFICATIONS ({configurations.length})</strong>
+              {configurations.map((item, index) => (
+                <article key={item.variantId + "-" + index}>
+                  <div><b>{item.variantLabel}</b><span>{formatConfiguration(item)}</span><small>Variant {item.variantId} · Qty {item.quantity}</small></div>
+                  <button type="button" aria-label={"Remove specification " + (index + 1)} onClick={() => setConfigurations((current) => current.filter((_, itemIndex) => itemIndex !== index))}>REMOVE</button>
+                </article>
+              ))}
             </div>}
           </div>
 
@@ -306,7 +324,7 @@ export function WheelsProductDetail({ slug }: { slug: string }) {
             {([["MAKE", vehicle.make], ["MODEL", vehicle.model], ["GENERATION / CHASSIS", vehicle.generation], ["MODEL YEAR", vehicle.year], ["TRIM / VERSION", vehicle.trim], ["CURRENT WHEEL SPEC", vehicle.originalWheel], ["BRAKE / CLEARANCE NOTES", vehicle.brakeNotes]] as [string, string][]).map(([label, value]) => <div key={label}><small>{label}</small><b>{value || "Not provided"}</b></div>)}
           </div><p className="wheel-inquiry-document__status">FITMENT STATUS: {hasVehicleData(vehicle) ? "PENDING VERIFICATION" : "UNVERIFIED — VEHICLE DETAILS NOT PROVIDED"}</p></section>
           <section><h3>03 / PRODUCT INFORMATION</h3><div className="wheel-inquiry-document__product"><img src={product.image} alt={product.imageAlt}/><div><small>PRODUCT / MODEL</small><b>{product.collection}-{suffix} {product.model}</b><span>Product code: {product.code}</span><span>Manufacturing: {product.manufacturing}</span><span>Design: {product.design}</span></div></div></section>
-          <section><h3>04 / WHEEL CONFIGURATIONS</h3>{configurations.length ? <table><thead><tr><th>NO.</th><th>DIAMETER</th><th>WIDTH</th><th>PCD</th><th>ET</th><th>CB</th><th>FINISH</th><th>QTY</th></tr></thead><tbody>{configurations.map((item, index) => <tr key={index}><td>{index + 1}</td><td>{item.diameter || "—"}</td><td>{item.width || "—"}</td><td>{item.pcd || "—"}</td><td>{item.offset || "—"}</td><td>{item.centerBore || "—"}</td><td>{item.finish || "—"}</td><td>{item.quantity || "—"}</td></tr>)}</tbody></table> : <p>No exact wheel configuration specified. Please confirm the required specification with Euresis.</p>}
+          <section><h3>04 / WHEEL CONFIGURATIONS</h3>{configurations.length ? <table><thead><tr><th>VARIANT ID</th><th>SPECIFICATION</th><th>DIAMETER</th><th>WIDTH</th><th>PCD</th><th>ET</th><th>CB</th><th>FINISH</th><th>QTY</th></tr></thead><tbody>{configurations.map((item, index) => <tr key={index}><td>{item.variantId}</td><td>{item.variantLabel}</td><td>{item.diameter || "—"}</td><td>{item.width || "—"}</td><td>{item.pcd || "—"}</td><td>{item.offset || "—"}</td><td>{item.centerBore || "—"}</td><td>{item.finish || "—"}</td><td>{item.quantity || "—"}</td></tr>)}</tbody></table> : <p>No exact wheel configuration specified. Please confirm the required specification with Euresis.</p>}
             {configurations.some((item) => item.boltSpec || item.loadRating) && <div className="wheel-inquiry-document__extra">{configurations.map((item, index) => <p key={index}>Configuration {index + 1}: Bolt specification — {item.boltSpec || "Not provided"} · Load rating — {item.loadRating || "Not provided"} kg</p>)}</div>}
           </section>
           <section><h3>05 / CUSTOMER REQUIREMENTS</h3><p className="wheel-inquiry-document__notes">{requirements || "No additional requirements provided."}</p></section>

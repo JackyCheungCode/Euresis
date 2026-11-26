@@ -7,6 +7,20 @@ export type WheelCollection =
   | "RALLY"
   | "HERITAGE";
 
+export type WheelProductVariant = {
+  id: string;
+  label?: string;
+  diameterInches?: number;
+  widthInches?: number;
+  pcd?: string;
+  offsetMm?: number;
+  centerBoreMm?: number;
+  boltSpec?: string;
+  loadRatingKg?: number;
+  finish?: string;
+  available?: boolean;
+};
+
 export type WheelProduct = {
   slug: string;
   model: string;
@@ -21,6 +35,7 @@ export type WheelProduct = {
   offsets?: string[];
   pcd?: string[];
   centerBores?: string[];
+  variants?: WheelProductVariant[];
   image: string;
   imageAlt: string;
   imageSource: string;
