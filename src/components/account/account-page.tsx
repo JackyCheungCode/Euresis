@@ -112,7 +112,7 @@ export function AccountPage() {
       } else if (authMode === "register") {
         if (authName.trim().length < 2) throw new Error("Enter your full name.");
         const result = await signUp(authEmail.trim(), authPassword, authName.trim());
-        if (result.access_token) {
+        if (result.session?.access_token) {
           const customer = await currentUser();
           if (customer) { setUser(customer); await refresh(customer.id); }
         } else {
