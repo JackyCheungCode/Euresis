@@ -94,7 +94,7 @@ export function CollectionSection() {
                 ))}
               </ul>
               <PButton variant="secondary" type="button">
-                <a href="#fitment">Discuss your fitment</a>
+                <a href="/wheels">Discuss your fitment</a>
               </PButton>
             </div>
           </article>

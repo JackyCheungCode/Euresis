@@ -1,0 +1,148 @@
+/* Euresis Wheels catalogue — page composition only; controls remain PDS components. */
+.wheels-page { color: var(--p-color-primary); background: var(--p-color-canvas); }
+.wheels-eyebrow { margin: 0; color: var(--p-color-contrast-medium); font-size: 10px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; }
+.wheels-hero { position: relative; display: flex; min-height: min(780px, 88svh); align-items: flex-end; overflow: hidden; background: var(--p-color-primary); color: var(--p-color-canvas); }
+.wheels-hero__image { position: absolute; inset: 0; background-image: linear-gradient(90deg, rgb(0 0 0 / .72), rgb(0 0 0 / .12) 78%), linear-gradient(0deg, rgb(0 0 0 / .5), transparent 62%), url("https://images.pexels.com/photos/41081788/pexels-photo-41081788.jpeg?auto=compress&cs=tinysrgb&w=2200"); background-size: cover; background-position: center 48%; transform: scale(1.01); }
+.wheels-hero__content { position: relative; z-index: 1; width: min(100% - 2 * var(--euresis-gutter), 1440px); margin: 0 auto; padding: clamp(150px, 22vh, 220px) 0 clamp(76px, 10vh, 126px); }
+.wheels-hero .wheels-eyebrow { color: rgb(255 255 255 / .72); }
+.wheels-hero__title { margin: 26px 0 0; color: #fff; font-size: clamp(4rem, 10vw, 9.6rem); letter-spacing: -.075em; line-height: .86; }
+.wheels-hero__lead { max-width: 520px; margin: 28px 0 0; color: rgb(255 255 255 / .86); font-size: clamp(1rem, 1.35vw, 1.2rem); line-height: 1.6; }
+.wheels-hero__actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+.wheels-hero__index { position: absolute; right: var(--euresis-gutter); bottom: 34px; z-index: 1; color: rgb(255 255 255 / .72); font-size: 9px; letter-spacing: .16em; }
+.wheels-section-heading { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(260px, .65fr); align-items: end; gap: clamp(30px, 7vw, 108px); max-width: 1440px; margin: 0 auto clamp(38px, 5vw, 72px); }
+.wheels-section-heading h2 { max-width: 900px; margin: 22px 0 0; font-size: clamp(3rem, 7vw, 7rem); font-weight: 500; letter-spacing: -.075em; line-height: .89; }
+.wheels-section-heading > p { max-width: 440px; margin: 0 0 5px; color: var(--p-color-contrast-high); font-size: clamp(1rem, 1.25vw, 1.15rem); line-height: 1.65; }
+.wheels-manufacturing { padding: clamp(82px, 9vw, 144px) var(--euresis-gutter); }
+.wheels-manufacturing__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(14px, 2vw, 28px); max-width: 1440px; margin: 0 auto; }
+.manufacturing-card { position: relative; display: flex; min-width: 0; aspect-ratio: 1.35 / 1; flex-direction: column; justify-content: flex-end; overflow: hidden; padding: clamp(24px, 3vw, 44px); border: 2px solid transparent; background: var(--p-color-primary); color: #fff; text-align: left; cursor: pointer; }
+.manufacturing-card::after { position: absolute; inset: 30% 0 0; content: ""; background: linear-gradient(0deg, rgb(0 0 0 / .78), transparent); }
+.manufacturing-card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 650ms cubic-bezier(.2,.7,.2,1); }
+.manufacturing-card:hover img { transform: scale(1.04); }
+.manufacturing-card.is-active { border-color: var(--p-color-primary); }
+.manufacturing-card__number, .manufacturing-card__copy, .manufacturing-card__arrow { position: relative; z-index: 1; }
+.manufacturing-card__number { position: absolute; top: 24px; left: 26px; color: rgb(255 255 255 / .8); font-size: 11px; letter-spacing: .15em; }
+.manufacturing-card__copy { display: grid; gap: 10px; }
+.manufacturing-card__copy strong { font-size: clamp(2.8rem, 5.4vw, 5.8rem); font-weight: 500; letter-spacing: -.07em; line-height: .9; }
+.manufacturing-card__copy small { color: rgb(255 255 255 / .8); font-size: 9px; letter-spacing: .16em; }
+.manufacturing-card__arrow { position: absolute; right: 28px; bottom: 30px; font-size: 22px; }
+.wheels-collections { padding: clamp(82px, 9vw, 144px) var(--euresis-gutter); background: var(--p-color-primary); color: var(--p-color-canvas); }
+.wheels-section-heading--light .wheels-eyebrow, .wheels-section-heading--light > p { color: var(--p-color-contrast-medium); }
+.wheels-section-heading--light h2 { color: var(--p-color-canvas); }
+.wheels-collection-list { max-width: 1440px; margin: 0 auto; border-top: 1px solid rgb(255 255 255 / .24); }
+.wheels-collection-item { display: grid; width: 100%; grid-template-columns: 48px minmax(150px, .8fr) minmax(170px, .8fr) minmax(220px, 1fr) 24px; align-items: center; gap: 18px; padding: 24px 0; border: 0; border-bottom: 1px solid rgb(255 255 255 / .24); background: transparent; color: #fff; text-align: left; cursor: pointer; transition: padding .2s ease, background .2s ease; }
+.wheels-collection-item:hover, .wheels-collection-item.is-active { padding-inline: 14px; background: rgb(255 255 255 / .06); }
+.wheels-collection-item__index { color: rgb(255 255 255 / .52); font-size: 11px; }
+.wheels-collection-item__name { font-size: clamp(1.5rem, 3.4vw, 3rem); letter-spacing: -.055em; }
+.wheels-collection-item__subtitle { color: rgb(255 255 255 / .72); font-size: 9px; letter-spacing: .15em; }
+.wheels-collection-item__description { color: rgb(255 255 255 / .64); font-size: 12px; line-height: 1.5; }
+.wheels-collection-item__arrow { font-size: 20px; }
+.wheels-fitment { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1fr); gap: clamp(36px, 8vw, 120px); align-items: start; padding: clamp(82px, 9vw, 144px) var(--euresis-gutter); background: var(--p-color-contrast-low); }
+.wheels-fitment__intro h2, .wheels-inquiry__intro h2, .wheels-engineering h2 { margin: 22px 0 0; font-size: clamp(3rem, 6.8vw, 6.6rem); font-weight: 500; letter-spacing: -.075em; line-height: .9; }
+.wheels-fitment__intro > p:not(.wheels-eyebrow), .wheels-inquiry__intro > p:not(.wheels-eyebrow) { max-width: 480px; margin: 24px 0 0; color: var(--p-color-contrast-high); font-size: 15px; line-height: 1.65; }
+.wheels-demo-note { display: block; margin-top: 24px; color: var(--p-color-contrast-medium); font-size: 9px; font-weight: 600; letter-spacing: .16em; }
+.wheels-fitment__form { display: grid; gap: 22px; padding: clamp(24px, 3vw, 42px); background: var(--p-color-canvas); }
+.wheels-fitment__fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+.wheels-fitment__result { padding: 18px; border-left: 3px solid var(--p-color-info); background: var(--p-color-contrast-low); }
+.wheels-fitment__result p { margin: 8px 0; }
+.wheels-fitment__result span { color: var(--p-color-contrast-high); font-size: 12px; }
+.wheels-catalogue { padding: clamp(82px, 9vw, 144px) var(--euresis-gutter); }
+.wheels-filters { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)) auto; align-items: end; gap: 14px; max-width: 1440px; margin: 0 auto 30px; }
+.wheels-catalogue__meta { display: flex; justify-content: space-between; max-width: 1440px; margin: 0 auto 18px; padding-top: 16px; border-top: 1px solid var(--p-color-contrast-low); color: var(--p-color-contrast-medium); font-size: 9px; font-weight: 600; letter-spacing: .15em; }
+.wheels-product-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(18px, 2vw, 30px); max-width: 1440px; margin: 0 auto; }
+.wheel-product-card { min-width: 0; }
+.wheel-product-card__image { position: relative; display: block; overflow: hidden; aspect-ratio: 1 / 1; background: var(--p-color-contrast-low); color: #fff; }
+.wheel-product-card__image img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform 650ms cubic-bezier(.2,.7,.2,1); }
+.wheel-product-card:hover .wheel-product-card__image img { transform: scale(1.04); }
+.wheel-product-card__index, .wheel-product-card__sample { position: absolute; top: 14px; padding: 7px 9px; background: rgb(0 0 0 / .68); color: #fff; font-size: 9px; letter-spacing: .12em; }
+.wheel-product-card__index { left: 14px; }
+.wheel-product-card__sample { right: 14px; }
+.wheel-product-card__body { padding: 18px 0 0; }
+.wheel-product-card__eyebrow { display: flex; justify-content: space-between; color: var(--p-color-contrast-medium); font-size: 9px; font-weight: 600; letter-spacing: .15em; }
+.wheel-product-card h3 { margin: 12px 0 8px; font-size: clamp(1.6rem, 2.5vw, 2.3rem); font-weight: 500; letter-spacing: -.05em; }
+.wheel-product-card h3 a { color: inherit; text-decoration: none; }
+.wheel-product-card__body > p { min-height: 44px; margin: 0; color: var(--p-color-contrast-high); font-size: 13px; line-height: 1.6; }
+.wheel-product-card__specs { display: flex; flex-wrap: wrap; gap: 7px 12px; margin-top: 16px; color: var(--p-color-contrast-medium); font-size: 10px; }
+.wheel-product-card__link { display: flex; justify-content: space-between; margin-top: 18px; padding: 13px 0; border-top: 1px solid var(--p-color-contrast-low); color: var(--p-color-primary); font-size: 10px; font-weight: 600; letter-spacing: .14em; text-decoration: none; }
+.wheels-empty { display: grid; justify-items: center; gap: 12px; padding: 60px 20px; background: var(--p-color-contrast-low); }
+.wheels-empty button { padding: 8px 12px; border: 1px solid var(--p-color-contrast-medium); background: transparent; cursor: pointer; }
+.wheels-image-credit { max-width: 1440px; margin: 24px auto 0; color: var(--p-color-contrast-medium); font-size: 10px; line-height: 1.6; }
+.wheels-engineering { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1fr); gap: clamp(40px, 8vw, 120px); align-items: end; padding: clamp(82px, 9vw, 144px) var(--euresis-gutter); background: var(--p-color-contrast-low); }
+.wheels-engineering__copy > p { max-width: 600px; color: var(--p-color-contrast-high); font-size: clamp(1rem, 1.3vw, 1.2rem); line-height: 1.7; }
+.wheels-engineering__labels { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; }
+.wheels-engineering__labels span, .wheel-detail__tags span { padding: 9px 12px; border: 1px solid var(--p-color-contrast-medium); font-size: 9px; letter-spacing: .12em; }
+.wheels-inquiry { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1fr); gap: clamp(36px, 8vw, 120px); padding: clamp(82px, 9vw, 144px) var(--euresis-gutter); background: var(--p-color-primary); color: var(--p-color-canvas); }
+.wheels-inquiry .wheels-eyebrow { color: var(--p-color-contrast-medium); }
+.wheels-inquiry__intro h2 { color: #fff; }
+.wheels-inquiry__intro > p:not(.wheels-eyebrow) { color: rgb(255 255 255 / .72); }
+.wheels-inquiry__form { display: grid; align-content: start; gap: 20px; padding: clamp(24px, 3vw, 42px); background: var(--p-color-canvas); color: var(--p-color-primary); }
+.wheels-inquiry__fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.wheels-inquiry__fields > :last-child { grid-column: 1 / -1; }
+.wheels-inquiry__success { align-self: start; padding: 28px; background: var(--p-color-canvas); color: var(--p-color-primary); }
+.wheels-inquiry__success p { color: var(--p-color-contrast-high); line-height: 1.6; }
+.wheel-detail { min-height: 70vh; padding: 120px var(--euresis-gutter) 90px; background: var(--p-color-canvas); }
+.wheel-detail__breadcrumb { display: flex; flex-wrap: wrap; gap: 10px; max-width: 1440px; margin: 0 auto 28px; color: var(--p-color-contrast-medium); font-size: 10px; letter-spacing: .12em; }
+.wheel-detail__breadcrumb a { color: inherit; }
+.wheel-detail__hero { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(320px, .8fr); gap: clamp(32px, 6vw, 88px); max-width: 1440px; margin: 0 auto; }
+.wheel-detail__image { position: relative; overflow: hidden; aspect-ratio: 1.1 / 1; background: var(--p-color-contrast-low); }
+.wheel-detail__image img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.wheel-detail__image > span { position: absolute; right: 14px; bottom: 14px; padding: 8px 10px; background: rgb(0 0 0 / .7); color: #fff; font-size: 9px; letter-spacing: .12em; }
+.wheel-detail__content { align-self: center; }
+.wheel-detail__content h1 { margin: 18px 0 0; font-size: clamp(3rem, 6vw, 6rem); letter-spacing: -.07em; }
+.wheel-detail__content h2 { margin: 4px 0 20px; font-size: clamp(2rem, 3vw, 3rem); font-weight: 400; }
+.wheel-detail__content > p:not(.wheels-eyebrow) { color: var(--p-color-contrast-high); line-height: 1.65; }
+.wheel-detail__tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 24px 0; }
+.wheel-detail__content small { display: block; margin-top: 16px; color: var(--p-color-contrast-medium); line-height: 1.5; }
+.wheel-detail__specs { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1fr); gap: 30px 70px; max-width: 1440px; margin: 100px auto 0; padding-top: 40px; border-top: 1px solid var(--p-color-contrast-low); }
+.wheel-detail__specs h2 { margin-top: 16px; }
+.wheel-detail__specs dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 24px; margin: 0; }
+.wheel-detail__specs dl > div { display: flex; justify-content: space-between; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--p-color-contrast-low); }
+.wheel-detail__specs dt { color: var(--p-color-contrast-medium); font-size: 12px; }
+.wheel-detail__specs dd { margin: 0; font-size: 12px; text-align: right; }
+.wheel-detail__specs > p { grid-column: 2; }
+.wheel-detail__source { display: flex; justify-content: space-between; max-width: 1440px; margin: 60px auto 0; padding-top: 20px; border-top: 1px solid var(--p-color-contrast-low); font-size: 10px; letter-spacing: .1em; }
+.wheel-detail__source a { color: inherit; }
+.wheel-detail--not-found { display: grid; align-content: center; justify-items: start; gap: 20px; min-height: 70vh; }
+@media (max-width: 900px) {
+  .wheels-section-heading { grid-template-columns: 1fr; gap: 20px; }
+  .wheels-fitment, .wheels-engineering, .wheels-inquiry { grid-template-columns: 1fr; }
+  .wheels-product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .wheels-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .wheels-collection-item { grid-template-columns: 34px minmax(120px, .8fr) minmax(150px, 1fr) 20px; }
+  .wheels-collection-item__description { display: none; }
+}
+@media (max-width: 600px) {
+  .wheels-hero { min-height: min(720px, 86svh); }
+  .wheels-hero__content { width: calc(100% - 40px); padding: 150px 0 104px; }
+  .wheels-hero__title { font-size: clamp(3.7rem, 16vw, 5.4rem); }
+  .wheels-hero__lead { max-width: 340px; margin-top: 20px; font-size: 15px; }
+  .wheels-hero__index { right: 20px; bottom: 24px; font-size: 8px; }
+  .wheels-manufacturing, .wheels-collections, .wheels-catalogue { padding: 74px 20px; }
+  .wheels-section-heading { margin-bottom: 32px; }
+  .wheels-section-heading h2 { margin-top: 17px; font-size: clamp(2.8rem, 13vw, 4.1rem); }
+  .wheels-manufacturing__grid { grid-template-columns: 1fr; gap: 14px; }
+  .manufacturing-card { aspect-ratio: 1.15 / 1; }
+  .manufacturing-card__copy strong { font-size: 3.7rem; }
+  .wheels-collection-item { grid-template-columns: 28px minmax(0, 1fr) 20px; gap: 10px; padding: 20px 0; }
+  .wheels-collection-item__subtitle { grid-column: 2; grid-row: 2; }
+  .wheels-collection-item__arrow { grid-column: 3; grid-row: 1 / 3; }
+  .wheels-fitment, .wheels-engineering, .wheels-inquiry { padding: 74px 20px; }
+  .wheels-fitment__intro h2, .wheels-inquiry__intro h2, .wheels-engineering h2 { font-size: clamp(2.8rem, 13vw, 4.1rem); }
+  .wheels-fitment__fields, .wheels-inquiry__fields { grid-template-columns: 1fr; }
+  .wheels-inquiry__fields > :last-child { grid-column: auto; }
+  .wheels-fitment__form, .wheels-inquiry__form { padding: 20px; }
+  .wheels-filters { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .wheels-filters > :last-child { grid-column: 1 / -1; }
+  .wheels-catalogue__meta { font-size: 8px; }
+  .wheels-product-grid { grid-template-columns: 1fr; gap: 30px; }
+  .wheel-product-card__body > p { min-height: 0; }
+  .wheel-detail { padding: 100px 20px 70px; }
+  .wheel-detail__hero, .wheel-detail__specs { grid-template-columns: 1fr; }
+  .wheel-detail__content { padding-top: 10px; }
+  .wheel-detail__specs { margin-top: 70px; gap: 24px; }
+  .wheel-detail__specs > p { grid-column: 1; }
+  .wheel-detail__specs dl { grid-template-columns: 1fr; }
+  .wheel-detail__source { gap: 20px; flex-direction: column; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .wheels-page *, .wheel-detail * { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+}

@@ -9,8 +9,10 @@ import {
 } from "@porsche-design-system/components-react/ssr";
 
 const searchSuggestions = [
-  { label: "Forged wheels", href: "/#collections" },
-  { label: "Vehicle fitment", href: "/#fitment" },
+  { label: "Forged wheels", href: "/wheels#catalogue" },
+  { label: "Cast wheels", href: "/wheels#catalogue" },
+  { label: "Wheel collections", href: "/wheels#collections" },
+  { label: "Vehicle fitment", href: "/wheels#vehicle-fitment" },
   { label: "Engineering", href: "/#engineering" },
 ];
 
@@ -107,21 +109,21 @@ export function SiteHeader() {
             onUpdate={(event) => setActiveIdentifier(event.detail.activeIdentifier)}
           >
             <PDrilldownItem identifier="wheels" label="Wheels">
-              <PDrilldownLink href="/#collections">All collections</PDrilldownLink>
+              <PDrilldownLink href="/wheels">All wheels</PDrilldownLink>
               <PDrilldownItem identifier="wheels-forged" label="Forged wheels">
-                <PDrilldownLink href="/#collections">Monoblock</PDrilldownLink>
-                <PDrilldownLink href="/#collections">Two-piece</PDrilldownLink>
-                <PDrilldownLink href="/#collections">Three-piece</PDrilldownLink>
+                <PDrilldownLink href="/wheels#catalogue">Browse forged models</PDrilldownLink>
+                <PDrilldownLink href="/wheels#catalogue">Browse collections</PDrilldownLink>
+                <PDrilldownLink href="/wheels#catalogue">View sample models</PDrilldownLink>
               </PDrilldownItem>
               <PDrilldownItem identifier="wheels-design" label="Design & finish">
-                <PDrilldownLink href="/#collections">Wheel designs</PDrilldownLink>
-                <PDrilldownLink href="/#engineering">Finishes & details</PDrilldownLink>
+                <PDrilldownLink href="/wheels#collections">Wheel collections</PDrilldownLink>
+                <PDrilldownLink href="/wheels#engineering">Finishes & details</PDrilldownLink>
               </PDrilldownItem>
-              <PDrilldownLink href="/#engineering">Technical specifications</PDrilldownLink>
+              <PDrilldownLink href="/wheels#engineering">Technical specifications</PDrilldownLink>
             </PDrilldownItem>
 
             <PDrilldownItem identifier="vehicles" label="Vehicles">
-              <PDrilldownLink href="/#fitment">Vehicle fitment</PDrilldownLink>
+              <PDrilldownLink href="/wheels#vehicle-fitment">Vehicle fitment</PDrilldownLink>
               <PDrilldownItem identifier="vehicles-makes" label="Browse by vehicle">
                 <PDrilldownLink href="/#fitment">Porsche</PDrilldownLink>
                 <PDrilldownLink href="/#fitment">BMW</PDrilldownLink>
@@ -152,7 +154,7 @@ export function SiteHeader() {
             </PDrilldownItem>
 
             <PDrilldownItem identifier="contact" label="Contact">
-              <PDrilldownLink href="/#fitment">Product enquiry</PDrilldownLink>
+              <PDrilldownLink href="/wheels#inquiry">Product enquiry</PDrilldownLink>
             </PDrilldownItem>
           </PDrilldown>
         </nav>
