@@ -33,7 +33,7 @@
 .wheels-demo-note { display: block; margin-top: 24px; color: var(--euresis-steel); font-size: 9px; font-weight: 600; letter-spacing: .16em; }
 .wheels-fitment__form { display: grid; gap: 22px; padding: 0; background: transparent; }
 .wheels-fitment__fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
-.wheels-fitment__result { padding: 18px; border-left: 3px solid var(--p-color-info); background: var(--euresis-surface-subtle); }
+.wheels-fitment__result { padding: 18px; border-left: 3px solid var(--cds-support-info); background: var(--euresis-surface-subtle); }
 .wheels-fitment__result p { margin: 8px 0; }
 .wheels-fitment__result span { color: var(--euresis-graphite); font-size: 12px; }
 .wheels-catalogue { padding: var(--euresis-section-space) var(--euresis-gutter); }
@@ -142,7 +142,7 @@
 .make-option { display: inline-flex; align-items: center; gap: 12px; min-height: 34px; }
 .make-option__logo { display: inline-flex; width: 48px; height: 34px; flex: 0 0 48px; align-items: center; justify-content: center; overflow: hidden; }
 .make-option__logo img { display: block; width: 100%; height: 100%; object-fit: contain; }
-.wheels-fitment__api-error { margin: 0; padding: 14px 16px; border-left: 3px solid var(--p-color-warning); color: var(--euresis-graphite); background: var(--euresis-surface-subtle); font-size: 13px; line-height: 1.5; }
+.wheels-fitment__api-error { margin: 0; padding: 14px 16px; border-left: 3px solid var(--cds-support-warning); color: var(--euresis-graphite); background: var(--euresis-surface-subtle); font-size: 13px; line-height: 1.5; }
 .wheels-fitment__results { min-width: 0; margin-top: 8px; }
 .wheels-fitment__results-heading { display: flex; justify-content: space-between; gap: 16px; align-items: baseline; margin-bottom: 12px; }
 .wheels-fitment__results-heading span { color: var(--euresis-steel); font-size: 9px; letter-spacing: .12em; }
@@ -151,7 +151,7 @@
 .wheels-fitment__table th { padding: 13px 10px; color: var(--euresis-steel); font-size: 9px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
 .wheels-fitment__table td { padding: 15px 10px; border-top: 1px solid var(--euresis-line); color: var(--euresis-graphite); font-size: 12px; }
 .fitment-type { display: inline-block; padding: 5px 7px; border: 1px solid var(--euresis-steel); font-size: 9px; font-weight: 600; letter-spacing: .08em; white-space: nowrap; }
-.fitment-type--oe { border-color: var(--p-color-success); }
+.fitment-type--oe { border-color: var(--cds-support-success); }
 .fitment-use-button { padding: 8px 10px; border: 1px solid var(--euresis-black); background: transparent; color: var(--euresis-black); font-size: 10px; font-weight: 600; cursor: pointer; white-space: nowrap; }
 .fitment-use-button:hover, .fitment-use-button:focus-visible { background: var(--euresis-black); color: var(--euresis-white); }
 .wheels-fitment__table-note, .wheels-selected-fitment { margin: 14px 0 0; color: var(--euresis-steel); font-size: 11px; line-height: 1.6; }
@@ -453,7 +453,7 @@
   justify-content: flex-end;
   background: #fff;
   color: #111;
-  border: 1px solid var(--euresis-lineer);
+  border: 1px solid var(--euresis-line);
 }
 .wheels-manufacturing__grid .manufacturing-card::after { display: none; }
 .wheels-manufacturing__grid .manufacturing-card img {
@@ -472,7 +472,7 @@
 .wheels-manufacturing__grid .manufacturing-card.is-active { border-color: #111; }
 .wheels-catalogue .wheel-product-card__image {
   background: #fff;
-  border: 1px solid var(--euresis-lineer);
+  border: 1px solid var(--euresis-line);
 }
 .wheels-catalogue .wheel-product-card__image img {
   object-fit: contain;
@@ -533,19 +533,19 @@
   margin-top: auto;
 }
 .wheels-page .wheels-empty {
-  border: 1px solid var(--euresis-lineer);
+  border: 1px solid var(--euresis-line);
   background: var(--euresis-surface-subtle);
 }
 .wheels-page .wheels-filters {
   padding-block: 22px;
-  border-block: 1px solid var(--euresis-lineer);
+  border-block: 1px solid var(--euresis-line);
 }
 .wheels-page .wheels-catalogue__meta {
   border-top: 0;
 }
 .wheels-page .wheels-selected-fitment {
   padding: 14px 16px;
-  border-left: 2px solid var(--p-color-info);
+  border-left: 2px solid var(--cds-support-info);
   background: var(--euresis-surface-subtle);
 }
 @media (max-width: 600px) {
