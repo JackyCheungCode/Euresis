@@ -93,7 +93,7 @@ export function WheelsPage() {
             <PButton type="button" variant="secondary"><a href="#vehicle-fitment">Find your vehicle</a></PButton>
           </div>
         </div>
-        <span className="wheels-hero__index">01 / PRODUCT CATALOGUE</span>
+        <span className="wheels-hero__index">EURESIS / PERFORMANCE WHEELS</span>
       </section>
 
       <section className="wheels-manufacturing" aria-labelledby="manufacturing-title">
@@ -127,42 +127,7 @@ export function WheelsPage() {
         </div>
         <div className="wheels-discovery__grid">
           <a className="wheels-discovery__card" href="#vehicle-fitment"><span>01 / VEHICLE FIRST</span><strong>Find wheels for<br />your vehicle.</strong><small>Make · Model · Year · Modification</small><b>START WITH VEHICLE ↗</b></a>
-          <a className="wheels-discovery__card" href="#specification-finder"><span>02 / SPECIFICATION FIRST</span><strong>Know your fitment?<br />Start with the numbers.</strong><small>Collection · Diameter · Width · PCD · Offset</small><b>FILTER BY SPECIFICATION ↗</b></a>
-        </div>
-      </section>
-
-      <section className="wheels-collections" id="specification-finder" aria-labelledby="collections-title">
-        <div className="wheels-section-heading wheels-section-heading--light">
-          <div>
-            <p className="wheels-eyebrow">03 / SPECIFICATION FINDER</p>
-            <PHeading id="collections-title" tag="h2" size="2xl">START WITH<br />YOUR SPECIFICATION.</PHeading>
-          </div>
-          <div className="wheels-section-heading__statement">
-            
-            <p>A shared Euresis design philosophy, expressed through six individual motorsport-inspired collections.</p>
-          </div>
-        </div>
-        <div className="wheels-specification-fields" aria-label="Wheel specification filters">
-          <PSelect label="Diameter" name="filter-diameter" value={diameter} onChange={(event: SelectUpdateEvent) => setDiameter(String(event.detail.value ?? "ALL"))}>
-            <PSelectOption value="ALL">All diameters</PSelectOption>
-            {["17","18","19","20","21","22"].map((value) => <PSelectOption key={value} value={value}>{value} inch</PSelectOption>)}
-          </PSelect>
-          <PInputText label="Width (J)" name="filter-width" value={fitmentWidth} onChange={(event: InputUpdateEvent) => setFitmentWidth(inputValue(event))} placeholder="e.g. 8.5" />
-          <PInputText label="Offset (ET)" name="filter-offset" value={fitmentOffset} onChange={(event: InputUpdateEvent) => setFitmentOffset(inputValue(event))} placeholder="e.g. 35" />
-          <PInputText label="Bolt pattern (PCD)" name="filter-pcd" value={fitmentPcd} onChange={(event: InputUpdateEvent) => setFitmentPcd(inputValue(event))} placeholder="e.g. 5×112" />
-          <PInputText label="Center bore (CB)" name="filter-center-bore" value={fitmentCenterBore} onChange={(event: InputUpdateEvent) => setFitmentCenterBore(inputValue(event))} placeholder="e.g. 66.6" />
-        </div>
-        <p className="wheels-specification-note">All dimensions are catalogue filters. A product appears only when its corresponding verified specification is present; the current sample range has no verified width, offset, PCD or center-bore records, so those filters may return no matches.</p>
-        <div className="wheels-collection-list">
-          {wheelCollections.map((item, index) => (
-            <button className={`wheels-collection-item ${collection === item.id ? "is-active" : ""}`} type="button" key={item.id} onClick={() => { setCollection(collection === item.id ? "ALL" : item.id); document.getElementById("discovery")?.scrollIntoView({ behavior: "smooth" }); }}>
-              <span className="wheels-collection-item__index">0{index + 1}</span>
-              <span className="wheels-collection-item__name">{item.id}</span>
-              <span className="wheels-collection-item__subtitle">{item.subtitle}</span>
-              <span className="wheels-collection-item__description">{item.description}</span>
-              <span className="wheels-collection-item__arrow">↗</span>
-            </button>
-          ))}
+          <a className="wheels-discovery__card" href="#catalogue"><span>02 / SPECIFICATION FIRST</span><strong>Know your fitment?<br />Start with the numbers.</strong><small>Collection · Diameter · Width · PCD · Offset</small><b>FILTER BY SPECIFICATION ↗</b></a>
         </div>
       </section>
 
@@ -174,7 +139,7 @@ export function WheelsPage() {
             <p className="wheels-eyebrow">04 / UNIFIED CATALOGUE</p>
             <PHeading id="catalogue-title" tag="h2" size="2xl">THE WHEEL<br />CATALOGUE.</PHeading>
           </div>
-          <PText color="contrast-high">Explore the first Euresis sample range. Images are visual references, not photographs of confirmed Euresis production models.</PText>
+          <PText color="contrast-high">Explore the Euresis wheel range. Filter by manufacturing, collection and wheel dimensions.</PText>
         </div>
         <div className="wheels-filters" aria-label="Catalogue filters">
           <PSelect label="Manufacturing" name="filter-manufacturing" value={manufacturing} onChange={(event: SelectUpdateEvent) => setManufacturing(String(event.detail.value ?? "") as typeof manufacturing)}>
@@ -222,7 +187,6 @@ export function WheelsPage() {
             </article>
           ))}
         </div> : <div className="wheels-empty"><strong>No sample models match these filters.</strong><button type="button" onClick={resetFilters}>Clear filters</button></div>}
-        <p className="wheels-image-credit">Reference imagery via Pexels. Each image links to its source; imagery is not a representation of an actual Euresis wheel model.</p>
       </section>
 
       <section className="wheels-engineering" aria-labelledby="engineering-title">
