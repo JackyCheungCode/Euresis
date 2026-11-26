@@ -1,5 +1,3 @@
-import { PLinkPure } from "@/src/components/ui/carbon-primitives";
-
 const footerGroups = [
   {
     title: "Wheels & Vehicles",
@@ -38,7 +36,7 @@ export function SiteFooter() {
               <ul>
                 {group.links.map((link) => (
                   <li key={link.label}>
-                    <PLinkPure icon="none"><a href={link.href}>{link.label}</a></PLinkPure>
+                    <a className="cds--link" href={link.href}>{link.label}</a>
                   </li>
                 ))}
               </ul>
