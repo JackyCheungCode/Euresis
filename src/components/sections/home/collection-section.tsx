@@ -2,7 +2,7 @@ import {
   PButton,
   PHeading,
   PText,
-} from "@porsche-design-system/components-react/ssr";
+} from "@/src/components/ui/carbon-primitives";
 
 const collections = [
   {
