@@ -7,4 +7,8 @@
   --euresis-paper: var(--p-color-canvas);
   --euresis-white: var(--p-color-canvas);
   --euresis-gutter: var(--p-spacing-fluid-md);
+  --euresis-content-width: 1440px;
+  --euresis-section-space: var(--p-spacing-fluid-2xl);
+  --euresis-section-space-mobile: var(--p-spacing-fluid-xl);
+  --euresis-surface-subtle: var(--p-color-surface);
 }
