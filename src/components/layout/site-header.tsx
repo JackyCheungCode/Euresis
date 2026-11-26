@@ -20,13 +20,9 @@ export function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeIdentifier, setActiveIdentifier] = useState<string | undefined>(undefined);
   const [searchOpen, setSearchOpen] = useState(false);
-  const [isHome, setIsHome] = useState(false);
   const [query, setQuery] = useState("");
   const searchRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    setIsHome(window.location.pathname === "/" || window.location.pathname === "/wheels");
-  }, []);
 
   useEffect(() => {
     if (!menuOpen && !searchOpen) return;
@@ -60,7 +56,7 @@ export function SiteHeader() {
 
   return (
     <>
-      <header className={`site-header ${isHome ? "site-header--home" : "site-header--inner"}`}>
+      <header className="site-header">
         <div className="site-header__inner">
           <div className="site-header__start scheme-dark">
             <PButtonPure
@@ -88,16 +84,6 @@ export function SiteHeader() {
               onClick={() => { setSearchOpen(true); setMenuOpen(false); }}
             >
               Search
-            </PButtonPure>
-            <PButtonPure
-              className="site-header__control"
-              type="button"
-              icon="user"
-              hideLabel
-              title="User"
-              aria={{ "aria-label": "User account placeholder" }}
-            >
-              User
             </PButtonPure>
           </div>
         </div>
