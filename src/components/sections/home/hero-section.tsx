@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { PButton, PHeading } from "@porsche-design-system/components-react/ssr";
+import { PButton, PHeading } from "@/src/components/ui/carbon-primitives";
 import { homepageContent } from "@/src/data/homepage";
 
 const HERO_VIDEO = "https://videos.pexels.com/video-files/20244146/20244146-uhd_4096_2160_30fps.mp4";
